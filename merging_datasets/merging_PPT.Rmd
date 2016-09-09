@@ -1,6 +1,6 @@
 ---
 title: "Merging the PPT Datasets"
-subtitle: "Strengthening the Dairy Value Chain | Datassist"
+subtitle: "Strengthening the Dairy Value Chain"
 author: "Julia Silge"
 date: "`r Sys.Date()`"
 output:
@@ -132,7 +132,7 @@ ppt3_round5 <- ppt3_round5 %>%
            upazila_code = `1.4 Upazila Code`,
            union = `1.5 Union Name`,
            union_code = `1.6 Union Code`,
-           ward = `1.7 Ward Number`,
+           ward_number = `1.7 Ward Number`,
            village = `1.8 Village/Para Name`,
            group_name = `1.9 Group Name `,
            group_code = `Group Code`,
@@ -170,7 +170,7 @@ ppt3 <- bind_rows(ppt3_round1 %>% mutate(round = 1),
                   ppt3_round5 %>% mutate(round = 5)) %>%
     select(round, team_name, group_name, group_type, group_code, village, 
            union, union_code, upazila, upazila_code, 
-           district, district_code, ward,
+           district, district_code, ward_number,
            female_producers_involved, male_producers_involved,
            female_producers_present, male_producers_present,
            female_producers_dropout, male_producers_dropout,
@@ -202,6 +202,263 @@ write_csv(ppt3, "../data/ppt3.csv")
 ```
 
 ## Merging the PPT1 Data
+
+Next, let's work on merging the PPT1 data. These files all have about 50 columns. Let's begin by making the names consistent. For starters, some of them have duplicate names for columns ("Men"/"Women"). Let's do these first.
+
+```{r}
+colnames(ppt1_round1)[c(8, 11, 14)] <- c("male_producers_involved",
+                                         "male_producers_present",
+                                         "male_producers_dropout")
+colnames(ppt1_round1)[c(9, 12, 15)] <- c("female_producers_involved",
+                                         "female_producers_present",
+                                         "female_producers_dropout")
+
+colnames(ppt1_round3)[c(9, 12, 15)] <- c("male_producers_involved",
+                                          "male_producers_present",
+                                          "male_producers_dropout")
+colnames(ppt1_round3)[c(10, 13, 16)] <- c("female_producers_involved",
+                                          "female_producers_present",
+                                          "female_producers_dropout")
+colnames(ppt1_round4)[c(9, 12, 15)] <- c("male_producers_involved",
+                                          "male_producers_present",
+                                          "male_producers_dropout")
+colnames(ppt1_round4)[c(10, 13, 16)] <- c("female_producers_involved",
+                                          "female_producers_present",
+                                          "female_producers_dropout")
+```
+
+
+Now let's go through the bulk of the rest of the the column names.
+
+```{r}
+make_names_consistent <- function(df) {
+    df %>% 
+        rename(cowshed_cleanliness = `Clean cow shed and maintain disposal system regularly (cow dung & others)`,
+               cowshed_light = `Proper ventilation , lights with sufficient security measurement available ( Window, sifficient light & air, net, smoke, finish liquid, coil  etc)`,
+               hybrid_grass = `Produces Hybrid grass`,
+               clean_grass = `Collected grass are ensured proper cleanliness during feeding`,
+               feeds_bran_oil = `HH feeds at least any Bran and Oil cake`,
+               ready_feed = `HH feeds their cattle any brand ready feed ( Ready Feed)`,
+               feeds_vitamin = `HH feeds any type Vitamin mineral premix (DCP, DB mix, liquid)`,
+               deworms = `HH regularly De-worm their all cattle except sick and pregnant cattle`,
+               vaccinates = `HH  vaccinate their all cattle regularly except sick and pregnant cattle With given priority on Anthrax and FMD `,
+               suggestion_from_vet = `Regular take suggestion / Treatment /check-up to the cattle health from the recommended Surgeon/paravate, LHW,etc `,
+               ai_services = `HH taking  AI services for high breed/high milk production during this period`,
+               
+               milk_yesterday_volume = `Total milk volume (Yesterday) (in ltr.)`,
+               increased_volume = `Increased volume of milk compare to before ( consider last 4 month)`,
+               proper_milking = `HH knows the proper/recommended milking system (cleanliness of place, udder, teat and milking pot & complete milking practice)`,
+               feed_after_milking = `Feeds the cow just after milking`,
+               market_info = `Using market information for decision making`,
+               selling_dft = `HH presently selling milk to DFT collection point`,
+               satisfied_dft = `I am satisfied with overall DFT servise (payment, delivery, domentation etc)`,
+               keeping_records = `Keeping record on individual milk production, sales and production cost `,
+               group_saving = `I involve with group saving (weekly/monthly)`,
+               borrowing_loan = `Taking loan from group saving/ others FI's easily for dairy purpose`,
+               communicate_ku = `Frequintly communicate to input shops(KU) to purchase feed ,medicine and other services`,
+               satisfied_ku = `I am satisfied with overall Krishi Utsho (KU) servises`,
+               communicated_lhw = `Communicated with LHW and AI on treatment issues as when required`,
+               satisfied_treatment = `I am satisfied with overall Treatment servises (dewarming, vaccination and AI)`,
+               family_support = `My Spouse/other family members support me while I work to dairy purpose (Cow shed cleanning, fodder cultivation, feeding, milking etc)`,
+               spent_income = `I spent comfortably the milk sales income for HH & own purpose as when required`,
+               discuss_family = `I discussed with my family member regarding dairy related decision making`,
+               decision_alone = `I can take decision along regarding dewarming, vaccination services as when required`,
+               spoke_meeting = `I spoke comfortably in the group meeting `,
+               consume_milk = `We consume our produced milk and gave preference to the children & women`
+        )
+    }
+
+ppt1_round1 <- ppt1_round1 %>%
+    rename(team_name = Team,
+           group_name = `Group Name`,
+           village = Village,
+           union = ` Union  `,
+           upazila = ` Upazilla  `,
+           district = ` District `,
+           producers_involved = `# of Producers involve in the group`,
+           producers_present = `# of Producers present at the session`,
+           producers_dropout = `# of drop out since last session`,
+           facilitator = `Name & designation of Facilitator`,
+           evaluation_date = Date,
+           group_code_old = `Old Group ID`,
+           group_code = `New Group ID`,
+           group_type = `Producer Type (SDVC I&II=1, SDVC II=2)`,
+           producer_serial = Sl,
+           producer_name = `Producer Name`,
+           producer_id = `Producer ID`,
+           sex = `Sex (Women=1/Man=2)`,
+           guardian_name = `Spouse/Guardian Name `,
+           group_leader = `Group Leader (Yes=1/No=0)`,
+           total_cows = `# of total of cow`
+           ) %>%
+    make_names_consistent()
+
+
+ppt1_round2 <- ppt1_round2 %>%
+    rename(team_name = Team,
+           group_name = `Group Name`,
+           group_code = `Group Code`,
+           village = Village,
+           union = `Union  `,
+           upazila = `Upazilla   `,
+           district = `District `,
+           facilitator = `Name & designation of Facilitator`,
+           evaluation_date = `Date of Evaluation`,
+           producer_name = `Producer Name`,
+           producer_id = `Producer ID`,
+           sex = `Sex (Women=1/Man=2)`,
+           guardian_name = `Spouse/Guardian Name `,
+           group_leader = `Group Leader (Yes=1/No=0)`,
+           milk_yesterday_cows = `Yesterday's milk from how many cow?`
+           ) %>%
+    make_names_consistent()
+
+
+ppt1_round3 <- ppt1_round3 %>%
+    rename(team_name = `Team:`,
+           group_name = `Group Name:`,
+           group_code = `Group Code`,
+           village = Village,
+           union = ` Union:    `,
+           upazila = ` Upazilla:   `,
+           district = ` District: `,
+           producers_involved = `# of Producers involve in the group:`,
+           producers_present = `# of Producers present at the session:`,
+           producers_dropout = `# of drop out since last session:`,
+           facilitator = `Name & designation of Facilitator:`,
+           evaluation_date = `Date:`,
+           producer_serial = Sl,
+           producer_name = `Producer Name`,
+           producer_id = `Producer ID`,
+           sex = `Sex (Women=1/Man=2)`,
+           guardian_name = `Spouse/Guardian Name `,
+           group_leader = `Group Leader (Yes=1/No=0)`,
+           group_type = `Producer Type (SDVC I&II=1; SDVC II=2)`,
+           milk_yesterday_cows = `Yesterday milk how many cow?`) %>%
+    make_names_consistent()
+
+
+ppt1_round4 <- ppt1_round4 %>%
+    rename(team_name = `Team:`,
+           group_name = `Group Name:`,
+           group_code = `Group Code`,
+           village = Village,
+           union = ` Union:    `,
+           upazila = ` Upazilla:   `,
+           district = ` District: `,
+           producers_involved = `# of Producers involve in the group:`,
+           producers_present = `# of Producers present at the session:`,
+           producers_dropout = `# of drop out since last session:`,
+           facilitator = `Name & designation of Facilitator:`,
+           evaluation_date = Date,
+           producer_serial = Sl,
+           producer_name = `Producer Name`,
+           producer_id = `Producer ID`,
+           sex = `Sex (Women=1/Man=2)`,
+           guardian_name = `Spouse/Guardian Name `,
+           group_leader = `Group Leader (Yes=1/No=0)`,
+           group_type = `Producer Type (SDVC I&II=1; SDVC II=2)`,
+           milk_yesterday_cows = `Yesterday milk how many cow?`) %>%
+    make_names_consistent()
+
+```
+
+
+There are two columns for producer code in the following data frame. Are they all the same?
+
+```{r}
+data_frame(code1 = ppt1_round5$`Producer's Code`, code2 = ppt1_round5$`Producer Code`) %>% 
+    mutate(compare = (code1 == code2)) 
+data_frame(code1 = ppt1_round5$`Producer's Code`, code2 = ppt1_round5$`Producer Code`) %>% 
+    mutate(compare = (code1 == code2)) %>% 
+    summarize(compare_all = all(compare, na.rm = TRUE))
+
+```
+
+Yep, we can keep only one of them and throw the other one out.
+
+```{r}
+ppt1_round5 <- ppt1_round5 %>%
+    rename(team_name = `Team Name`,
+           district = District,
+           upazila = Upazila,
+           ward = `Union/Ward`,
+           ward_number = `Ward #`,
+           village = Village,
+           para = Para,
+           group_name = `Group Name`,
+           group_code = `Group Code`,
+           producer_id = `Producer Code`,
+           producer_name = `Producer Name`,
+           guardian_name = `Husbandand/ Father'S Name`,
+           sex = `Sex (W=1, M=2)`,
+           group_leader = `Group Leader  (Yes=1; No=0)`,
+           group_type = `Producer types (SDVC I&II=1; SDVC II=2)`,
+           producer_serial = `Producer serial at group`,
+           producer_status = `Producer Status`,
+           cowshed_cleanliness = ` [1] Cowshed Cleanliness`,
+           cowshed_light = ` [2] Sufficient Light and Ventilation in Cowshed`,
+           hybrid_grass = ` [3] Produce Hybrid grass`,
+           clean_grass = ` [4] Clean Collected Grass and Feed Cows`,
+           feeds_bran_oil = ` [5] HH feeds at least any Bran and Oil cake`,
+           feeds_vitamin = ` [6] HH feeds any type Vitamin mineral premix (DCP, DB mix, liquid)`,
+           deworms = ` [7] HH regularly De-worm their all cattle except sick and pregnant cattle`,
+           vaccinates = ` [9] HH  vaccinate their all cattle regularly except sick and pregnant cattle With given priority on Anthrax and FMD `,
+           suggestion_from_vet = ` [10] Regular take suggestion / Treatment /check-up to the cattle health from the recommended Surgeon/paravate, LHW,etc `,
+           ai_services = ` [11] HH taking  AI services for high breed/high milk production during this period`,
+           milk_yesterday_cows = `[12] Yesterday's milk produced from how many cow?`,
+           milk_yesterday_volume = `[13] Total milk volume yesterday (in ltr`,
+           increased_volume = ` [14] Increased volume of milk compare to before ( consider last 4 month)`,
+           proper_milking = ` [15] HH knows the proper/recommended milking system (cleanliness of place, udder, teat and milking pot & complete milking practice)`,
+           feed_after_milking = ` [16] Feeds the cow just after milking`,
+           market_info = ` [17] Using market information for decision making`,
+           selling_dft = ` [18] HH presently selling milk to DFT collection point`,
+           satisfied_dft = ` [19] I am satisfied with overall DFT servise (payment, delivery, domentation etc)`,
+           keeping_records = ` [20] Keeping record on individual milk production, sales and production cost `,
+           group_saving = ` [21] I involve with group saving (weekly/monthly)`,
+           borrowing_loan = ` [22] Taking loan from group saving/ others FI's easily for dairy purpose`,
+           communicate_ku = ` [23] Frequintly communicate to input shops(KU) to purchase feed ,medicine and other services`,
+           satisfied_ku = ` [24] I am satisfied with overall Krishi Utsho (KU) servises`,
+           communicated_lhw = ` [25] Communicated with LHW and AI on treatment issues as when required`,
+           satisfied_treatment = ` [26] I am satisfied with overall Treatment servises (dewarming, vaccination and AI)`,
+           family_support = ` [27] My Spouse/other family members support me while I work to dairy purpose (Cow shed cleanning, fodder cultivation, feeding, milking etc)`,
+           spent_income = ` [28] I spent comfortably the milk sales income for HH & own purpose as when required`,
+           discuss_family = ` [29] I discusse with my family member regarding dairy related decision making`,
+           decision_alone = ` [30] I can take decision alone regarding dewarming, vaccination services as when required`,
+           spoke_meeting = ` [31] I spoke comfortably in the group meeting `,
+           consume_milk = ` [32] We consume our produced milk and gave preference to the children & women`
+           )
+
+```
+
+Now let's bind these rows together, and then use `select` to reorder the columns how we want them.
+
+```{r}
+ppt1 <- bind_rows(ppt1_round1 %>% mutate(round = 1), 
+                  ppt1_round2 %>% mutate(round = 2), 
+                  ppt1_round3 %>% mutate(round = 3), 
+                  ppt1_round4 %>% mutate(round = 4), 
+                  ppt1_round5 %>% mutate(round = 5)) %>%
+    select(round, team_name, group_name, group_type, group_code, group_code_old,
+           village, para, union, upazila, district, ward, ward_number,
+           producers_involved, female_producers_involved, male_producers_involved,
+           producers_present, female_producers_present, male_producers_present,
+           producers_dropout, female_producers_dropout, male_producers_dropout,
+           evaluation_date, facilitator,
+           producer_name, producer_id, producer_serial, producer_status,
+           sex, guardian_name, group_leader,
+           cowshed_cleanliness, cowshed_light, hybrid_grass, clean_grass,
+           feeds_bran_oil, ready_feed, feeds_vitamin, deworms, vaccinates,
+           suggestion_from_vet, ai_services, total_cows, milk_yesterday_cows,
+           increased_volume, proper_milking, feed_after_milking, market_info,
+           selling_dft, satisfied_dft, keeping_records, group_saving, 
+           borrowing_loan, communicate_ku, satisfied_ku, communicated_lhw, 
+           satisfied_treatment, family_support, spent_income, discuss_family,
+           decision_alone, spoke_meeting, consume_milk)
+```
+
+These are still all characters from when we first imported them from Excel, so let's convert the appropriate columns to numeric. This might make some `NA` values (the problem that led me to import everything as characters to start with) so let's make sure to check that.
+
 
 ## Merging Both Together for Final PPT Data Set
 
