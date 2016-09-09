@@ -1,0 +1,54 @@
+---
+title: "Merging the PPT Datasets"
+subtitle: "Strengthening the Dairy Value Chain"
+author: "Julia Silge"
+date: "`r Sys.Date()`"
+footer:
+  - content: '[Datassist](http://idatassist.com/)<br/>'
+  - content: 'Copyright 2016'
+output:
+  prettydoc::html_pretty:
+    theme: leonids
+---
+
+```{r, echo = FALSE, warning = FALSE}
+library(knitr)
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, dpi = 180)
+options(width=80, dplyr.width = 150)
+```
+
+There are five rounds of performance tracker data collected for this project, in September 2014 (May 2014), January 2015 (December 2014), December 2015 (June 2015), December 2015, and June 2016. These data sets contain the information we need to answer most of the questions for the final analysis plan, due this month, and is also expected to be the easiest to deal with, so let's work on munging, tidying, and merging the five data sets.
+
+## Reading In the Data
+
+First let's read in the original Excel files as sent to me zipped on 2016-9-8.
+
+```{r}
+library(readxl)
+ppt1_round1 <- read_excel("../data/PPT-1&3 Database_1st round_May 2014_SDVC-II.xls", 
+                          sheet = 1, col_types = rep("text", 58))
+ppt3_round1 <- read_excel("../data/PPT-1&3 Database_1st round_May 2014_SDVC-II.xls", 
+                          sheet = 2, col_types = rep("text", 30))
+ppt1_round2 <- read_excel("../data/PPT-1&3 Database_2nd round_December 2014_SDVC-II.xls", 
+                          sheet = 1, col_types = rep("text", 46))
+ppt3_round2 <- read_excel("../data/PPT-1&3 Database_2nd round_December 2014_SDVC-II.xls", 
+                          sheet = 2, col_types = rep("text", 30))
+
+## what is going on with this one?!?!?
+#ppt1_round3 <- read_excel("../data/PPT-1&3 Database_3rd Round_June 2015_SDVC-II.xls", 
+##                          sheet = 1, col_types = rep("text", 57))
+
+
+
+ppt3_round3 <- read_excel("../data/PPT-1&3 Database_3rd Round_June 2015_SDVC-II.xls", 
+                          sheet = 2, col_types = rep("text", 30))
+ppt1_round4 <- read_excel("../data/PPT-1&3 Database_4th Round_ December 2015_SDVC-II.xls", 
+                          sheet = 1, col_types = rep("text", 58))
+ppt3_round4 <- read_excel("../data/PPT-1&3 Database_4th Round_ December 2015_SDVC-II.xls", 
+                          sheet = 2, col_types = rep("text", 30))
+ppt1_round5 <- read_excel("../data/PPT-1&3 Database_5th Round_June 2016_SDVC-II.xlsx", 
+                          sheet = 1, col_types = rep("text", 50))
+ppt3_round5 <- read_excel("../data/PPT-1&3 Database_5th Round_June 2016_SDVC-II.xlsx", 
+                          sheet = 2, col_types = rep("text", 32))
+```
+
