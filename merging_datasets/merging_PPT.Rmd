@@ -1,11 +1,8 @@
 ---
 title: "Merging the PPT Datasets"
-subtitle: "Strengthening the Dairy Value Chain"
+subtitle: "Strengthening the Dairy Value Chain | Datassist"
 author: "Julia Silge"
 date: "`r Sys.Date()`"
-footer:
-  - content: '[Datassist](http://idatassist.com/)<br/>'
-  - content: 'Copyright 2016'
 output:
   prettydoc::html_pretty:
     theme: leonids
@@ -36,14 +33,10 @@ ppt1_round2 <- read_excel("../data/PPT-1&3 Database_2nd round_December 2014_SDVC
 ppt3_round2 <- read_excel("../data/PPT-1&3 Database_2nd round_December 2014_SDVC-II.xls", 
                           sheet = 2, col_types = rep("text", 30))
 
-## what is going on with this one?!?!?
-ppt1_round3 <- read_excel("../data/PPT-1&3 Database_3rd Round_June 2015_SDVC-II.xls", 
-                          sheet = 1)
-
-#ppt1_round3 <- read_excel("../data/PPT-1&3 Database_3rd Round_June 2015_SDVC-II.xls", 
-#                          sheet = 1, col_types = rep("text", 57))
-
-
+## I did end up having to remove some blank columns from the right hand side of this one 
+## in Excel to get it to read it without NAs and without problems with colnames/colnums
+ppt1_round3 <- read_excel("../data/PPT-1&3 Database_3rd Round_June 2015_SDVC-II.xlsx", 
+                          sheet = 1, col_types = rep("text", 57))
 
 ppt3_round3 <- read_excel("../data/PPT-1&3 Database_3rd Round_June 2015_SDVC-II.xls", 
                           sheet = 2, col_types = rep("text", 30))
@@ -175,7 +168,7 @@ ppt3 <- bind_rows(ppt3_round1 %>% mutate(round = 1),
                   ppt3_round3 %>% mutate(round = 3), 
                   ppt3_round4 %>% mutate(round = 4), 
                   ppt3_round5 %>% mutate(round = 5)) %>%
-    select(team_name, group_name, group_type, group_code, village, 
+    select(round, team_name, group_name, group_type, group_code, village, 
            union, union_code, upazila, upazila_code, 
            district, district_code, ward,
            female_producers_involved, male_producers_involved,
@@ -195,16 +188,20 @@ These are still all characters from when we first imported them from Excel, so l
 na_count_before <-sapply(ppt3, function(y) sum(length(which(is.na(y)))))
 
 ## now do the conversion
-ppt3[,c(3:4,7,9,11:18,21:34)] <- lapply(ppt3[,c(3:4,7,9,11:18,21:34)], as.numeric)
+ppt3[,c(4:5,8,10,12:19,22:35)] <- lapply(ppt3[,c(4:5,8,10,12:19,22:35)], as.numeric)
 
 na_count_after <-sapply(ppt3, function(y) sum(length(which(is.na(y)))))
 na_count_after - na_count_before
 ```
 
-Not bad; we just made `NA` values in this data frame of 3000 rows. I think this is OK. Let's save this intermediate step as a csv.
+Not bad; we just made 2 more `NA` values in this data frame of 3000 rows. I think this is OK. Let's save this intermediate step as a csv.
 
 ```{r}
 library(readr)
 write_csv(ppt3, "../data/ppt3.csv")
 ```
+
+## Merging the PPT1 Data
+
+## Merging Both Together for Final PPT Data Set
 
