@@ -24,6 +24,8 @@ There are five rounds of performance tracker data collected for this project, in
 First let's read in the original Excel files as sent to me zipped on 2016-9-8.
 
 ```{r}
+## FIX THE DATES
+
 library(readxl)
 ppt1_round1 <- read_excel("../data/PPT-1&3 Database_1st round_May 2014_SDVC-II.xls", 
                           sheet = 1, col_types = rep("text", 58))
@@ -35,8 +37,11 @@ ppt3_round2 <- read_excel("../data/PPT-1&3 Database_2nd round_December 2014_SDVC
                           sheet = 2, col_types = rep("text", 30))
 
 ## what is going on with this one?!?!?
+ppt1_round3 <- read_excel("../data/PPT-1&3 Database_3rd Round_June 2015_SDVC-II.xls", 
+                          sheet = 1)
+
 #ppt1_round3 <- read_excel("../data/PPT-1&3 Database_3rd Round_June 2015_SDVC-II.xls", 
-##                          sheet = 1, col_types = rep("text", 57))
+#                          sheet = 1, col_types = rep("text", 57))
 
 
 
@@ -50,5 +55,156 @@ ppt1_round5 <- read_excel("../data/PPT-1&3 Database_5th Round_June 2016_SDVC-II.
                           sheet = 1, col_types = rep("text", 50))
 ppt3_round5 <- read_excel("../data/PPT-1&3 Database_5th Round_June 2016_SDVC-II.xlsx", 
                           sheet = 2, col_types = rep("text", 32))
+```
+
+
+Let's save all of the column names as they are originally, for use later.
+
+```{r}
+library(dplyr)
+original_names <- bind_rows(
+    data_frame(ppt_type = 'ppt1', round = 1, names = list(names(ppt1_round1))),
+    data_frame(ppt_type = 'ppt1', round = 2, names = list(names(ppt1_round2))),
+    data_frame(ppt_type = 'ppt1', round = 3, names = list(names(ppt1_round3))),
+    data_frame(ppt_type = 'ppt1', round = 4, names = list(names(ppt1_round4))),
+    data_frame(ppt_type = 'ppt1', round = 5, names = list(names(ppt1_round5))),
+    data_frame(ppt_type = 'ppt3', round = 1, names = list(names(ppt3_round1))),
+    data_frame(ppt_type = 'ppt3', round = 2, names = list(names(ppt3_round2))),
+    data_frame(ppt_type = 'ppt3', round = 3, names = list(names(ppt3_round3))),
+    data_frame(ppt_type = 'ppt3', round = 4, names = list(names(ppt3_round4))),
+    data_frame(ppt_type = 'ppt3', round = 5, names = list(names(ppt3_round5)))
+    )
+```
+
+## Merging the PPT3 Data
+
+The PPT3 Data all has about 30 columns; let's start by merging that. First, we need to make the names consistent.
+
+```{r}
+make_names_consistent <- function(df) {
+    df %>% 
+        rename(team_name = `Team Name`,
+               group_name = `Group Name`,
+               group_code = `Group Code`,
+               village = `Village `,
+               union = Union,
+               upazila = Upazila,
+               district = District,
+               female_producers_involved = `Total # of Female Producers involve at the group`,
+               male_producers_involved = `Total # of male Producers involve at the group`,
+               female_producers_present = `# of Female Producers present at the session`,
+               male_producers_present = `# of male Producers present at the session`,
+               female_producers_dropout = `# of female  drop out`,
+               male_producers_dropout = `# of male  drop out`,
+               evaluation_date = `Date of Evaluation`,
+               facilitator = `Name & designation of Facilitator:`,
+               development_plan = `Group Operational & Dairy Development Plan\nGroup Operational & Dairy Development Plan\n`,
+               rules_regulation = `Rules & Regulation\n`,
+               leadership_process = `Leadership Process `,
+               learning_sharing_space = `Learning Sharing Space`,
+               services = `Access to Services/ External Relationship`,
+               cow_shed_mgmt = `Project promoted Key practice adaptation status: Cow Shed Management`,
+               feed_mgmt = `Project promoted Key practice adaptation status: Feed Management`,
+               health_mgmt = `Project promoted Key practice adaptation status: Health Management`,
+               breed_dvmt = `Project promoted Key practice adaptation status: Breed Development`,
+               milk_mgmt = `Milk Management`,
+               milk_marketing = `Milk Marketing`,
+               info_mgmt = `Information Management (Record Keeping)`,
+               gender_equity = `Gender Equity `,
+               total = `Total `
+        )
+    }
+
+ppt3_round1 <- ppt3_round1 %>%
+    rename(group_type = `Group Types (SDVC I&II=1; SDVC I&II=2)`) %>%
+    make_names_consistent()
+
+ppt3_round2 <- ppt3_round2 %>%
+    rename(group_type = `Group Status (SDVC I&II=1;\nSDVC II=2)`) %>%
+    make_names_consistent()
+
+ppt3_round3 <- ppt3_round3 %>%
+    rename(group_type = `Group Status (producers group from phase1=1 & Phase2 Group=2)`) %>%
+    make_names_consistent()
+
+ppt3_round4 <- ppt3_round4 %>%
+    rename(group_type = `Group Status (SDVC I&II=1; SDVC II=2)`) %>%
+    make_names_consistent()
+
+ppt3_round5 <- ppt3_round5 %>%
+    rename(team_name = `1.1 Team name`,
+           district = `1.2 District Name `,
+           district_code = `District Code`,
+           upazila = `1.3 Upazila`,
+           upazila_code = `1.4 Upazila Code`,
+           union = `1.5 Union Name`,
+           union_code = `1.6 Union Code`,
+           ward = `1.7 Ward Number`,
+           village = `1.8 Village/Para Name`,
+           group_name = `1.9 Group Name `,
+           group_code = `Group Code`,
+           group_type = `Group Status (SDVC I&II=1; SDVC II=2)`,
+           female_producers_present = `2.2 Number of female producers present at the session`,
+           male_producers_present = `2.1 Number of male producers present at the session`,
+           evaluation_date = `2.3 Date of evaluation`,
+           facilitator_type = `2.4 Types of main facilitator`,
+           facilitator = `2.5 Responsible FF`,
+           development_plan = `3.1 Group Operational & Dairy Development Plan`,
+           rules_regulation = `3.2 Rules & Regulations`,
+           leadership_process = `3.3 Leadership Process `,
+           learning_sharing_space = `3.4 Learning Sharing Space`,
+           services = `3.5 Access to Services/ External Relationship`,
+           cow_shed_mgmt = `3.6 Project promoted Key practice adaptation status: Cow Shed Management`,
+           feed_mgmt = `3.7 Project promoted Key practice adaptation status: Feed Management`,
+           health_mgmt = `3.8 Project promoted Key practice adaptation status: Health Management`,
+           breed_dvmt = `3.9 Project promoted Key practice adaptation status: Breed Development`,
+           milk_mgmt = `3.10 Milk Management`,
+           milk_marketing = `3.11 Marketing `,
+           info_mgmt = `3.12 Information Management (Record Keeping)`,
+           gender_equity = `3.13 Gender Equity `,
+           total = `Total Score `
+        )
+
+```
+
+Now let's bind these rows together, and then use `select` to reorder the columns how we want them.
+
+```{r}
+ppt3 <- bind_rows(ppt3_round1 %>% mutate(round = 1), 
+                  ppt3_round2 %>% mutate(round = 2), 
+                  ppt3_round3 %>% mutate(round = 3), 
+                  ppt3_round4 %>% mutate(round = 4), 
+                  ppt3_round5 %>% mutate(round = 5)) %>%
+    select(team_name, group_name, group_type, group_code, village, 
+           union, union_code, upazila, upazila_code, 
+           district, district_code, ward,
+           female_producers_involved, male_producers_involved,
+           female_producers_present, male_producers_present,
+           female_producers_dropout, male_producers_dropout,
+           evaluation_date, facilitator,
+           development_plan, rules_regulation, leadership_process,
+           learning_sharing_space, services,
+           cow_shed_mgmt, feed_mgmt, health_mgmt, breed_dvmt, milk_mgmt,
+           milk_mgmt, milk_marketing, info_mgmt, gender_equity, total)
+```
+
+These are still all characters from when we first imported them from Excel, so let's convert the appropriate columns to numeric. This might make some `NA` values (the problem that led me to import everything as characters to start with) so let's make sure to check that.
+
+
+```{r}
+na_count_before <-sapply(ppt3, function(y) sum(length(which(is.na(y)))))
+
+## now do the conversion
+ppt3[,c(3:4,7,9,11:18,21:34)] <- lapply(ppt3[,c(3:4,7,9,11:18,21:34)], as.numeric)
+
+na_count_after <-sapply(ppt3, function(y) sum(length(which(is.na(y)))))
+na_count_after - na_count_before
+```
+
+Not bad; we just made `NA` values in this data frame of 3000 rows. I think this is OK. Let's save this intermediate step as a csv.
+
+```{r}
+library(readr)
+write_csv(ppt3, "../data/ppt3.csv")
 ```
 
