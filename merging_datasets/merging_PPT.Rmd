@@ -21,33 +21,42 @@ There are five rounds of performance tracker data collected for this project, in
 First let's read in the original Excel files as sent to me zipped on 2016-9-8.
 
 ```{r}
-## FIX THE DATES
 
 library(readxl)
-ppt1_round1 <- read_excel("../data/PPT-1&3 Database_1st round_May 2014_SDVC-II.xls", 
+library(lubridate)
+
+## to get the dates to read in as dates for this file, I find/replaced in Excel 
+## in the date columns, all the - and . for / and a few other cleaning tasks
+ppt1_round1 <- read_excel("../data/PPT-1&3 Database_1st round_May 2014_SDVC-II.xlsx", 
                           sheet = 1, col_types = rep("text", 58))
-ppt3_round1 <- read_excel("../data/PPT-1&3 Database_1st round_May 2014_SDVC-II.xls", 
+ppt1_round1$Date <- dmy(ppt1_round1$Date, tz = "Asia/Dhaka")
+ppt3_round1 <- read_excel("../data/PPT-1&3 Database_1st round_May 2014_SDVC-II.xlsx", 
                           sheet = 2, col_types = rep("text", 30))
+ppt3_round1$`Date of Evaluation` <- dmy(ppt3_round1$`Date of Evaluation`,
+                                        tz = "Asia/Dhaka")
+
 ppt1_round2 <- read_excel("../data/PPT-1&3 Database_2nd round_December 2014_SDVC-II.xls", 
-                          sheet = 1, col_types = rep("text", 46))
+                          sheet = 1, col_types = c(rep("text", 8), "date", rep("text", 37)))
 ppt3_round2 <- read_excel("../data/PPT-1&3 Database_2nd round_December 2014_SDVC-II.xls", 
-                          sheet = 2, col_types = rep("text", 30))
+                          sheet = 2, col_types = c(rep("text", 13), "date", rep("text", 16)))
 
 ## I did end up having to remove some blank columns from the right hand side of this one 
 ## in Excel to get it to read it without NAs and without problems with colnames/colnums
 ppt1_round3 <- read_excel("../data/PPT-1&3 Database_3rd Round_June 2015_SDVC-II.xlsx", 
-                          sheet = 1, col_types = rep("text", 57))
-
+                          sheet = 1, col_types = c(rep("text", 17), "date", rep("text", 39)))
 ppt3_round3 <- read_excel("../data/PPT-1&3 Database_3rd Round_June 2015_SDVC-II.xls", 
-                          sheet = 2, col_types = rep("text", 30))
+                          sheet = 2, col_types = c(rep("text", 13), "date", rep("text", 16)))
+
 ppt1_round4 <- read_excel("../data/PPT-1&3 Database_4th Round_ December 2015_SDVC-II.xls", 
-                          sheet = 1, col_types = rep("text", 58))
+                          sheet = 1, col_types = c(rep("text", 17), "date", rep("text", 40)))
 ppt3_round4 <- read_excel("../data/PPT-1&3 Database_4th Round_ December 2015_SDVC-II.xls", 
-                          sheet = 2, col_types = rep("text", 30))
+                          sheet = 2, col_types = c(rep("text", 13), "date", rep("text", 16)))
+
+## no date in this one
 ppt1_round5 <- read_excel("../data/PPT-1&3 Database_5th Round_June 2016_SDVC-II.xlsx", 
                           sheet = 1, col_types = rep("text", 50))
 ppt3_round5 <- read_excel("../data/PPT-1&3 Database_5th Round_June 2016_SDVC-II.xlsx", 
-                          sheet = 2, col_types = rep("text", 32))
+                          sheet = 2, col_types = c(rep("text", 14), "date", rep("text", 17)))
 ```
 
 
@@ -109,19 +118,19 @@ make_names_consistent <- function(df) {
     }
 
 ppt3_round1 <- ppt3_round1 %>%
-    rename(group_type = `Group Types (SDVC I&II=1; SDVC I&II=2)`) %>%
+    rename(producer_type = `Group Types (SDVC I&II=1; SDVC I&II=2)`) %>%
     make_names_consistent()
 
 ppt3_round2 <- ppt3_round2 %>%
-    rename(group_type = `Group Status (SDVC I&II=1;\nSDVC II=2)`) %>%
+    rename(producer_type = `Group Status (SDVC I&II=1;\nSDVC II=2)`) %>%
     make_names_consistent()
 
 ppt3_round3 <- ppt3_round3 %>%
-    rename(group_type = `Group Status (producers group from phase1=1 & Phase2 Group=2)`) %>%
+    rename(producer_type = `Group Status (producers group from phase1=1 & Phase2 Group=2)`) %>%
     make_names_consistent()
 
 ppt3_round4 <- ppt3_round4 %>%
-    rename(group_type = `Group Status (SDVC I&II=1; SDVC II=2)`) %>%
+    rename(producer_type = `Group Status (SDVC I&II=1; SDVC II=2)`) %>%
     make_names_consistent()
 
 ppt3_round5 <- ppt3_round5 %>%
@@ -136,7 +145,7 @@ ppt3_round5 <- ppt3_round5 %>%
            village = `1.8 Village/Para Name`,
            group_name = `1.9 Group Name `,
            group_code = `Group Code`,
-           group_type = `Group Status (SDVC I&II=1; SDVC II=2)`,
+           producer_type = `Group Status (SDVC I&II=1; SDVC II=2)`,
            female_producers_present = `2.2 Number of female producers present at the session`,
            male_producers_present = `2.1 Number of male producers present at the session`,
            evaluation_date = `2.3 Date of evaluation`,
@@ -158,6 +167,9 @@ ppt3_round5 <- ppt3_round5 %>%
            total = `Total Score `
         )
 
+## remove column with NA column header that "corrupts" the data frame
+ppt3_round5 <- ppt3_round5[,-32]
+
 ```
 
 Now let's bind these rows together, and then use `select` to reorder the columns how we want them.
@@ -168,9 +180,9 @@ ppt3 <- bind_rows(ppt3_round1 %>% mutate(round = 1),
                   ppt3_round3 %>% mutate(round = 3), 
                   ppt3_round4 %>% mutate(round = 4), 
                   ppt3_round5 %>% mutate(round = 5)) %>%
-    select(round, team_name, group_name, group_type, group_code, village, 
+    select(round, team_name, group_name, group_code, village, 
            union, union_code, upazila, upazila_code, 
-           district, district_code, ward_number,
+           district, district_code, ward_number, producer_type,
            female_producers_involved, male_producers_involved,
            female_producers_present, male_producers_present,
            female_producers_dropout, male_producers_dropout,
@@ -185,10 +197,10 @@ These are still all characters from when we first imported them from Excel, so l
 
 
 ```{r}
-na_count_before <-sapply(ppt3, function(y) sum(length(which(is.na(y)))))
+na_count_before <- sapply(ppt3, function(y) sum(length(which(is.na(y)))))
 
 ## now do the conversion
-ppt3[,c(4:5,8,10,12:19,22:35)] <- lapply(ppt3[,c(4:5,8,10,12:19,22:35)], as.numeric)
+ppt3[,c(4,7,9,11:19,22:35)] <- lapply(ppt3[,c(4,7,9,11:19,22:35)], as.numeric)
 
 na_count_after <-sapply(ppt3, function(y) sum(length(which(is.na(y)))))
 na_count_after - na_count_before
@@ -277,7 +289,7 @@ ppt1_round1 <- ppt1_round1 %>%
            evaluation_date = Date,
            group_code_old = `Old Group ID`,
            group_code = `New Group ID`,
-           group_type = `Producer Type (SDVC I&II=1, SDVC II=2)`,
+           producer_type = `Producer Type (SDVC I&II=1, SDVC II=2)`,
            producer_serial = Sl,
            producer_name = `Producer Name`,
            producer_id = `Producer ID`,
@@ -328,7 +340,7 @@ ppt1_round3 <- ppt1_round3 %>%
            sex = `Sex (Women=1/Man=2)`,
            guardian_name = `Spouse/Guardian Name `,
            group_leader = `Group Leader (Yes=1/No=0)`,
-           group_type = `Producer Type (SDVC I&II=1; SDVC II=2)`,
+           producer_type = `Producer Type (SDVC I&II=1; SDVC II=2)`,
            milk_yesterday_cows = `Yesterday milk how many cow?`) %>%
     make_names_consistent()
 
@@ -352,7 +364,7 @@ ppt1_round4 <- ppt1_round4 %>%
            sex = `Sex (Women=1/Man=2)`,
            guardian_name = `Spouse/Guardian Name `,
            group_leader = `Group Leader (Yes=1/No=0)`,
-           group_type = `Producer Type (SDVC I&II=1; SDVC II=2)`,
+           producer_type = `Producer Type (SDVC I&II=1; SDVC II=2)`,
            milk_yesterday_cows = `Yesterday milk how many cow?`) %>%
     make_names_consistent()
 
@@ -388,7 +400,7 @@ ppt1_round5 <- ppt1_round5 %>%
            guardian_name = `Husbandand/ Father'S Name`,
            sex = `Sex (W=1, M=2)`,
            group_leader = `Group Leader  (Yes=1; No=0)`,
-           group_type = `Producer types (SDVC I&II=1; SDVC II=2)`,
+           producer_type = `Producer types (SDVC I&II=1; SDVC II=2)`,
            producer_serial = `Producer serial at group`,
            producer_status = `Producer Status`,
            cowshed_cleanliness = ` [1] Cowshed Cleanliness`,
@@ -434,19 +446,19 @@ ppt1 <- bind_rows(ppt1_round1 %>% mutate(round = 1),
                   ppt1_round3 %>% mutate(round = 3), 
                   ppt1_round4 %>% mutate(round = 4), 
                   ppt1_round5 %>% mutate(round = 5)) %>%
-    select(round, team_name, group_name, group_type, group_code, group_code_old,
+    select(round, team_name, group_name, group_code, group_code_old,
            village, para, union, upazila, district, ward, ward_number,
            producers_involved, female_producers_involved, male_producers_involved,
            producers_present, female_producers_present, male_producers_present,
            producers_dropout, female_producers_dropout, male_producers_dropout,
            evaluation_date, facilitator,
-           producer_name, producer_id, producer_serial, producer_status,
-           sex, guardian_name, group_leader,
+           producer_name, producer_id, producer_type, producer_serial, 
+           producer_status, sex, guardian_name, group_leader,
            cowshed_cleanliness, cowshed_light, hybrid_grass, clean_grass,
            feeds_bran_oil, ready_feed, feeds_vitamin, deworms, vaccinates,
            suggestion_from_vet, ai_services, total_cows, milk_yesterday_cows,
-           increased_volume, proper_milking, feed_after_milking, market_info,
-           selling_dft, satisfied_dft, keeping_records, group_saving, 
+           milk_yesterday_volume, increased_volume, proper_milking, feed_after_milking, 
+           market_info, selling_dft, satisfied_dft, keeping_records, group_saving, 
            borrowing_loan, communicate_ku, satisfied_ku, communicated_lhw, 
            satisfied_treatment, family_support, spent_income, discuss_family,
            decision_alone, spoke_meeting, consume_milk)
@@ -455,10 +467,10 @@ ppt1 <- bind_rows(ppt1_round1 %>% mutate(round = 1),
 These are still all characters from when we first imported them from Excel, so let's again convert the appropriate columns to numeric. Again, we will check whether this makes more `NA` values.
 
 ```{r}
-na_count_before <-sapply(ppt1, function(y) sum(length(which(is.na(y)))))
+na_count_before <- sapply(ppt1, function(y) sum(length(which(is.na(y)))))
 
 ## now do the conversion
-ppt1[,c(4:6,13:22,26:27,29,31:63)] <- lapply(ppt1[,c(4:6,13:22,26:27,29,31:63)], as.numeric)
+ppt1[,c(4:5,12:21,25:27,29,31:63)] <- lapply(ppt1[,c(4:5,12:21,25:27,29,31:63)], as.numeric)
 
 na_count_after <-sapply(ppt1, function(y) sum(length(which(is.na(y)))))
 na_count_after - na_count_before
@@ -474,20 +486,20 @@ Now we can merge the two types of PPT data together for the final version of the
 ppt <- bind_rows(ppt1 %>% mutate(data_type = 'ppt1'), 
                  ppt3 %>% mutate(data_type = 'ppt3')) %>%
     select(data_type, round, 
-           team_name, group_name, group_type, group_code, group_code_old,
+           team_name, group_name, group_code, group_code_old,
            village, para, union, union_code, upazila, upazila_code, 
            district, district_code, ward, ward_number,
            producers_involved, female_producers_involved, male_producers_involved,
            producers_present, female_producers_present, male_producers_present,
            producers_dropout, female_producers_dropout, male_producers_dropout,
            evaluation_date, facilitator,
-           producer_name, producer_id, producer_serial, producer_status,
-           sex, guardian_name, group_leader,
+           producer_name, producer_id, producer_type, producer_serial, 
+           producer_status, sex, guardian_name, group_leader,
            cowshed_cleanliness, cowshed_light, hybrid_grass, clean_grass,
            feeds_bran_oil, ready_feed, feeds_vitamin, deworms, vaccinates,
            suggestion_from_vet, ai_services, total_cows, milk_yesterday_cows,
-           increased_volume, proper_milking, feed_after_milking, market_info,
-           selling_dft, satisfied_dft, keeping_records, group_saving, 
+           milk_yesterday_volume, increased_volume, proper_milking, feed_after_milking, 
+           market_info, selling_dft, satisfied_dft, keeping_records, group_saving, 
            borrowing_loan, communicate_ku, satisfied_ku, communicated_lhw, 
            satisfied_treatment, family_support, spent_income, discuss_family,
            decision_alone, spoke_meeting, consume_milk,
