@@ -177,7 +177,7 @@ ppt3 <- bind_rows(ppt3_round1 %>% mutate(round = 1),
            evaluation_date, facilitator,
            development_plan, rules_regulation, leadership_process,
            learning_sharing_space, services,
-           cow_shed_mgmt, feed_mgmt, health_mgmt, breed_dvmt, milk_mgmt,
+           cow_shed_mgmt, feed_mgmt, health_mgmt, breed_dvmt,
            milk_mgmt, milk_marketing, info_mgmt, gender_equity, total)
 ```
 
@@ -194,12 +194,7 @@ na_count_after <-sapply(ppt3, function(y) sum(length(which(is.na(y)))))
 na_count_after - na_count_before
 ```
 
-Not bad; we just made 2 more `NA` values in this data frame of 3000 rows. I think this is OK. Let's save this intermediate step as a csv.
-
-```{r}
-library(readr)
-write_csv(ppt3, "../data/ppt3.csv")
-```
+Not bad; we just made 2 more `NA` values in this data frame of 3000 rows. I think this is OK. 
 
 ## Merging the PPT1 Data
 
@@ -219,6 +214,7 @@ colnames(ppt1_round3)[c(9, 12, 15)] <- c("male_producers_involved",
 colnames(ppt1_round3)[c(10, 13, 16)] <- c("female_producers_involved",
                                           "female_producers_present",
                                           "female_producers_dropout")
+
 colnames(ppt1_round4)[c(9, 12, 15)] <- c("male_producers_involved",
                                           "male_producers_present",
                                           "male_producers_dropout")
@@ -244,7 +240,6 @@ make_names_consistent <- function(df) {
                vaccinates = `HH  vaccinate their all cattle regularly except sick and pregnant cattle With given priority on Anthrax and FMD `,
                suggestion_from_vet = `Regular take suggestion / Treatment /check-up to the cattle health from the recommended Surgeon/paravate, LHW,etc `,
                ai_services = `HH taking  AI services for high breed/high milk production during this period`,
-               
                milk_yesterday_volume = `Total milk volume (Yesterday) (in ltr.)`,
                increased_volume = `Increased volume of milk compare to before ( consider last 4 month)`,
                proper_milking = `HH knows the proper/recommended milking system (cleanliness of place, udder, teat and milking pot & complete milking practice)`,
@@ -457,8 +452,62 @@ ppt1 <- bind_rows(ppt1_round1 %>% mutate(round = 1),
            decision_alone, spoke_meeting, consume_milk)
 ```
 
-These are still all characters from when we first imported them from Excel, so let's convert the appropriate columns to numeric. This might make some `NA` values (the problem that led me to import everything as characters to start with) so let's make sure to check that.
+These are still all characters from when we first imported them from Excel, so let's again convert the appropriate columns to numeric. Again, we will check whether this makes more `NA` values.
 
+```{r}
+na_count_before <-sapply(ppt1, function(y) sum(length(which(is.na(y)))))
+
+## now do the conversion
+ppt1[,c(4:6,13:22,26:27,29,31:63)] <- lapply(ppt1[,c(4:6,13:22,26:27,29,31:63)], as.numeric)
+
+na_count_after <-sapply(ppt1, function(y) sum(length(which(is.na(y)))))
+na_count_after - na_count_before
+```
+
+No new `NA` values! Perfect.
 
 ## Merging Both Together for Final PPT Data Set
+
+Now we can merge the two types of PPT data together for the final version of the PPT data set.
+
+```{r}
+ppt <- bind_rows(ppt1 %>% mutate(data_type = 'ppt1'), 
+                 ppt3 %>% mutate(data_type = 'ppt3')) %>%
+    select(data_type, round, 
+           team_name, group_name, group_type, group_code, group_code_old,
+           village, para, union, union_code, upazila, upazila_code, 
+           district, district_code, ward, ward_number,
+           producers_involved, female_producers_involved, male_producers_involved,
+           producers_present, female_producers_present, male_producers_present,
+           producers_dropout, female_producers_dropout, male_producers_dropout,
+           evaluation_date, facilitator,
+           producer_name, producer_id, producer_serial, producer_status,
+           sex, guardian_name, group_leader,
+           cowshed_cleanliness, cowshed_light, hybrid_grass, clean_grass,
+           feeds_bran_oil, ready_feed, feeds_vitamin, deworms, vaccinates,
+           suggestion_from_vet, ai_services, total_cows, milk_yesterday_cows,
+           increased_volume, proper_milking, feed_after_milking, market_info,
+           selling_dft, satisfied_dft, keeping_records, group_saving, 
+           borrowing_loan, communicate_ku, satisfied_ku, communicated_lhw, 
+           satisfied_treatment, family_support, spent_income, discuss_family,
+           decision_alone, spoke_meeting, consume_milk,
+           development_plan, rules_regulation, leadership_process,
+           learning_sharing_space, services,
+           cow_shed_mgmt, feed_mgmt, health_mgmt, breed_dvmt,
+           milk_mgmt, milk_marketing, info_mgmt, gender_equity, total)
+```
+
+We did it! What does this look like?
+
+```{r}
+dim(ppt)
+kable(head(ppt, n = 20))
+```
+
+Let's save this as a csv.
+
+```{r}
+library(readr)
+write_csv(ppt, "../data/ppt_merged.csv")
+```
 
