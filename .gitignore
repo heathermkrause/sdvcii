@@ -2,6 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+merging_datasets/rsconnect
 merging_datasets/*cache
 merging_datasets/*files
 merging_datasets/*html
