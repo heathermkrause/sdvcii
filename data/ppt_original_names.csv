@@ -1,0 +1,435 @@
+ppt_type,round,names
+ppt1,1.0,Team
+ppt1,1.0,Group Name
+ppt1,1.0,Village
+ppt1,1.0, Union  
+ppt1,1.0, Upazilla  
+ppt1,1.0, District 
+ppt1,1.0,# of Producers involve in the group
+ppt1,1.0,Man       
+ppt1,1.0,Women 
+ppt1,1.0,# of Producers present at the session
+ppt1,1.0,Men       
+ppt1,1.0,Women 
+ppt1,1.0,# of drop out since last session
+ppt1,1.0,Men       
+ppt1,1.0,Women 
+ppt1,1.0,Name & designation of Facilitator
+ppt1,1.0,Date
+ppt1,1.0,Old Group ID
+ppt1,1.0,New Group ID
+ppt1,1.0,"Producer Type (SDVC I&II=1, SDVC II=2)"
+ppt1,1.0,Sl
+ppt1,1.0,Producer Name
+ppt1,1.0,Producer ID
+ppt1,1.0,Sex (Women=1/Man=2)
+ppt1,1.0,Spouse/Guardian Name 
+ppt1,1.0,Group Leader (Yes=1/No=0)
+ppt1,1.0,Clean cow shed and maintain disposal system regularly (cow dung & others)
+ppt1,1.0,"Proper ventilation , lights with sufficient security measurement available ( Window, sifficient light & air, net, smoke, finish liquid, coil  etc)"
+ppt1,1.0,Produces Hybrid grass
+ppt1,1.0,Collected grass are ensured proper cleanliness during feeding
+ppt1,1.0,HH feeds at least any Bran and Oil cake
+ppt1,1.0,HH feeds their cattle any brand ready feed ( Ready Feed)
+ppt1,1.0,"HH feeds any type Vitamin mineral premix (DCP, DB mix, liquid)"
+ppt1,1.0,HH regularly De-worm their all cattle except sick and pregnant cattle
+ppt1,1.0,HH  vaccinate their all cattle regularly except sick and pregnant cattle With given priority on Anthrax and FMD 
+ppt1,1.0,"Regular take suggestion / Treatment /check-up to the cattle health from the recommended Surgeon/paravate, LHW,etc "
+ppt1,1.0,HH taking  AI services for high breed/high milk production during this period
+ppt1,1.0,# of total of cow
+ppt1,1.0,Total milk volume (Yesterday) (in ltr.)
+ppt1,1.0,Increased volume of milk compare to before ( consider last 4 month)
+ppt1,1.0,"HH knows the proper/recommended milking system (cleanliness of place, udder, teat and milking pot & complete milking practice)"
+ppt1,1.0,Feeds the cow just after milking
+ppt1,1.0,Using market information for decision making
+ppt1,1.0,HH presently selling milk to DFT collection point
+ppt1,1.0,"I am satisfied with overall DFT servise (payment, delivery, domentation etc)"
+ppt1,1.0,"Keeping record on individual milk production, sales and production cost "
+ppt1,1.0,I involve with group saving (weekly/monthly)
+ppt1,1.0,Taking loan from group saving/ others FI's easily for dairy purpose
+ppt1,1.0,"Frequintly communicate to input shops(KU) to purchase feed ,medicine and other services"
+ppt1,1.0,I am satisfied with overall Krishi Utsho (KU) servises
+ppt1,1.0,Communicated with LHW and AI on treatment issues as when required
+ppt1,1.0,"I am satisfied with overall Treatment servises (dewarming, vaccination and AI)"
+ppt1,1.0,"My Spouse/other family members support me while I work to dairy purpose (Cow shed cleanning, fodder cultivation, feeding, milking etc)"
+ppt1,1.0,I spent comfortably the milk sales income for HH & own purpose as when required
+ppt1,1.0,I discussed with my family member regarding dairy related decision making
+ppt1,1.0,"I can take decision along regarding dewarming, vaccination services as when required"
+ppt1,1.0,I spoke comfortably in the group meeting 
+ppt1,1.0,We consume our produced milk and gave preference to the children & women
+ppt1,2.0,Team
+ppt1,2.0,Group Name
+ppt1,2.0,Group Code
+ppt1,2.0,Village
+ppt1,2.0,Union  
+ppt1,2.0,Upazilla   
+ppt1,2.0,District 
+ppt1,2.0,Name & designation of Facilitator
+ppt1,2.0,Date of Evaluation
+ppt1,2.0,Producer Name
+ppt1,2.0,Producer ID
+ppt1,2.0,Sex (Women=1/Man=2)
+ppt1,2.0,Spouse/Guardian Name 
+ppt1,2.0,Group Leader (Yes=1/No=0)
+ppt1,2.0,Clean cow shed and maintain disposal system regularly (cow dung & others)
+ppt1,2.0,"Proper ventilation , lights with sufficient security measurement available ( Window, sifficient light & air, net, smoke, finish liquid, coil  etc)"
+ppt1,2.0,Produces Hybrid grass
+ppt1,2.0,Collected grass are ensured proper cleanliness during feeding
+ppt1,2.0,HH feeds at least any Bran and Oil cake
+ppt1,2.0,HH feeds their cattle any brand ready feed ( Ready Feed)
+ppt1,2.0,"HH feeds any type Vitamin mineral premix (DCP, DB mix, liquid)"
+ppt1,2.0,HH regularly De-worm their all cattle except sick and pregnant cattle
+ppt1,2.0,HH  vaccinate their all cattle regularly except sick and pregnant cattle With given priority on Anthrax and FMD 
+ppt1,2.0,"Regular take suggestion / Treatment /check-up to the cattle health from the recommended Surgeon/paravate, LHW,etc "
+ppt1,2.0,HH taking  AI services for high breed/high milk production during this period
+ppt1,2.0,Yesterday's milk from how many cow?
+ppt1,2.0,Total milk volume (Yesterday) (in ltr.)
+ppt1,2.0,Increased volume of milk compare to before ( consider last 4 month)
+ppt1,2.0,"HH knows the proper/recommended milking system (cleanliness of place, udder, teat and milking pot & complete milking practice)"
+ppt1,2.0,Feeds the cow just after milking
+ppt1,2.0,Using market information for decision making
+ppt1,2.0,HH presently selling milk to DFT collection point
+ppt1,2.0,"I am satisfied with overall DFT servise (payment, delivery, domentation etc)"
+ppt1,2.0,"Keeping record on individual milk production, sales and production cost "
+ppt1,2.0,I involve with group saving (weekly/monthly)
+ppt1,2.0,Taking loan from group saving/ others FI's easily for dairy purpose
+ppt1,2.0,"Frequintly communicate to input shops(KU) to purchase feed ,medicine and other services"
+ppt1,2.0,I am satisfied with overall Krishi Utsho (KU) servises
+ppt1,2.0,Communicated with LHW and AI on treatment issues as when required
+ppt1,2.0,"I am satisfied with overall Treatment servises (dewarming, vaccination and AI)"
+ppt1,2.0,"My Spouse/other family members support me while I work to dairy purpose (Cow shed cleanning, fodder cultivation, feeding, milking etc)"
+ppt1,2.0,I spent comfortably the milk sales income for HH & own purpose as when required
+ppt1,2.0,I discussed with my family member regarding dairy related decision making
+ppt1,2.0,"I can take decision along regarding dewarming, vaccination services as when required"
+ppt1,2.0,I spoke comfortably in the group meeting 
+ppt1,2.0,We consume our produced milk and gave preference to the children & women
+ppt1,3.0,Team:
+ppt1,3.0,Group Name:
+ppt1,3.0,Group Code
+ppt1,3.0,Village
+ppt1,3.0, Union:    
+ppt1,3.0, Upazilla:   
+ppt1,3.0, District: 
+ppt1,3.0,# of Producers involve in the group:
+ppt1,3.0,Man:       
+ppt1,3.0,Women: 
+ppt1,3.0,# of Producers present at the session:
+ppt1,3.0,Man:       
+ppt1,3.0,Women: 
+ppt1,3.0,# of drop out since last session:
+ppt1,3.0,Man:       
+ppt1,3.0,Women: 
+ppt1,3.0,Name & designation of Facilitator:
+ppt1,3.0,Date:
+ppt1,3.0,Sl
+ppt1,3.0,Producer Name
+ppt1,3.0,Producer ID
+ppt1,3.0,Sex (Women=1/Man=2)
+ppt1,3.0,Spouse/Guardian Name 
+ppt1,3.0,Group Leader (Yes=1/No=0)
+ppt1,3.0,Producer Type (SDVC I&II=1; SDVC II=2)
+ppt1,3.0,Clean cow shed and maintain disposal system regularly (cow dung & others)
+ppt1,3.0,"Proper ventilation , lights with sufficient security measurement available ( Window, sifficient light & air, net, smoke, finish liquid, coil  etc)"
+ppt1,3.0,Produces Hybrid grass
+ppt1,3.0,Collected grass are ensured proper cleanliness during feeding
+ppt1,3.0,HH feeds at least any Bran and Oil cake
+ppt1,3.0,HH feeds their cattle any brand ready feed ( Ready Feed)
+ppt1,3.0,"HH feeds any type Vitamin mineral premix (DCP, DB mix, liquid)"
+ppt1,3.0,HH regularly De-worm their all cattle except sick and pregnant cattle
+ppt1,3.0,HH  vaccinate their all cattle regularly except sick and pregnant cattle With given priority on Anthrax and FMD 
+ppt1,3.0,"Regular take suggestion / Treatment /check-up to the cattle health from the recommended Surgeon/paravate, LHW,etc "
+ppt1,3.0,HH taking  AI services for high breed/high milk production during this period
+ppt1,3.0,Yesterday milk how many cow?
+ppt1,3.0,Total milk volume (Yesterday) (in ltr.)
+ppt1,3.0,Increased volume of milk compare to before ( consider last 4 month)
+ppt1,3.0,"HH knows the proper/recommended milking system (cleanliness of place, udder, teat and milking pot & complete milking practice)"
+ppt1,3.0,Feeds the cow just after milking
+ppt1,3.0,Using market information for decision making
+ppt1,3.0,HH presently selling milk to DFT collection point
+ppt1,3.0,"I am satisfied with overall DFT servise (payment, delivery, domentation etc)"
+ppt1,3.0,"Keeping record on individual milk production, sales and production cost "
+ppt1,3.0,I involve with group saving (weekly/monthly)
+ppt1,3.0,Taking loan from group saving/ others FI's easily for dairy purpose
+ppt1,3.0,"Frequintly communicate to input shops(KU) to purchase feed ,medicine and other services"
+ppt1,3.0,I am satisfied with overall Krishi Utsho (KU) servises
+ppt1,3.0,Communicated with LHW and AI on treatment issues as when required
+ppt1,3.0,"I am satisfied with overall Treatment servises (dewarming, vaccination and AI)"
+ppt1,3.0,"My Spouse/other family members support me while I work to dairy purpose (Cow shed cleanning, fodder cultivation, feeding, milking etc)"
+ppt1,3.0,I spent comfortably the milk sales income for HH & own purpose as when required
+ppt1,3.0,I discussed with my family member regarding dairy related decision making
+ppt1,3.0,"I can take decision along regarding dewarming, vaccination services as when required"
+ppt1,3.0,I spoke comfortably in the group meeting 
+ppt1,3.0,We consume our produced milk and gave preference to the children & women
+ppt1,4.0,Team:
+ppt1,4.0,Group Name:
+ppt1,4.0,Group Code
+ppt1,4.0,Village
+ppt1,4.0, Union:    
+ppt1,4.0, Upazilla:   
+ppt1,4.0, District: 
+ppt1,4.0,# of Producers involve in the group:
+ppt1,4.0,Man:       
+ppt1,4.0,Women: 
+ppt1,4.0,# of Producers present at the session:
+ppt1,4.0,Man:       
+ppt1,4.0,Women: 
+ppt1,4.0,# of drop out since last session:
+ppt1,4.0,Man:       
+ppt1,4.0,Women: 
+ppt1,4.0,Name & designation of Facilitator:
+ppt1,4.0,Date
+ppt1,4.0,Sl
+ppt1,4.0,Producer Name
+ppt1,4.0,Producer ID
+ppt1,4.0,Sex (Women=1/Man=2)
+ppt1,4.0,Spouse/Guardian Name 
+ppt1,4.0,Group Leader (Yes=1/No=0)
+ppt1,4.0,Producer Type (SDVC I&II=1; SDVC II=2)
+ppt1,4.0,Clean cow shed and maintain disposal system regularly (cow dung & others)
+ppt1,4.0,"Proper ventilation , lights with sufficient security measurement available ( Window, sifficient light & air, net, smoke, finish liquid, coil  etc)"
+ppt1,4.0,Produces Hybrid grass
+ppt1,4.0,Collected grass are ensured proper cleanliness during feeding
+ppt1,4.0,HH feeds at least any Bran and Oil cake
+ppt1,4.0,HH feeds their cattle any brand ready feed ( Ready Feed)
+ppt1,4.0,"HH feeds any type Vitamin mineral premix (DCP, DB mix, liquid)"
+ppt1,4.0,HH regularly De-worm their all cattle except sick and pregnant cattle
+ppt1,4.0,HH  vaccinate their all cattle regularly except sick and pregnant cattle With given priority on Anthrax and FMD 
+ppt1,4.0,"Regular take suggestion / Treatment /check-up to the cattle health from the recommended Surgeon/paravate, LHW,etc "
+ppt1,4.0,HH taking  AI services for high breed/high milk production during this period
+ppt1,4.0,Yesterday milk how many cow?
+ppt1,4.0,Total milk volume (Yesterday) (in ltr.)
+ppt1,4.0,Increased volume of milk compare to before ( consider last 4 month)
+ppt1,4.0,"HH knows the proper/recommended milking system (cleanliness of place, udder, teat and milking pot & complete milking practice)"
+ppt1,4.0,Feeds the cow just after milking
+ppt1,4.0,Using market information for decision making
+ppt1,4.0,HH presently selling milk to DFT collection point
+ppt1,4.0,"I am satisfied with overall DFT servise (payment, delivery, domentation etc)"
+ppt1,4.0,"Keeping record on individual milk production, sales and production cost "
+ppt1,4.0,I involve with group saving (weekly/monthly)
+ppt1,4.0,Taking loan from group saving/ others FI's easily for dairy purpose
+ppt1,4.0,"Frequintly communicate to input shops(KU) to purchase feed ,medicine and other services"
+ppt1,4.0,I am satisfied with overall Krishi Utsho (KU) servises
+ppt1,4.0,Communicated with LHW and AI on treatment issues as when required
+ppt1,4.0,"I am satisfied with overall Treatment servises (dewarming, vaccination and AI)"
+ppt1,4.0,"My Spouse/other family members support me while I work to dairy purpose (Cow shed cleanning, fodder cultivation, feeding, milking etc)"
+ppt1,4.0,I spent comfortably the milk sales income for HH & own purpose as when required
+ppt1,4.0,I discussed with my family member regarding dairy related decision making
+ppt1,4.0,"I can take decision along regarding dewarming, vaccination services as when required"
+ppt1,4.0,I spoke comfortably in the group meeting 
+ppt1,4.0,We consume our produced milk and gave preference to the children & women
+ppt1,4.0,Remarks
+ppt1,5.0,Team Name
+ppt1,5.0,District
+ppt1,5.0,Upazila
+ppt1,5.0,Union/Ward
+ppt1,5.0,Ward #
+ppt1,5.0,Village
+ppt1,5.0,Para
+ppt1,5.0,Group Name
+ppt1,5.0,Group Code
+ppt1,5.0,Producer's Code
+ppt1,5.0,Producer Name
+ppt1,5.0,Husbandand/ Father'S Name
+ppt1,5.0,"Sex (W=1, M=2)"
+ppt1,5.0,Group Leader  (Yes=1; No=0)
+ppt1,5.0,Producer types (SDVC I&II=1; SDVC II=2)
+ppt1,5.0,Producer serial at group
+ppt1,5.0,Producer Code
+ppt1,5.0,Producer Status
+ppt1,5.0, [1] Cowshed Cleanliness
+ppt1,5.0, [2] Sufficient Light and Ventilation in Cowshed
+ppt1,5.0, [3] Produce Hybrid grass
+ppt1,5.0, [4] Clean Collected Grass and Feed Cows
+ppt1,5.0, [5] HH feeds at least any Bran and Oil cake
+ppt1,5.0," [6] HH feeds any type Vitamin mineral premix (DCP, DB mix, liquid)"
+ppt1,5.0, [7] HH regularly De-worm their all cattle except sick and pregnant cattle
+ppt1,5.0, [8] HH regularly De-worm their all cattle except sick and pregnant cattle
+ppt1,5.0, [9] HH  vaccinate their all cattle regularly except sick and pregnant cattle With given priority on Anthrax and FMD 
+ppt1,5.0," [10] Regular take suggestion / Treatment /check-up to the cattle health from the recommended Surgeon/paravate, LHW,etc "
+ppt1,5.0, [11] HH taking  AI services for high breed/high milk production during this period
+ppt1,5.0,[12] Yesterday's milk produced from how many cow?
+ppt1,5.0,[13] Total milk volume yesterday (in ltr
+ppt1,5.0, [14] Increased volume of milk compare to before ( consider last 4 month)
+ppt1,5.0," [15] HH knows the proper/recommended milking system (cleanliness of place, udder, teat and milking pot & complete milking practice)"
+ppt1,5.0, [16] Feeds the cow just after milking
+ppt1,5.0, [17] Using market information for decision making
+ppt1,5.0, [18] HH presently selling milk to DFT collection point
+ppt1,5.0," [19] I am satisfied with overall DFT servise (payment, delivery, domentation etc)"
+ppt1,5.0," [20] Keeping record on individual milk production, sales and production cost "
+ppt1,5.0, [21] I involve with group saving (weekly/monthly)
+ppt1,5.0, [22] Taking loan from group saving/ others FI's easily for dairy purpose
+ppt1,5.0," [23] Frequintly communicate to input shops(KU) to purchase feed ,medicine and other services"
+ppt1,5.0, [24] I am satisfied with overall Krishi Utsho (KU) servises
+ppt1,5.0, [25] Communicated with LHW and AI on treatment issues as when required
+ppt1,5.0," [26] I am satisfied with overall Treatment servises (dewarming, vaccination and AI)"
+ppt1,5.0," [27] My Spouse/other family members support me while I work to dairy purpose (Cow shed cleanning, fodder cultivation, feeding, milking etc)"
+ppt1,5.0, [28] I spent comfortably the milk sales income for HH & own purpose as when required
+ppt1,5.0, [29] I discusse with my family member regarding dairy related decision making
+ppt1,5.0," [30] I can take decision alone regarding dewarming, vaccination services as when required"
+ppt1,5.0, [31] I spoke comfortably in the group meeting 
+ppt1,5.0, [32] We consume our produced milk and gave preference to the children & women
+ppt3,1.0,Team Name
+ppt3,1.0,Group Name
+ppt3,1.0,Group Types (SDVC I&II=1; SDVC I&II=2)
+ppt3,1.0,Group Code
+ppt3,1.0,Village 
+ppt3,1.0,Union
+ppt3,1.0,Upazila
+ppt3,1.0,District
+ppt3,1.0,Total # of Female Producers involve at the group
+ppt3,1.0,Total # of male Producers involve at the group
+ppt3,1.0,# of Female Producers present at the session
+ppt3,1.0,# of male Producers present at the session
+ppt3,1.0,# of female  drop out
+ppt3,1.0,# of male  drop out
+ppt3,1.0,Date of Evaluation
+ppt3,1.0,Name & designation of Facilitator:
+ppt3,1.0,"Group Operational & Dairy Development Plan
+Group Operational & Dairy Development Plan
+"
+ppt3,1.0,"Rules & Regulation
+"
+ppt3,1.0,Leadership Process 
+ppt3,1.0,Learning Sharing Space
+ppt3,1.0,Access to Services/ External Relationship
+ppt3,1.0,Project promoted Key practice adaptation status: Cow Shed Management
+ppt3,1.0,Project promoted Key practice adaptation status: Feed Management
+ppt3,1.0,Project promoted Key practice adaptation status: Health Management
+ppt3,1.0,Project promoted Key practice adaptation status: Breed Development
+ppt3,1.0,Milk Management
+ppt3,1.0,Milk Marketing
+ppt3,1.0,Information Management (Record Keeping)
+ppt3,1.0,Gender Equity 
+ppt3,1.0,Total 
+ppt3,2.0,Team Name
+ppt3,2.0,Group Name
+ppt3,2.0,Group Code
+ppt3,2.0,Village 
+ppt3,2.0,Union
+ppt3,2.0,Upazila
+ppt3,2.0,District
+ppt3,2.0,Total # of Female Producers involve at the group
+ppt3,2.0,Total # of male Producers involve at the group
+ppt3,2.0,# of Female Producers present at the session
+ppt3,2.0,# of male Producers present at the session
+ppt3,2.0,# of female  drop out
+ppt3,2.0,# of male  drop out
+ppt3,2.0,Date of Evaluation
+ppt3,2.0,Name & designation of Facilitator:
+ppt3,2.0,"Group Operational & Dairy Development Plan
+Group Operational & Dairy Development Plan
+"
+ppt3,2.0,"Rules & Regulation
+"
+ppt3,2.0,Leadership Process 
+ppt3,2.0,Learning Sharing Space
+ppt3,2.0,Access to Services/ External Relationship
+ppt3,2.0,Project promoted Key practice adaptation status: Cow Shed Management
+ppt3,2.0,Project promoted Key practice adaptation status: Feed Management
+ppt3,2.0,Project promoted Key practice adaptation status: Health Management
+ppt3,2.0,Project promoted Key practice adaptation status: Breed Development
+ppt3,2.0,Milk Management
+ppt3,2.0,Milk Marketing
+ppt3,2.0,Information Management (Record Keeping)
+ppt3,2.0,Gender Equity 
+ppt3,2.0,Total 
+ppt3,2.0,"Group Status (SDVC I&II=1;
+SDVC II=2)"
+ppt3,3.0,Team Name
+ppt3,3.0,Group Name
+ppt3,3.0,Group Code
+ppt3,3.0,Village 
+ppt3,3.0,Union
+ppt3,3.0,Upazila
+ppt3,3.0,District
+ppt3,3.0,Total # of Female Producers involve at the group
+ppt3,3.0,Total # of male Producers involve at the group
+ppt3,3.0,# of Female Producers present at the session
+ppt3,3.0,# of male Producers present at the session
+ppt3,3.0,# of female  drop out
+ppt3,3.0,# of male  drop out
+ppt3,3.0,Date of Evaluation
+ppt3,3.0,Name & designation of Facilitator:
+ppt3,3.0,"Group Operational & Dairy Development Plan
+Group Operational & Dairy Development Plan
+"
+ppt3,3.0,"Rules & Regulation
+"
+ppt3,3.0,Leadership Process 
+ppt3,3.0,Learning Sharing Space
+ppt3,3.0,Access to Services/ External Relationship
+ppt3,3.0,Project promoted Key practice adaptation status: Cow Shed Management
+ppt3,3.0,Project promoted Key practice adaptation status: Feed Management
+ppt3,3.0,Project promoted Key practice adaptation status: Health Management
+ppt3,3.0,Project promoted Key practice adaptation status: Breed Development
+ppt3,3.0,Milk Management
+ppt3,3.0,Milk Marketing
+ppt3,3.0,Information Management (Record Keeping)
+ppt3,3.0,Gender Equity 
+ppt3,3.0,Total 
+ppt3,3.0,Group Status (producers group from phase1=1 & Phase2 Group=2)
+ppt3,4.0,Team Name
+ppt3,4.0,Group Name
+ppt3,4.0,Group Code
+ppt3,4.0,Village 
+ppt3,4.0,Union
+ppt3,4.0,Upazila
+ppt3,4.0,District
+ppt3,4.0,Total # of Female Producers involve at the group
+ppt3,4.0,Total # of male Producers involve at the group
+ppt3,4.0,# of Female Producers present at the session
+ppt3,4.0,# of male Producers present at the session
+ppt3,4.0,# of female  drop out
+ppt3,4.0,# of male  drop out
+ppt3,4.0,Date of Evaluation
+ppt3,4.0,Name & designation of Facilitator:
+ppt3,4.0,"Group Operational & Dairy Development Plan
+Group Operational & Dairy Development Plan
+"
+ppt3,4.0,"Rules & Regulation
+"
+ppt3,4.0,Leadership Process 
+ppt3,4.0,Learning Sharing Space
+ppt3,4.0,Access to Services/ External Relationship
+ppt3,4.0,Project promoted Key practice adaptation status: Cow Shed Management
+ppt3,4.0,Project promoted Key practice adaptation status: Feed Management
+ppt3,4.0,Project promoted Key practice adaptation status: Health Management
+ppt3,4.0,Project promoted Key practice adaptation status: Breed Development
+ppt3,4.0,Milk Management
+ppt3,4.0,Milk Marketing
+ppt3,4.0,Information Management (Record Keeping)
+ppt3,4.0,Gender Equity 
+ppt3,4.0,Total 
+ppt3,4.0,Group Status (SDVC I&II=1; SDVC II=2)
+ppt3,5.0,1.1 Team name
+ppt3,5.0,1.2 District Name 
+ppt3,5.0,District Code
+ppt3,5.0,1.3 Upazila
+ppt3,5.0,1.4 Upazila Code
+ppt3,5.0,1.5 Union Name
+ppt3,5.0,1.6 Union Code
+ppt3,5.0,1.7 Ward Number
+ppt3,5.0,1.8 Village/Para Name
+ppt3,5.0,1.9 Group Name 
+ppt3,5.0,Group Code
+ppt3,5.0,Group Status (SDVC I&II=1; SDVC II=2)
+ppt3,5.0,2.1 Number of male producers present at the session
+ppt3,5.0,2.2 Number of female producers present at the session
+ppt3,5.0,2.3 Date of evaluation
+ppt3,5.0,2.4 Types of main facilitator
+ppt3,5.0,2.5 Responsible FF
+ppt3,5.0,3.1 Group Operational & Dairy Development Plan
+ppt3,5.0,3.2 Rules & Regulations
+ppt3,5.0,3.3 Leadership Process 
+ppt3,5.0,3.4 Learning Sharing Space
+ppt3,5.0,3.5 Access to Services/ External Relationship
+ppt3,5.0,3.6 Project promoted Key practice adaptation status: Cow Shed Management
+ppt3,5.0,3.7 Project promoted Key practice adaptation status: Feed Management
+ppt3,5.0,3.8 Project promoted Key practice adaptation status: Health Management
+ppt3,5.0,3.9 Project promoted Key practice adaptation status: Breed Development
+ppt3,5.0,3.10 Milk Management
+ppt3,5.0,3.11 Marketing 
+ppt3,5.0,3.12 Information Management (Record Keeping)
+ppt3,5.0,3.13 Gender Equity 
+ppt3,5.0,Total Score 
+ppt3,5.0,NA
