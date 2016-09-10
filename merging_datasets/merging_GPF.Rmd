@@ -1,0 +1,71 @@
+---
+title: "Merging the GPF Datasets"
+subtitle: "Strengthening the Dairy Value Chain"
+author: "Julia Silge"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: leonids
+---
+
+```{r, echo = FALSE, warning = FALSE}
+library(knitr)
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, dpi = 180)
+options(width=80, dplyr.width = 150)
+```
+
+There are five rounds of group performance format (GPF) data collected for this project, in July 2014, December 2014, July 2015, December 2015, and August 2016. Let's work on munging, tidying, and merging these five data sets.
+
+## Reading In the Data
+
+First let's read in the file of already merged data for rounds 1 through 4, downloaded from the Google Drive folder.
+
+```{r}
+library(readr)
+old_gpf_merged <- read_csv("../data/CleanedMergedGFPRounds1234January2016.csv")
+```
+
+There are some minor problems with this file; it is not super clean CSV. If we have time, I might want to re-merge the previous rounds. Here are some examples of the issues.
+
+```{r}
+kable(tail(problems(old_gpf_merged), 15))
+```
+
+Anyway, let's read in the original Excel files for round 5, downloaded from the Google Drive folder.
+
+```{r}
+library(readxl)
+library(dplyr)
+control_round5 <- left_join(read_excel("../data/SDVCII HH Survey_Excel Version_OSS_05092016.xlsx",
+                                       sheet = 1),
+                            read_excel("../data/SDVCII HH Survey_Excel Version_OSS_05092016.xlsx", 
+                                       sheet = 3, col_types = c("numeric", rep("text", 127))), 
+                            by = "DEO ID") %>%
+    left_join(read_excel("../data/SDVCII HH Survey_Excel Version_OSS_05092016.xlsx", 
+                         sheet = 4, col_types = c("numeric", rep("text", 51))),
+              by = "DEO ID") %>%
+    left_join(read_excel("../data/SDVCII HH Survey_Excel Version_OSS_05092016.xlsx", 
+                         sheet = 5, col_types = c("numeric", rep("text", 127))),
+              by = "DEO ID")
+
+control_round5_cows <- read_excel("../data/SDVCII HH Survey_Excel Version_OSS_05092016.xlsx",
+                                  sheet = 2)
+    
+
+treatment_round5 <- left_join(read_excel("../data/3. SDVCII Endline Database_ August 2016_CARE.xlsx",
+                                         sheet = 1),
+                              read_excel("../data/3. SDVCII Endline Database_ August 2016_CARE.xlsx", 
+                                         sheet = 3, col_types = c("numeric", rep("text", 65))), 
+                              by = "DEO ID") %>%
+    left_join(read_excel("../data/3. SDVCII Endline Database_ August 2016_CARE.xlsx", 
+                         sheet = 4, col_types = c("numeric", rep("text", 51))),
+              by = "DEO ID") %>%
+    left_join(read_excel("../data/3. SDVCII Endline Database_ August 2016_CARE.xlsx", 
+                         sheet = 5, col_types = c("numeric", rep("text", 127))),
+              by = "DEO ID")
+
+treatment_round5_cows <- read_excel("../data/3. SDVCII Endline Database_ August 2016_CARE.xlsx",
+                                    sheet = 2)
+
+```
+
