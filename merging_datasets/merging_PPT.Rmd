@@ -523,3 +523,10 @@ library(readr)
 write_csv(ppt, "../data/ppt_merged.csv")
 ```
 
+Let's also save the original names as a csv to be able to look at.
+
+```{r}
+library(tidyr)
+write_csv(original_names %>% unnest(names), "../data/ppt_original_names.csv")
+```
+
