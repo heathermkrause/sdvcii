@@ -16,7 +16,7 @@ options(width=80, dplyr.width = 150)
 
 There are five rounds of group performance format (GPF) data collected for this project, in July 2014, December 2014, July 2015, December 2015, and August 2016. Let's work on munging, tidying, and merging these five data sets.
 
-## Reading In the Data
+## Reading in the Original Data
 
 First let's read in the file of already merged data for rounds 1 through 4, downloaded from the Google Drive folder.
 
@@ -30,6 +30,8 @@ There are some minor problems with this file; it is not super clean CSV. If we h
 ```{r}
 kable(tail(problems(old_gpf_merged), 15))
 ```
+
+## Reading in Round 5
 
 Anyway, let's read in the original Excel files for round 5, downloaded from the Google Drive folder.
 
@@ -69,3 +71,235 @@ treatment_round5_cows <- read_excel("../data/3. SDVCII Endline Database_ August 
 
 ```
 
+## Reading in Round 4
+
+```{r}
+treatment_round4 <- left_join(read_excel("../data/gpf_round4/Basic Information.xlsx"),
+                              read_excel("../data/gpf_round4/Module 2.xlsx"),
+                              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round4/Module 3 Milk Consumption.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round4/Module 4.xlsx",
+                         col_types = c("numeric", rep("text", 53))),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round4/Module 5 Expenditure.xlsx",
+                         col_types = c("numeric", rep("text", 54))),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round4/Module  6.xlsx"),
+              by = c("DEO SL" = "Deo SL")) %>%
+    left_join(read_excel("../data/gpf_round4/Module 7.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round4/Module 7 Cattle Died Information.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round4/Module 8.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round4/Modiul 9.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round4/Module 10.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round4/Module 11.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round4/Module 12.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round4/Module 13 first part.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round4/Module 13 Last Part.xlsx",
+                         col_types = c("numeric", rep("text", 28))),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round4/Module 13 Women Asset Information.xlsx",
+                         col_types = c("numeric", rep("text", 13))),
+              by = "DEO SL")
+
+treatment_round4_cows <- read_excel("../data/gpf_round4/Module 3 Cattle Information.xlsx")
+```
+
+
+## Reading in Round 3
+
+```{r}
+treatment_round3 <- left_join(read_excel("../data/gpf_round3/Module 1.xlsx"),
+                              read_excel("../data/gpf_round3/Module 2.xlsx"),
+                              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round3/Module 3 Milk Consumption.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round3/Module 4 of 4.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round3/Module 5 Expenditure.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round3/Module  6.xlsx"),
+              by = c("DEO SL" = "Deo SL")) %>%
+    left_join(read_excel("../data/gpf_round3/Module 7.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round3/Module 7 Cattle Died Information.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round3/Modiul 8.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round3/Modiul 9.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round3/Module 10.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round3/Module 11.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round3/Module 12.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round3/Module 13 first part.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round3/Module 13 Last Part.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round3/Module 13 Women Asset Information.xlsx"),
+              by = "DEO SL")
+
+treatment_round3_cows <- read_excel("../data/gpf_round3/Module 3 Cattle Information.xlsx")
+```
+
+## Reading in Round 2
+
+```{r}
+treatment_round2 <- left_join(read_excel("../data/gpf_round2/Module 1.xlsx"),
+                              read_excel("../data/gpf_round2/Module 2.xlsx"),
+                              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round2/Module 3 Milk Consumption.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round2/Module 4.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round2/Module 5 Expenditure.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round2/Module 6.xlsx"),
+              by = c("DEO SL" = "Deo SL")) %>%
+    left_join(read_excel("../data/gpf_round2/Module 7.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round2/Module 7 Cattle Died Information.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round2/Module 8.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round2/Module 9.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round2/Module 10.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round2/Module 11.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round2/Module 12.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round2/Module 13 first part.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round2/Module 13 Last Part.xlsx"),
+              by = "DEO SL") %>%
+    left_join(read_excel("../data/gpf_round2/Module 13 Women Asset Information.xlsx"),
+              by = "DEO SL")
+
+treatment_round2_cows <- read_excel("../data/gpf_round2/Module 3 Cattle Information.xlsx")
+```
+
+## Reading in Round 1
+
+```{r}
+treatment_round1 <- read_excel("../data/SDVC II Baseline.xlsx",
+                               sheet = 1,
+                               col_types = rep("text", 469))
+```
+
+Let's do some date handling while we're here.
+
+```{r}
+library(lubridate)
+library(stringr)
+grep("calvingdate", names(treatment_round1), value = TRUE)
+
+treatment_round1 <- treatment_round1 %>% 
+    mutate(Cow1Lastcalvingdate = dmy(Cow1Lastcalvingdate)) %>%
+    mutate(Cow2Lastcalvingdate = dmy(Cow2Lastcalvingdate)) %>%
+    mutate(Cow3Lastcalvingdate = dmy(Cow3Lastcalvingdate)) %>%
+    mutate(Cow4Lastcalvingdate = dmy(Cow4Lastcalvingdate)) %>%
+    mutate(Cow5Lastcalvingdate = dmy(Cow5Lastcalvingdate)) %>%
+    mutate(Cow6Lastcalvingdate = dmy(Cow6Lastcalvingdate)) %>%
+    mutate(Cow7Lastcalvingdate = dmy(Cow7Lastcalvingdate)) %>%
+    mutate(Cow8Lastcalvingdate = dmy(Cow8Lastcalvingdate)) %>%
+    mutate(Cow9Lastcalvingdate = dmy(Cow9Lastcalvingdate)) %>%
+    mutate(Cow10Lastcalvingdate = dmy(Cow10Lastcalvingdate))
+
+```
+
+
+## Making Names Consistent
+
+Let's keep a copy of the original column names of all of these so we can get them back if necessary.
+
+```{r}
+original_names <- bind_rows(
+    data_frame(ppt_type = 'producer', round = 1, names = list(names(treatment_round1))),
+    data_frame(ppt_type = 'producer', round = 2, names = list(names(treatment_round2))),
+    data_frame(ppt_type = 'cows', round = 2, names = list(names(treatment_round2_cows))),
+    data_frame(ppt_type = 'producer', round = 3, names = list(names(treatment_round3))),
+    data_frame(ppt_type = 'cows', round = 3, names = list(names(treatment_round3_cows))),
+    data_frame(ppt_type = 'producer', round = 4, names = list(names(treatment_round4))),
+    data_frame(ppt_type = 'cows', round = 4, names = list(names(treatment_round4_cows))),
+    data_frame(ppt_type = 'producer', round = 5, names = list(names(treatment_round5))),
+    data_frame(ppt_type = 'cows', round = 5, names = list(names(treatment_round5_cows))),
+    data_frame(ppt_type = 'producer', round = 5, names = list(names(control_round5))),
+    data_frame(ppt_type = 'cows', round = 5, names = list(names(control_round5_cows)))
+    )
+```
+
+Now let's make these names consistent so we can merge/join this data together.
+
+```{r}
+make_names_consistent <- function(df) {
+    names(df) <- names(df) %>%
+        tolower() %>%
+        str_replace_all("s/he", " ") %>%
+        str_replace_all("nennbers", "members") %>%
+        str_replace_all("mutch", "much") %>%
+        str_replace_all("[:punct:]|=", " ") %>%
+        str_replace_all("the |of |is |your ", " ") %>%
+        str_replace_all("what is ", " ") %>%
+        str_replace_all("geo", "") %>%
+        str_trim(side = "both") %>%
+        str_replace_all("[ ]{2,}", " ") %>%
+        str_replace_all(" ", "_")
+    
+        colnames(df)[str_detect(names(df), "deo")] <- "deo_id"
+        colnames(df)[str_detect(names(df), "name_of_the_respondent")] <- "producer_name"
+        colnames(df)[str_detect(names(df), "para_name")] <- "para"
+        colnames(df)[str_detect(names(df), "village_name")] <- "village"
+        colnames(df)[str_detect(names(df), "union_name")] <- "union"
+        colnames(df)[str_detect(names(df), "thana_name")] <- "thana"
+        colnames(df)[str_detect(names(df), "district_name")] <- "district"
+        colnames(df)[str_detect(names(df), "group_name")] <- "group_name"
+
+        
+    df    
+}
+```
+
+Let's apply this function on our data frames now.
+
+```{r}
+treatment_round2 <- treatment_round2 %>%
+    make_names_consistent()
+treatment_round3 <- treatment_round3 %>%
+    make_names_consistent()
+treatment_round4 <- treatment_round4 %>%
+    make_names_consistent()
+treatment_round5 <- treatment_round5 %>%
+    make_names_consistent()
+control_round5 <- control_round5 %>%
+    make_names_consistent()
+
+```
+
+No we have to do some further cleaning up for more inconsistencies.
+
+
+
+
+
+## Calculating Cattle Information
+
+## Merging All Rounds
+
+
+
+
+                    
+                    
+                    
