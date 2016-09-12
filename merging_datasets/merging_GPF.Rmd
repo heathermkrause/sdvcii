@@ -41,7 +41,7 @@ library(dplyr)
 control_round5 <- left_join(read_excel("../data/SDVCII HH Survey_Excel Version_OSS_05092016.xlsx",
                                        sheet = 1),
                             read_excel("../data/SDVCII HH Survey_Excel Version_OSS_05092016.xlsx", 
-                                       sheet = 3, col_types = c("numeric", rep("text", 127))), 
+                                       sheet = 3, col_types = c("numeric", rep("text", 127)))[,1:66], 
                             by = "DEO ID") %>%
     left_join(read_excel("../data/SDVCII HH Survey_Excel Version_OSS_05092016.xlsx", 
                          sheet = 4, col_types = c("numeric", rep("text", 51))),
@@ -226,17 +226,17 @@ Let's keep a copy of the original column names of all of these so we can get the
 
 ```{r}
 original_names <- bind_rows(
-    data_frame(ppt_type = 'producer', round = 1, names = list(names(treatment_round1))),
-    data_frame(ppt_type = 'producer', round = 2, names = list(names(treatment_round2))),
-    data_frame(ppt_type = 'cows', round = 2, names = list(names(treatment_round2_cows))),
-    data_frame(ppt_type = 'producer', round = 3, names = list(names(treatment_round3))),
-    data_frame(ppt_type = 'cows', round = 3, names = list(names(treatment_round3_cows))),
-    data_frame(ppt_type = 'producer', round = 4, names = list(names(treatment_round4))),
-    data_frame(ppt_type = 'cows', round = 4, names = list(names(treatment_round4_cows))),
-    data_frame(ppt_type = 'producer', round = 5, names = list(names(treatment_round5))),
-    data_frame(ppt_type = 'cows', round = 5, names = list(names(treatment_round5_cows))),
-    data_frame(ppt_type = 'producer', round = 5, names = list(names(control_round5))),
-    data_frame(ppt_type = 'cows', round = 5, names = list(names(control_round5_cows)))
+    data_frame(gpf_type = 'treatment', round = 1, names = list(names(treatment_round1))),
+    data_frame(gpf_type = 'treatment', round = 2, names = list(names(treatment_round2))),
+    data_frame(gpf_type = 'cows', round = 2, names = list(names(treatment_round2_cows))),
+    data_frame(gpf_type = 'treatment', round = 3, names = list(names(treatment_round3))),
+    data_frame(gpf_type = 'cows', round = 3, names = list(names(treatment_round3_cows))),
+    data_frame(gpf_type = 'treatment', round = 4, names = list(names(treatment_round4))),
+    data_frame(gpf_type = 'cows', round = 4, names = list(names(treatment_round4_cows))),
+    data_frame(gpf_type = 'treatment', round = 5, names = list(names(treatment_round5))),
+    data_frame(gpf_type = 'cows', round = 5, names = list(names(treatment_round5_cows))),
+    data_frame(gpf_type = 'control', round = 5, names = list(names(control_round5))),
+    data_frame(gpf_type = 'controlcows', round = 5, names = list(names(control_round5_cows)))
     )
 ```
 
@@ -247,24 +247,58 @@ make_names_consistent <- function(df) {
     names(df) <- names(df) %>%
         tolower() %>%
         str_replace_all("s/he", " ") %>%
+        str_replace_all("\\.x|\\.y", "") %>%
+        str_replace_all("this |the |of |is |your ", " ") %>%
         str_replace_all("nennbers", "members") %>%
+        str_replace_all("hans", "hands") %>%
+        str_replace_all("decission", "decision") %>%
+        str_replace_all("wrok", "work") %>%
+        str_replace_all("satiesfaction", "satisfaction") %>%
+        str_replace_all("satiesfied", "satisfied") %>%
+        str_replace_all("outside at home", "outside home") %>%
         str_replace_all("mutch", "much") %>%
+        str_replace_all("you purchase from", " ") %>%
+        str_replace_all("(kg)", " ") %>%
+        str_replace_all("who makes decision for use", "decision") %>%
+        str_replace_all("who makes decisions for spend", "decision") %>%
+        str_replace_all("highly satisfied|moderately satisfied|not satisfied|dissatisfied", "satisfied") %>%
+        str_replace_all("do you face any", " ") %>%
+        str_replace_all("inpur", "input") %>%
+        str_replace_all("input shop", " ") %>%
         str_replace_all("[:punct:]|=", " ") %>%
-        str_replace_all("the |of |is |your ", " ") %>%
+        str_replace_all("^[0-9 ]+", " ") %>%
         str_replace_all("what is ", " ") %>%
+        str_replace_all("what name", "name") %>%
         str_replace_all("geo", "") %>%
         str_trim(side = "both") %>%
         str_replace_all("[ ]{2,}", " ") %>%
         str_replace_all(" ", "_")
     
         colnames(df)[str_detect(names(df), "deo")] <- "deo_id"
-        colnames(df)[str_detect(names(df), "name_of_the_respondent")] <- "producer_name"
+        colnames(df)[str_detect(names(df), "respondents_name")] <- "producer_name"
+        colnames(df)[str_detect(names(df), "name_respondent")] <- "producer_name"
         colnames(df)[str_detect(names(df), "para_name")] <- "para"
         colnames(df)[str_detect(names(df), "village_name")] <- "village"
         colnames(df)[str_detect(names(df), "union_name")] <- "union"
         colnames(df)[str_detect(names(df), "thana_name")] <- "thana"
         colnames(df)[str_detect(names(df), "district_name")] <- "district"
         colnames(df)[str_detect(names(df), "group_name")] <- "group_name"
+        colnames(df)[str_detect(names(df), "hh_type")] <- "household_type"
+        colnames(df)[str_detect(names(df), "respondent_s_education")] <- "educational_status_respondent"
+        colnames(df)[str_detect(names(df), "what_are_drinking_water_sources_for_cattle")] <- "what_drinking_water_sources_for_cattle"
+        colnames(df)[str_detect(names(df), 
+                                "does_husband_help_you_in_day_to_day_household_activiti")] <- "does_husband_help_you_in_daily_household_work"
+        colnames(df)[str_detect(names(df), 
+                                "does_husband_help_you_in_day_to_day_household_activiti")] <- "attended_group_meetings_within_village_need_permission"
+        colnames(df)[str_detect(names(df), 
+                                "attend_meetings_at_a_distant_place_do_you_have_to_take_permissio")] <- "attend_meetings_at_a_distant_place_need_permission"
+        colnames(df)[str_detect(names(df), 
+                                "travel_to_distant_place_in_general_like_visit_to_relativeshse_do")] <- "travel_to_distant_place_do_you_have_to_take_permission"
+        colnames(df)[str_detect(names(df), 
+                                "travel_to_distant_place_in_general_like_visit_to_relativeshse_if")] <- "travel_distant_place_if_yes_from_whom"
+        colnames(df)[str_detect(names(df), 
+                                "if_yes_from_home")] <- "travel_distant_place_if_yes_from_whom"
+
 
         
     df    
@@ -289,7 +323,117 @@ control_round5 <- control_round5 %>%
 
 No we have to do some further cleaning up for more inconsistencies.
 
+```{r}
+all(names(treatment_round3) %in% names(treatment_round2))
 
+## used code like this to find names that were different 
+## but actually should be the same
+#names(treatment_round4)[!names(treatment_round4) %in% names(treatment_round2)]
+#names(treatment_round2)[!names(treatment_round2) %in% names(treatment_round4)]
+```
+
+Round 5 is more different from rounds 2, 3, and 4.
+
+```{r}
+
+treatment_round2 <- treatment_round2 %>%
+    select(-hello_my_name_is)
+
+treatment_round3 <- treatment_round3 %>%
+    select(-hello_my_name_is)
+
+treatment_round4 <- treatment_round4 %>%
+    select(-text11, hello_my_name_is)
+
+colnames(treatment_round5)[74] <- "how_wash_hands"
+colnames(treatment_round5)[76] <- "how_wash_milking_pot"
+colnames(treatment_round5)[78] <- "how_wash_teat"
+colnames(treatment_round5)[237] <- "cow_buy_if_yes_how_many"
+colnames(treatment_round5)[241] <- "cow_sell_if_yes_how_many"
+colnames(treatment_round5)[245] <- "calf_buy_if_yes_how_many"
+colnames(treatment_round5)[269] <- "cow_died_if_yes_how_many"
+colnames(treatment_round5)[128] <- "attended_group_meetings_within_village_if_yes_from_whom"
+colnames(treatment_round5)[130] <- "attend_meetings_at_a_distant_place_if_yes_from_whom"
+colnames(treatment_round5)[95] <- "total_score_health"
+colnames(treatment_round5)[101] <- "total_score_cowshed"
+
+colnames(control_round5)[74] <- "how_wash_hands"
+colnames(control_round5)[76] <- "how_wash_milking_pot"
+colnames(control_round5)[78] <- "how_wash_teat"
+colnames(control_round5)[95] <- "total_score_health"
+colnames(control_round5)[101] <- "total_score_cowshed"
+colnames(control_round5)[237] <- "cow_buy_if_yes_how_many"
+colnames(control_round5)[241] <- "cow_sell_if_yes_how_many"
+colnames(control_round5)[245] <- "calf_buy_if_yes_how_many"
+colnames(control_round5)[269] <- "cow_died_if_yes_how_many"
+colnames(control_round5)[128] <- "attended_group_meetings_within_village_if_yes_from_whom"
+colnames(control_round5)[130] <- "attend_meetings_at_a_distant_place_if_yes_from_whom"
+
+
+treatment_round5 <- treatment_round5 %>%
+    select(-my_name_is) %>%
+    rename(affected_by_disease_2 = affected_by_disease_yes_or_no_2,
+           affected_by_disease_3 = affected_by_disease_what_did_you_do_3,
+           affected_by_disease_4 = affected_by_disease_who_provide_treatment_4,
+           affected_by_disease_5 = affected_by_disease_who_sugested_5,
+           affected_by_disease_6 = affected_by_disease_fee_6,
+           affected_by_disease_7 = affected_by_disease_diagnos_7,
+           affected_by_disease_8 = affected_by_disease_medicine_8,
+           vaccinated_2 = vaccinated_yes_or_no_2,
+           vaccinated_4 = vaccinated_who_provide_treatment_4,
+           vaccinated_5 = vaccinated_who_sugested_5,
+           vaccinated_6 = vaccinated_fee_6,
+           vaccinated_7 = vaccinated_diagnos_7,
+           vaccinated_8 = vaccinated_vaccine_8,
+           dewormed_2 = dewormed_yes_or_no_2,
+           dewormed_4 = dewormed_who_provide_treatment_4,
+           dewormed_5 = dewormed_who_sugested_5,
+           dewormed_6 = dewormed_fee_6,
+           dewormed_7 = dewormed_diagnos_7,
+           dewormed_8 = dewormed_vaccine_8,
+           dewormed_9 = dewormed_total_9,
+           provided_ai_2 = provided_ai_yes_or_no_2,
+           provided_ai_4 = provided_ai_who_provide_services_4,
+           provided_ai_9 = provided_ai_total_9,
+           provided_ni_2 = provided_ni_yes_or_no_2,
+           provided_ni_4 = provided_ni_who_provide_services_4,
+           provided_ni_9 = provided_ni_total_9,
+           cow_buy_yes_no = did_you_purchase_any_cattle_last_6_months,
+           cow_buy_type_cow = what_type_cattle_purchased,
+           cow_buy_breed_cow = breed_type,
+           cow_sell_yes_no = did_you_sell_any_cattle_last_6_months,
+           cow_sell_type_cow = what_type_cattle,
+           calf_sell_yes_no = did_you_sell_any_calf_last_6_months,
+           calf_sell_type_cow = calf_identification_1,
+           calf_sell_breed_cow = breed_1,
+           calf_sell_calf_sex = sex_1,
+           calf_sell_price_cow = selling_price_1,
+           calf_sell_selling_month = selling_month_1,
+           if_you_sell_cow_why_sold = if_yes_why_sold,
+           did_you_have_any_calf_born_in_last_6_months = did_any_calf_born_last_6_months,
+           how_many_calf_born = if_yes_how_many_cow_was_born,
+           cow_died_yes_1_no_2 = did_any_cattle_die_during_last_6_months,
+           cow_died_type_cow = type_death_cattle,
+           cow_died_calf_sex = if_calf_sex,
+           causes_death_cow = what_was_cause_death_cow,
+           causes_death_calf = what_was_cause_death_calve)
+
+
+control_round5 <- control_round5 %>%
+    select(-my_name_is)
+
+
+names(treatment_round4)[!names(treatment_round4) %in% names(treatment_round5)]
+names(treatment_round5)[!names(treatment_round5) %in% names(treatment_round4)]
+
+names(treatment_round2)[!names(treatment_round2) %in% names(treatment_round5)]
+names(treatment_round5)[!names(treatment_round5) %in% names(treatment_round2)]
+
+names(control_round5)[!names(control_round5) %in% names(treatment_round5)]
+names(treatment_round5)[!names(treatment_round5) %in% names(control_round5)]
+
+
+```
 
 
 
