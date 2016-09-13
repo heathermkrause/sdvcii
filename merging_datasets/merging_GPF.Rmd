@@ -16,24 +16,10 @@ options(width=80, dplyr.width = 150)
 
 There are five rounds of group performance format (GPF) data collected for this project, in July 2014, December 2014, July 2015, December 2015, and August 2016. Let's work on munging, tidying, and merging these five data sets.
 
-## Reading in the Original Data
-
-First let's read in the file of already merged data for rounds 1 through 4, downloaded from the Google Drive folder.
-
-```{r}
-library(readr)
-old_gpf_merged <- read_csv("../data/CleanedMergedGFPRounds1234January2016.csv")
-```
-
-There are some minor problems with this file; it is not super clean CSV. If we have time, I might want to re-merge the previous rounds. Here are some examples of the issues.
-
-```{r}
-kable(tail(problems(old_gpf_merged), 15))
-```
 
 ## Reading in Round 5
 
-Anyway, let's read in the original Excel files for round 5, downloaded from the Google Drive folder.
+Let's read in the original Excel files for round 5, downloaded from the Google Drive folder.
 
 ```{r}
 library(readxl)
@@ -507,8 +493,8 @@ colnames(treatment_round5)[245] <- "calf_buy_if_yes_how_many"
 colnames(treatment_round5)[269] <- "cow_died_if_yes_how_many"
 colnames(treatment_round5)[128] <- "attended_group_meetings_within_village_if_yes_from_whom"
 colnames(treatment_round5)[130] <- "attend_meetings_at_a_distant_place_if_yes_from_whom"
-colnames(treatment_round5)[95] <- "total_score_health"
-colnames(treatment_round5)[101] <- "total_score_cowshed"
+colnames(treatment_round5)[95] <- "total_score_knowledge"
+colnames(treatment_round5)[101] <- "total_score_practice"
 
 colnames(control_round5)[74] <- "how_wash_hands"
 colnames(control_round5)[76] <- "how_wash_milking_pot"
@@ -638,20 +624,20 @@ control_round5 <- control_round5 %>%
 How are things looking?
 
 ```{r}
-names(treatment_round3)[!names(treatment_round3) %in% names(treatment_round2)]
-names(treatment_round2)[!names(treatment_round2) %in% names(treatment_round3)]
+length(names(treatment_round3)[!names(treatment_round3) %in% names(treatment_round2)])
+length(names(treatment_round2)[!names(treatment_round2) %in% names(treatment_round3)])
 
-names(treatment_round4)[!names(treatment_round4) %in% names(treatment_round2)]
-names(treatment_round2)[!names(treatment_round2) %in% names(treatment_round4)]
+length(names(treatment_round4)[!names(treatment_round4) %in% names(treatment_round2)])
+length(names(treatment_round2)[!names(treatment_round2) %in% names(treatment_round4)])
 
-names(treatment_round4)[!names(treatment_round4) %in% names(treatment_round5)]
-names(treatment_round5)[!names(treatment_round5) %in% names(treatment_round4)]
+length(names(treatment_round4)[!names(treatment_round4) %in% names(treatment_round5)])
+length(names(treatment_round5)[!names(treatment_round5) %in% names(treatment_round4)])
 
-names(treatment_round2)[!names(treatment_round2) %in% names(treatment_round5)]
-names(treatment_round5)[!names(treatment_round5) %in% names(treatment_round2)]
+length(names(treatment_round2)[!names(treatment_round2) %in% names(treatment_round5)])
+length(names(treatment_round5)[!names(treatment_round5) %in% names(treatment_round2)])
 
-names(control_round5)[!names(control_round5) %in% names(treatment_round5)]
-names(treatment_round5)[!names(treatment_round5) %in% names(control_round5)]
+length(names(control_round5)[!names(control_round5) %in% names(treatment_round5)])
+length(names(treatment_round5)[!names(treatment_round5) %in% names(control_round5)])
 ```
 
 
@@ -662,18 +648,19 @@ Round 1 is structured very, very differently than the rest of it, so we'll have 
 ```{r}
 treatment_round1_cows <- treatment_round1[,29:98]
 treatment_round1 <- treatment_round1[,-c(29:98)]
+treatment_round1 <- treatment_round1[,1:387]
 #names(treatment_round1)
 ```
 
 Let's get started.
 
-```{r, eval=FALSE}
+```{r}
 names(treatment_round1) <- names(treatment_round1) %>%
     tolower()
 
 treatment_round1 <- treatment_round1 %>%
     rename(entry_id = entryid,
-           household_number = `01baselinehouseholdnumber` = household_number,
+           household_number = `01baselinehouseholdnumber`,
            census_number = `02censusnoapplicableforcontrol2andcontrol3producer`,
            producer_name = `03anameoftherespondent`,
            sex_respondent = `03bsexfemale1male2other3`,
@@ -704,7 +691,361 @@ treatment_round1 <- treatment_round1 %>%
            milk_collector = salescollector,
            open_market = salesopenmarket,
            sweetmeat_tea_stall = salesteastall,
-           direct_to_company = salesdirecttocompant)
+           direct_to_company = salesdirecttocompant,
+           yesterday_total_spoilage_ltr = spoilage,
+           yesterday_total_income_from_milk_sale = totalrecieptfromsales,
+           within_household_who_given_priority_to_consumed_milk = whowasgivenpriorityofyourfamilytoconsumemilkyesterday,
+           why_was_given_priority_to_consumed_milk = whysshewasgivenprioritytoconsumemilk,
+           who_consumed_milk_1 = whoconsumedmilkyesterday1,
+           who_consumed_milk_2 = whoconsumedmilkyesterday2,
+           who_consumed_milk_3 = whoconsumedmilkyesterday3,
+           who_consumed_milk_4 = whoconsumedmilkyesterday4,
+           are_you_cultivating_fodder = areyoucultivatingfodder,
+           if_yes_cultivated_land_dec = ifyescultivatedlanddec,
+           type_fodder_cultivating = whichtypeoffoddercultivating1,
+           do_you_feed_green_grass_to_cow = doyoufedgreengrasstoyourcow,
+           source_grass = sourceofgrass1,
+           what_name_doctor_who_provides_cattle_treatment_to = whoprovidetreatmentservicetoyouranimal,
+           what_type_vet_doctor_is = whichtypeofthedoctorsheis1,
+           how_many_vaccines_should_be_given_for_cattle = howmanyvaccineshouldbegivenforcattle1,
+           what_are_vaccines = whatarethose,
+           which_vaccines_have_you_given_to_cattle = whichvaccines,
+           have_you_dewormed_cattle_in_last_6_months = didyoudewormed,
+           how_many_days_deworming = howmanydaysbefore,
+           who_suggested_deworming = whosuggestedyou1,
+           from_where_vaccination_taken = whodecideswhethervaccinationdewormingtreatmentaiisprovidedforcat,
+           what_drinking_water_sources_for_cattle = whatarethedrinkingwatersourcesforyourcattle1,
+           do_you_wash_cattle = doyouwashyourcattle,
+           if_not_why = ifnowhy,
+           if_you_wash_cattle_how_often = ifyesinwhichinterval,
+           measurement_taken_for_bio_security = measurementtakenforbiosecurity1,
+           cow_rearing = sexofthepersonwhoengagedwithcowrearing,
+           feed_practice = sexofthepersonwhoengagedwithcattlefeedpurchase,
+           milk_selling = sexofthepersonwhoengagedwithmilkselling,
+           where_to_sell_milk = whodecideswheretosellmilk,
+           cattle_purchase = whotakesthecattlepurchasedecision1,
+           cattle_sales = whotakesthecattlesalesdecision1,
+           where_to_purchase_food = whodecidesfromwheretopurchasefeedfodder1,
+           milking_cow = whoengagedinmilkingthecow,
+           if_you_do_not_engaged_in_milking_why_not = ifyoudonotengagedinmilkingwhynot,
+           do_you_wash_hands_before_milking = doyouwashyourhandbeforeandaftermilking,
+           how_wash_hands = ifyeshow,
+           do_you_wash_milking_pot = doyouwashyourmilkingpot,
+           how_wash_milking_pot = ifyeshow_a,
+           do_you_wash_under_teat_before_milking = doyouwashudderandteatbeforemilking,
+           how_wash_teat = how,
+           do_you_use_anything_on_under_teat_during_milking = doyouuseanythingontheudderandteatduringmilking,
+           if_yes_what = ifyeswhat1,
+           where_do_you_dispose_cowdung = wheredoyoudisposecowdung1,
+           what_do_you_do_with_cowdung = whatdoyoudowithcowdung1,
+           what_types_cattle_feeds_are_there = whattypesofcattlefeedsare,
+           which_type_feed_increase_milk_fat = whichtypeoffeedincreasethemilkfat,
+           mention_name_a_few_hybrid_fodders = mentionthenameoffewhybridfodder,
+           mention_name_few_concentrated_feeds = mentionthenameoffewconcentratefeed,
+           what_should_be_condition_cow_shed = whatshouldbetheconditionofcowshed,
+           which_type_cattle_should_get_vaccinated = whichtypeofcattleshouldvaccinate,
+           what_are_symptoms_worm_affected_cattle = whatarethesymptomsofwormaffectedcattle,
+           in_which_interval_should_de_worming_should_be_done = inwhichintervaldewormingshouldbedone,
+           how_long_after_heat_detection_best_time_for_ai = afterheatdetectionwhichisthebesttimeforai,
+           what_are_advantages_ai = whataretheadvantagesofai,
+           total_score_knowledge = totalknowledgescore,
+           proper_ventilation_system_available_in_cow_shed = properventilationsystemisavailableincowshedornot,
+           cleanliness_floor_cow_shed = cleanlinessofthefloorofcowshed,
+           proper_sloping_floor_to_drain = isthereanypropersloppingofthefloortothedrainornot,
+           a_disposal_place_for_cow_dung = isthereanydisposalplaceforcowdungornot,
+           cleanliness_milking_place = cleanlinessofthemilkingplace,
+           total_score_practice = totalpracticescore,
+           do_you_own_any_cattle = doyouownedanycattle,
+           did_you_get_ownership_cow_after_joining_sdvc = didyougetownershipofcowafterjoiningsdvc,
+           how_did_you_get_ownership_cow = didyouinheritanycattlecowfromfatherhusbandothers1,
+           decision_money = whotakedecisionforuseyourownincome1,
+           decision_milk_sales_income = whotakedecisionforusethemilksalesincome1,
+           have_any_asset_been_purchased_with_money_you_have_earned = haveanyassetsbeenpurchasedwithmoneyyouhaveearnedduringlastmonths,
+           asset_1_name_asset = asset1name,
+           asset_1_who_made_decision_to_buy_assets = asset1whomadedecisiontobuythisassets1,
+           asset_1_who_control_asset = asset1whocontrolthisasset1,
+           asset_2_name_asset = asset2name,
+           asset_2_who_made_decision_to_buy_assets = asset2whomadedecisiontobuythisassets,
+           asset_2_who_control_asset = asset2whocontrolthisasset,
+           asset_3_name_asset = asset3name,
+           asset_3_who_made_decision_to_buy_asset = asset3whomadedecisiontobuythisassets,
+           asset_3_who_control_asset = asset3whocontrolthisasset,
+           asset_4_name_asset = asset4name,
+           asset_4_who_made_decision_to_buy_asset = asset4whomadedecisiontobuythisassets,
+           asset_4_who_control_asset = asset4whocontrolthisasset,
+           asset_5_name_asset = asset5name,
+           asset_5_who_made_decision_to_buy_asset = asset5whomadedecisiontobuythisassets,
+           asset_5_who_control_asset = asset5whocontrolthisasset,
+           attended_group_meetings_within_village_need_permission = doyouhavetotakepermissiontoattendedgroupmeeting,
+           attended_group_meetings_within_village_if_yes_from_whom = ifyesfromwhom1,
+           attend_meetings_at_a_distant_place_need_permission = doyouhavetotakepermissiontoattendedmeetingatdistantplace,
+           attend_meetings_at_a_distant_place_if_yes_from_whom = ifyesfromwhom1_a,
+           travel_to_distant_place_do_you_have_to_take_permission = doyouhavetotakepermissiontotravelatadistantplaceingeneralliketov,
+           travel_distant_place_if_yes_from_whom = ifyesfromwhom1_b,
+           does_husband_help_you_in_daily_household_work = doyourhusbandhelpyouinyourdaytodayhhactivities,
+           cattle_feeding = cattlefeeding,
+           cattle_wash = cattlewash,
+           grass_collection = grasscollection,
+           child_teaching = childteaching,
+           feed_children = feedthechildren,
+           home_arrangement = homearrangement,
+           house_clearing = housecleaning,
+           others_specify = others,
+           obstruction_from_family_for_own_income = doyoufaceanyobstructionfromyourfamily,
+           asset_purchase_own = assetpurchaseofyourown1,
+           income_generating_activities_at_home = incomegeneratingactivitiesathome1,
+           income_generating_activities_outside_home = incomegeneratingactivitiesoutsideofhome1,
+           own_asset_sales = ownassetsales1,
+           spend_own_asset = spendownincome1,
+           attend_meeting_training_at_distant_place = attendmeetingtrainingatdistantplace1,
+           amount_rice_bran = ricebran_amount,
+           unit_rice_bran = ricebran_unit,
+           source_rice_bran = ricebran_source1,
+           taka_rice_bran = ricebran_taka,
+           amount_wheat_bran = wheatbran_amount,
+           unit_wheat_bran = wheatbran_unit,
+           source_wheat_bran = wheatbran_source,
+           taka_wheat_bran = wheatbran_taka,
+           amount_pulse_husk = pulsehusk_amount,
+           unit_pulse_husk = pulsehusk_unit,
+           source_pulse_husk = pulsehusk_source,
+           taka_pulse_husk = pulsehusk_taka,
+           amount_broken_rice = brokenrice_amount,
+           unit_broken_rice = brokenrice_unit,
+           source_broken_rice = brokenrice_source1,
+           taka_broken_rice = brokenrice_taka,
+           amount_molasess = molasses_amount,
+           unit_molasess = molasses_unit,
+           source_molasess = molasses_source,
+           taka_molasess = molasses_taka,
+           amount_broken_maize = brokenmaize_amount,
+           unit_broken_maize = brokenmaize_unit,
+           source_broken_maize = brokenmaize_source,
+           taka_broken_maize = brokenmaize_taka,
+           amount_coconut_oil_cake = coconutoilcake_amount,
+           unit_coconut_oil_cake = coconutoilcake_unit,
+           source_coconut_oil_cake = coconutoilcake_source,
+           taka_coconut_oil_cake = coconutoilcake_taka,
+           amount_mustard_oil_cake = mustardoilcake_amount,
+           unit_mustard_oil_cake = mustardoilcake_unit,
+           source_mustard_oil_cake = mustardoilcake_source1,
+           taka_mustard_oil_cake = mustardoilcake_taka,
+           amount_mineral_mix = mineralmix_amount,
+           unit_mineral_mix = mineralmix_unit,
+           source_mineral_mix = mineralmix_source,
+           taka_mineral_mix = mineralmix_taka,
+           amount_dcp = dcp_amount,
+           unit_dcp = dcp_unit,
+           source_dcp = dcp_source,
+           taka_dcp = dcp_taka,
+           amount_straw = straw_amount,
+           unit_straw = straw_unit,
+           source_straw = straw_source1,
+           taka_straw = straw_taka,
+           amount_green_grass = greengrass_amount,
+           unit_green_grass = greengrass_unit,
+           source_green_grass = greengrass_source1,
+           taka_green_grass = greengrass_taka,
+           amount_ready_feed = readyfeed_amount,
+           unit_ready_feed = readyfeed_unit,
+           source_ready_feed = readyfeed_source1,
+           taka_ready_feed = readyfeed_taka,
+           amount_total = total_amount,
+           taka_total = total_taka,
+           affected_by_disease_2 = affectedbydiseaseyesno,
+           affected_by_disease_3 = actiontakenaffectedbydisease,
+           affected_by_disease_4 = whoprovidedtreatment1,
+           affected_by_disease_6 = treatmentfees,
+           affected_by_disease_7 = diagnosiscost,
+           affected_by_disease_8 = medicinecost,
+           affected_by_disease_9 = totaltreatmentcost,
+           vaccinated_2 = vaccinatedyesno,
+           vaccinated_4 = whoprovidedvaccinne1,
+           vaccinated_6 = feeforvaccination,
+           vaccinated_7 = diagnosiscostforvaccination,
+           vaccinated_8 = vaccinecost,
+           vaccinated_9 = totalvaccinationcost,
+           dewormed_2 = dewormedyesno,
+           dewormed_4 = provideddewormed1,
+           dewormed_9 = totaldewormingcost,
+           provided_ai_2 = providedaiyesno,
+           provided_ai_4 = whoprovidedai1,
+           provided_ai_9 = totalaicost,
+           provided_ni_2 = providedniyesno,
+           provided_ni_4 = niprovidersource,
+           provided_ni_9 = totalnicost,
+           total_expenditure = totalcost,
+           cow_buy_yes_no = didyoupurchaseanycattle,
+           cow_buy_if_yes_how_many = howmanycattlepurchase,
+           cow_buy_type_cow = typeofcattlepurchased1,
+           cow_buy_breed_cow = breedtypeofpurchasedcattle,
+           cow_sell_yes_no = didyousaleanycattle,
+           cow_sell_if_yes_how_many = howmanycattlesold,
+           cow_sell_type_cow = typeofcattlesold1,
+           if_you_sell_cow_why_sold = whysoldthem1,
+           calf_sell_yes_no = didyousellanycalf,
+           calf_sell_how_many = howmanycalfsold,
+           calf_sell_price_cow = calf1price,
+           calf_sell_calf_sex = calf1sex,
+           calf_sell_selling_month = calf1soldmonth,
+           total_selling_price = totalcalfsaleincome,
+           did_you_have_any_calf_born_in_last_6_months = didyouhaveanycalfborninthelast6months,
+           how_long_was_dry_period = howlongwasthedryperiod,
+           cow_died_yes_1_no_2 = diedanycattle,
+           cow_died_if_yes_how_many = yeshowmany,
+           cow_died_type_cow = typeofdeadcattle1,
+           what_did_you_do_with_dead_cattle = whatdidyoudowithdeadcattle1,
+           how_did_you_bear_dairy_related_expenses = wheredidyougetthemoneytofinanceyourdairy1,
+           if_receive_any_loan_how_much_was_it_tk = ifreceiveanyloanshowmuch,
+           loan_source = loansource1,
+           if_not_have_you_any_plans_to_receive_a_loan = ifnottakenloanhaveanyplantoreceiveloan,
+           where_will_you_get_loan = ifhaveplanfromwheretoreceiveloan1,
+           how_many_times_has_vet_doctor_visited_farm_thelast_3 = howmanytimesthevetdoctorvisitedyourfarm,
+           knowledge_level = knowledgelevelofthatvetdoctor,
+           skill_level = skilllevelofthatvetdoctor,
+           responsivness_that_vet_doctor_when_called = responsivenessofthatvetdoctorwhencall,
+           range_fee_received = rangeoffeereceived,
+           does_vet_doctor_provides_prescription = doesheprovideprescription,
+           service_vet_satisfied = areyousatisfiedwiththeserviceofvetdoctor,
+           where_do_you_sell_milk_in_general = wheredoyousellmilk1,
+           why_do_you_chose_to_sell_milk_here = whydoyouchoosetosellmilkhere,
+           are_you_satisfied_with_overall_services_dft = levelofsatisfactionwithdftpointormilkcollector,
+           are_you_satisfied_with_methods_measurement_milk = areyousatisfiedwiththemethodsofmeasurement,
+           explain = describewhy,
+           do_you_think_milk_transactions_are_fair = doyouthinkthemilksalestransactionsarefair,
+           explains = describewhy_a,
+           where_do_you_purchase_inputs = wheredoyoupurchaseyourinputs1,
+           have_you_recently_changed_where_you_purchase_inputs = haveyourecentlychangedwhereyoupurchaseyourinputs,
+           where_did_you_previously_purchase_inputs = wheredidyoupreviouslypurchaseyourinputs1,
+           quality_products_ku = howwouldyouratethequalityoftheproductsyoupurchasethere,
+           quality_service_ku = howwouldyouratethequalityoftheserviceyoupurchasethere,
+           what_type_effective_action_taken_by_fls_for_group_development = whattypeeffectiveactiontakenbyflsforgroupdevelopment,
+           how_are_decision_taken_in_group = howthedecisionsaretakeninthegroup1,
+           level_satisfaction_fls_activities = levelofsatisfactionofflsactivities) %>%
+    mutate(how_often_have_you_gone_to_ku_during_last_3_month = 0.5 * as.numeric(howoftendidyougototheinputkushopinthepast6months),
+           income_from_cowdung_sold_during_last_6_months = 2 * as.numeric(incomefromcowdungsoldduringlast3months),
+           income_from_own_cattle_taka = 2 * as.numeric(haveanyincomefromthosecattleduringlast3months),
+           income_from_any_other_income_source_taka = 2 * as.numeric(doyouhaveanyotherincomeduringlast3months) )
+```
+
+Now let's remove a whole bunch of columns we don't need anymore.
+
+```{r}
+treatment_round1 <- treatment_round1 %>%    
+    select(-whoconsumedmilkyesterday5,
+           -whichtypeoffoddercultivating2,
+           -whichtypeoffoddercultivating3,
+           -whichtypeoffoddercultivating4,
+           -sourceofgrass2,
+           -sourceofgrass3,
+           -whichtypeofthedoctorsheis2,
+           -whichtypeofthedoctorsheis3,
+           -howmanyvaccineshouldbegivenforcattle2,
+           -whosuggestedyou2,
+           -whotakesthecattlepurchasedecision2,
+           -whodecideswhethervaccinationdewormingtreatmentaiisprovidedforc_a,
+           -whatarethedrinkingwatersourcesforyourcattle2,
+           -measurementtakenforbiosecurity2,
+           -measurementtakenforbiosecurity3,
+           -whatarethereasonsforthesechanges,
+           -whotakesthecattlesalesdecision2,
+           -whodecidesfromwheretopurchasefeedfodder2,
+           -ifyeswhatarethey,
+           -ifyeswhat2,
+           -explainyourcomments,
+           -wheredoyoudisposecowdung2,
+           -wheredoyoudisposecowdung3,
+           -whatdoyoudowithcowdung2,
+           -whatdoyoudowithcowdung3,
+           -whatdoyoudowithcowdung4,
+           -whatdoyoudowithcowdung5,
+           -didyouinheritanycattlecowfromfatherhusbandothers2,
+           -whotakedecisionforuseyourownincome2,
+           -whotakedecisionforusethemilksalesincome2,
+           -ifyesputinformationinthefollowingtable,
+           -ifyesinwhichcaseobstaclesapplier,
+           -incomegeneratingactivitiesathome2,
+           -incomegeneratingactivitiesathome3,
+           -incomegeneratingactivitiesoutsideofhome2,
+           -incomegeneratingactivitiesoutsideofhome3,
+           -ownassetsales2,
+           -ownassetsales3,
+           -ifyesfromwhom2,
+           -ifyesfromwhom3,
+           -ifyesfromwhom2_a,
+           -ifyesfromwhom2_b,
+           -ifyesfromwhom3_a,
+           -ifyesfromwhom3_b,
+           -washchildern,
+           -assetpurchaseofyourown2,
+           -assetpurchaseofyourown3,
+           -loansource2,
+           -loansource3,
+           -loansource4,
+           -ifhaveplanfromwheretoreceiveloan2,
+           -ifhaveplanfromwheretoreceiveloan3,
+           -ifhaveplanfromwheretoreceiveloan4,
+           -didyouobserveanychangeindairyrelatedactivities,
+           -isthereanyorganizationgovtinstituteworkingherefordairydevelopme,
+           -ifyeswhatactivitiesaretheyarecontinuingfordairydevelopment,
+           -whatistheroleoffarmerleaderflforgroupdevelopment,
+           -mainlywhoisresponsibleforsellingthemilk1,
+           -mainlywhoisresponsibleforsellingthemilk2,
+           -mainlywhoreceivespaymentfrommilksales1,
+           -describehowyoudecidedwhowillreceivepaymentinhh,
+           -wheredidyoupreviouslypurchaseyourinputs2,
+           -wheredidyoupreviouslypurchaseyourinputs3,
+           -mainlywhoreceivespaymentfrommilksales2,
+           -whatisthenameofvetdoctorserveinyourgroup,
+           -howoftendidyougototheinputkushopinthepast6months,
+           -incomefromcowdungsoldduringlast3months,
+           -haveanyincomefromthosecattleduringlast3months,
+           -doyouhaveanyotherincomeduringlast3months,
+           -overallcommentsifany,
+           -whatdoyouthinkdftcontributingtoincreasingdecreasingyourgroupcohe,
+           -spendownincome2,
+           -attendmeetingtrainingatdistantplace2,
+           -ricebran_source2,
+           -brokenrice_source2,
+           -mustardoilcake_source2,
+           -straw_source2,
+           -straw_source3,
+           -greengrass_source2,
+           -greengrass_source3,
+           -readyfeed_source2,
+           -typeofcattlepurchased2,
+           -typeofcattlepurchased3,
+           -typeofcattlesold2,
+           -typeofcattlesold3,
+           -typeofcattlesold4,
+           -typeofcattlesold5,
+           -typeofcattlesold6,
+           -ccalf1calfid, -ccalf2calfid, -ccalf3calfid,
+           -calf1breed, -calf2breed, -calf3breed,
+           -calf2sex, -calf2price, -calf3sex, -calf3price,
+           -calf2soldmonth, -calf3soldmonth,
+           -typeofdeadcattle2,
+           -whatdidyoudowithdeadcattle2,
+           -wheredidyougetthemoneytofinanceyourdairy2,
+           -wheredidyougetthemoneytofinanceyourdairy3,
+           -howthedecisionsaretakeninthegroup2,
+           -wheredoyoupurchaseyourinputs2,
+           -wheredoyoupurchaseyourinputs3,
+           -wheredoyousellmilk2,
+           -whattypeofthevetdoctoris1,
+           -whattypeofthevetdoctoris2,
+           -whattypeofthevetdoctoris3,
+           -whoprovidedtreatment2,
+           -whoprovidedtreatment3,
+           -asset1whomadedecisiontobuythisassets2,
+           -asset1whocontrolthisasset2,
+           -whysoldthem2,
+           -whoprovidedvaccinne2,
+           -provideddewormed2,
+           -whoprovidedai2)
+
+length(names(treatment_round1)[!names(treatment_round1) %in% names(treatment_round2)])
+length(names(treatment_round1)[!names(treatment_round1) %in% names(treatment_round5)])
 
 
 ```
@@ -715,9 +1056,73 @@ treatment_round1 <- treatment_round1 %>%
 
 ## Merging All Rounds
 
+Now let's merge these together. First let's convert everything to character type.
 
+```{r}
+treatment_round1[] <- lapply(treatment_round1, as.character)
+treatment_round2[] <- lapply(treatment_round2, as.character)
+treatment_round3[] <- lapply(treatment_round3, as.character)
+treatment_round4[] <- lapply(treatment_round4, as.character)
+treatment_round5[] <- lapply(treatment_round5, as.character)
+control_round5[] <- lapply(control_round5, as.character)
+```
 
+Now let's merge!
 
-                    
-                    
+```{r}
+gpf_merged <- bind_rows(treatment_round1 %>% mutate(round = 1),
+                        treatment_round2 %>% mutate(round = 2),
+                        treatment_round3 %>% mutate(round = 3),
+                        treatment_round4 %>% mutate(round = 4),
+                        treatment_round5 %>% mutate(round = 5),
+                        control_round5 %>% mutate(round = 5)) %>%
+    select(round, everything())
+
+```
+
+How big did this end up?
+
+```{r}
+dim(gpf_merged)
+```
+
+There are a few things that we need to fix from some `NA` handling up above.
+
+```{r}
+gpf_merged$cow_rearing[gpf_merged$cow_rearing == 0] <- NA
+gpf_merged$feed_practice[gpf_merged$feed_practice == 0] <- NA
+gpf_merged$from_where_vaccination_taken[gpf_merged$from_where_vaccination_taken == 0] <- NA
+gpf_merged$milking_cow[gpf_merged$milking_cow == 0] <- NA
+gpf_merged$milk_selling[gpf_merged$milk_selling == 0] <- NA
+gpf_merged$cattle_purchase[gpf_merged$cattle_purchase == 0] <- NA
+gpf_merged$cattle_sales[gpf_merged$cattle_sales == 0] <- NA
+gpf_merged$where_to_sell_milk[gpf_merged$where_to_sell_milk == 0] <- NA
+gpf_merged$where_to_purchase_food[gpf_merged$where_to_purchase_food == 0] <- NA
+gpf_merged$decision_money[gpf_merged$decision_money == 0] <- NA
+gpf_merged$decision_milk_sales_income[gpf_merged$decision_milk_sales_income == 0] <- NA
+gpf_merged$knowledge_level[gpf_merged$knowledge_level == 0] <- NA
+gpf_merged$skill_level[gpf_merged$skill_level == 0] <- NA
+gpf_merged$service_vet_satisfied[gpf_merged$service_vet_satisfied == 0] <- NA
+gpf_merged$dft_point_manager_satisfied[gpf_merged$dft_point_manager_satisfied == 0] <- NA
+gpf_merged$quality_products_ku[gpf_merged$quality_products_ku == 0] <- NA
+gpf_merged$quality_service_ku[gpf_merged$quality_service_ku == 0] <- NA
+gpf_merged$others_satisfied[gpf_merged$others_satisfied == 0] <- NA
+gpf_merged$vaccination[gpf_merged$vaccination == 0] <- NA
+
+```
+
+Now let's write this file to a csv.
+
+```{r}
+library(readr)
+write_csv(gpf_merged, "../data/gpf_merged.csv")
+```
+
+Let's also save the original names as a csv to be able to look at.
+
+```{r}
+library(tidyr)
+write_csv(original_names %>% unnest(names), "../data/gpf_original_names.csv")
+```
+
                     
