@@ -1054,6 +1054,59 @@ length(names(treatment_round1)[!names(treatment_round1) %in% names(treatment_rou
 
 ## Calculating Cattle Information
 
+For each producer, we need to know
+
+- total number of cows per breed per producer
+- average and median value of cows per breed per producer
+
+Let's work on this, by writing a function to do the operations to find these quantities.
+
+```{r}
+library(tidyr)
+
+calculate_cows <- function(df) {
+    cow_df <- df %>% 
+        group_by(deo_id, breed_of_cow) %>% 
+        summarise(number = n(),
+                  mean_bdt = mean(`Value of Cow in BDT`, na.rm = TRUE),
+                  median_bdt = median(`Value of Cow in BDT`, na.rm = TRUE)) %>%
+        rename(number_breed = breed_of_cow) %>%
+        mutate(mean_value = number_breed,
+               median_value = number_breed) %>%
+        spread(number_breed, number, sep = "_") %>%
+        spread(mean_value, mean_bdt, sep = "_") %>%
+        spread(median_value, median_bdt, sep = "_") %>%
+        select(-number_breed_NA, -mean_value_NA, -median_value_NA) %>%
+        ungroup
+    
+    ret <- cow_df %>%
+        group_by(deo_id) %>%
+        summarise(number_cattle_breed_1 = max(number_breed_1, na.rm = TRUE),
+                  number_cattle_breed_2 = max(number_breed_2, na.rm = TRUE),
+                  mean_value_cattle_breed_1 = max(mean_value_1, na.rm = TRUE),
+                  mean_value_cattle_breed_2 = max(mean_value_2, na.rm = TRUE),
+                  median_value_cattle_breed_1 = max(median_value_1, na.rm = TRUE),
+                  median_value_cattle_breed_2 = max(median_value_2, na.rm = TRUE))
+}
+```
+
+
+
+
+```{r}
+calculate_cows_round5 <- control_round5_cows %>%
+    rename(deo_id = `DEO ID`,
+           breed_of_cow = `Bread of Cow`) %>%
+    calculate_cows
+control_round5 <- control_round5 %>% 
+    left_join(calculate_cows_round5, by = "deo_id")
+```
+
+
+
+
+
+
 ## Merging All Rounds
 
 Now let's merge these together. First let's convert everything to character type.
