@@ -305,6 +305,26 @@ make_names_consistent <- function(df) {
                                 "travel_to_distant_place_in_general_like_visit_to_relativeshse_if")] <- "travel_distant_place_if_yes_from_whom"
         colnames(df)[str_detect(names(df), 
                                 "if_yes_from_home")] <- "travel_distant_place_if_yes_from_whom"
+        colnames(df)[str_detect(names(df), 
+                                "where_did_yu_get_money_to_finance_dairy_activities")] <- "how_did_you_bear_dairy_related_expenses"
+        colnames(df)[str_detect(names(df), 
+                                "loan_source")] <- "loan_source"
+        colnames(df)[str_detect(names(df), 
+                                "if_receive_any_loans_during_how_much")] <- "if_receive_any_loan_how_much_was_it_tk"
+        colnames(df)[str_detect(names(df), 
+                                "do_you_haveany_plan_to_get_a_loan")] <- "if_not_have_you_any_plans_to_receive_a_loan"
+        colnames(df)[str_detect(names(df), 
+                                "if_yes_from_where_will_you_get_it")] <- "where_will_you_get_loan"
+        colnames(df)[str_detect(names(df), 
+                                "if_you_have_plans_to_get_a_loan_where_will_you_get_if_from")] <- "where_will_you_get_loan"
+        colnames(df)[str_detect(names(df), 
+                                "did_you_earned_any_income_during_last_6_months")] <- "have_you_earned_any_income_during_last_6_months"
+        colnames(df)[str_detect(names(df), 
+                                "if_yes_what_was_income_in_last_6_months")] <- "income_from_own_cattle_taka"
+        colnames(df)[str_detect(names(df), 
+                                "have_you_had_any_other_income_income_during_last_6_months")] <- "income_from_any_other_income_source_taka"
+        colnames(df)[str_detect(names(df), 
+                                "have_you_had_any_other_income_income_during_last_6_months")] <- "income_from_any_other_income_source_taka"
 
 
         
@@ -411,7 +431,7 @@ process_names_more <- function(df) {
                -decision_money_you_earned_husband_2,
                -decision_money_you_earned_jointly_3,
                -decision_money_you_earned_other_male_member_4,
-               -decision_money_you_earned_other_female_member_5
+               -decision_money_you_earned_other_female_member_5,
                -knowledge_level_very_good_5,
                -knowledge_level_good_4,
                -knowledge_level_moderate_3,
@@ -427,7 +447,7 @@ process_names_more <- function(df) {
                -service_vet_doctor_satisfied_2,
                -service_vet_doctor_satisfied_1,
                -dft_point_manager_milk_collector_satisfied_4,
-               -dft_point_manager_milk_collector_satisfied_3
+               -dft_point_manager_milk_collector_satisfied_3,
                -dft_point_manager_milk_collector_satisfied_2,
                -dft_point_manager_milk_collector_satisfied_1,
                -quality_products_ku_4,
@@ -477,9 +497,6 @@ treatment_round4 <- treatment_round4 %>%
 
 Now let's work on round 5 a bit.
 
-INCOME
-LOANS
-
 ```{r}
 colnames(treatment_round5)[74] <- "how_wash_hands"
 colnames(treatment_round5)[76] <- "how_wash_milking_pot"
@@ -508,7 +525,7 @@ colnames(control_round5)[130] <- "attend_meetings_at_a_distant_place_if_yes_from
 
 treatment_round5 <- treatment_round5 %>%
     select(-my_name_is,
-           -sl_1, -sl_2, -sl_3
+           -sl_1, -sl_2, -sl_3,
            -calf_identification_2,
            -calf_identification_3,
            -breed_2, -breed_3,
@@ -564,7 +581,7 @@ treatment_round5 <- treatment_round5 %>%
 
 control_round5 <- control_round5 %>%
     select(-my_name_is,
-           -sl_1, -sl_2, -sl_3
+           -sl_1, -sl_2, -sl_3,
            -calf_identification_2,
            -calf_identification_3,
            -breed_2, -breed_3,
