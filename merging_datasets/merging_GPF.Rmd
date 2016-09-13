@@ -248,11 +248,13 @@ make_names_consistent <- function(df) {
         tolower() %>%
         str_replace_all("s/he", " ") %>%
         str_replace_all("\\.x|\\.y", "") %>%
-        str_replace_all("this |the |of |is |your ", " ") %>%
+        str_replace_all("this |the |of |is |your |there ", " ") %>%
+        str_replace_all("comsumption", "consumption") %>%
         str_replace_all("nennbers", "members") %>%
         str_replace_all("hans", "hands") %>%
         str_replace_all("decission", "decision") %>%
         str_replace_all("wrok", "work") %>%
+        str_replace_all("slopping", "sloping") %>%
         str_replace_all("satiesfaction", "satisfaction") %>%
         str_replace_all("satiesfied", "satisfied") %>%
         str_replace_all("outside at home", "outside home") %>%
@@ -265,6 +267,7 @@ make_names_consistent <- function(df) {
         str_replace_all("do you face any", " ") %>%
         str_replace_all("inpur", "input") %>%
         str_replace_all("input shop", " ") %>%
+        str_replace_all("highly", " ") %>%
         str_replace_all("[:punct:]|=", " ") %>%
         str_replace_all("^[0-9 ]+", " ") %>%
         str_replace_all("what is ", " ") %>%
@@ -293,7 +296,7 @@ make_names_consistent <- function(df) {
         colnames(df)[str_detect(names(df), 
                                 "does_husband_help_you_in_day_to_day_household_activiti")] <- "does_husband_help_you_in_daily_household_work"
         colnames(df)[str_detect(names(df), 
-                                "does_husband_help_you_in_day_to_day_household_activiti")] <- "attended_group_meetings_within_village_need_permission"
+                                "attended_group_meetings_within_village_do_you_have_to_take_p")] <- "attended_group_meetings_within_village_need_permission"
         colnames(df)[str_detect(names(df), 
                                 "attend_meetings_at_a_distant_place_do_you_have_to_take_permissio")] <- "attend_meetings_at_a_distant_place_need_permission"
         colnames(df)[str_detect(names(df), 
@@ -340,11 +343,11 @@ Let's do some work on rounds 2, 3, and 4.
 
 ```{r}
 treatment_round4[,c(60:100,302:311)] <- lapply(treatment_round4[,c(60:100,302:311)], as.numeric)
-treatment_round2[,c(290:299)] <- lapply(treatment_round2[,c(290:299)], as.numeric)
+treatment_round2[,c(235:244,261:299)] <- lapply(treatment_round2[,c(235:244,261:299)], as.numeric)
 
 process_names_more <- function(df) {
     df <- df %>%
-        mutate(cow_rearing = rowSums(df[,grep("cow_rearing", colnames(df))],na.rm = TRUE),
+        mutate(cow_rearing = rowSums(df[,grep("cow_rearing", colnames(df))], na.rm = TRUE),
                feed_practice = rowSums(df[,grep("feed_purchase", colnames(df))], na.rm = TRUE),
                from_where_vaccination_taken = rowSums(df[,grep("from_where_vaccination", colnames(df))], na.rm = TRUE),
                milking_cow = rowSums(df[,grep("milking_cow", colnames(df))], na.rm = TRUE),
@@ -354,7 +357,13 @@ process_names_more <- function(df) {
                where_to_sell_milk = rowSums(df[,grep("where_to_sell_milk", colnames(df))], na.rm = TRUE),
                where_to_purchase_food = rowSums(df[,grep("where_to_purchase_feed", colnames(df))], na.rm = TRUE),
                decision_money = rowSums(df[,grep("decision_money", colnames(df))], na.rm = TRUE),
-               decision_milk_sales_income = rowSums(df[,grep("decision_milk_sales_income", colnames(df))], na.rm = TRUE)) %>%
+               decision_milk_sales_income = rowSums(df[,grep("decision_milk_sales_income", colnames(df))], na.rm = TRUE),
+               knowledge_level = rowSums(df[,grep("knowledge_level", colnames(df))], na.rm = TRUE),
+               skill_level = rowSums(df[,grep("skill_level", colnames(df))], na.rm = TRUE),
+               service_vet_satisfied = rowSums(df[,grep("service_vet_doctor", colnames(df))], na.rm = TRUE), 
+               dft_point_manager_satisfied = rowSums(df[,grep("dft_point_manager_milk_collector", colnames(df))], na.rm = TRUE),
+               quality_products_ku = rowSums(df[,grep("quality_products_ku", colnames(df))], na.rm = TRUE),
+               quality_service_ku = rowSums(df[,grep("quality_service_ku", colnames(df))], na.rm = TRUE)) %>%
         select(-hello_my_name_is,
                -cow_rearing_women_1,
                -cow_rearing_men_2,
@@ -402,30 +411,74 @@ process_names_more <- function(df) {
                -decision_money_you_earned_husband_2,
                -decision_money_you_earned_jointly_3,
                -decision_money_you_earned_other_male_member_4,
-               -decision_money_you_earned_other_female_member_5)
+               -decision_money_you_earned_other_female_member_5
+               -knowledge_level_very_good_5,
+               -knowledge_level_good_4,
+               -knowledge_level_moderate_3,
+               -knowledge_level_poor_2,
+               -knowledge_level_un_satisfactory_1,
+               -skill_level_very_good_5,
+               -skill_level_good_4,
+               -skill_level_moderate_3,
+               -skill_level_poor_2,
+               -skill_level_un_satisfactory_1,
+               -service_vet_doctor_satisfied_4,
+               -service_vet_doctor_satisfied_3,
+               -service_vet_doctor_satisfied_2,
+               -service_vet_doctor_satisfied_1,
+               -dft_point_manager_milk_collector_satisfied_4,
+               -dft_point_manager_milk_collector_satisfied_3
+               -dft_point_manager_milk_collector_satisfied_2,
+               -dft_point_manager_milk_collector_satisfied_1,
+               -quality_products_ku_4,
+               -quality_products_ku_3,
+               -quality_products_ku_2,
+               -quality_products_ku_1,
+               -quality_service_ku_4,
+               -quality_service_ku_3,
+               -quality_service_ku_2,
+               -quality_service_ku_1)
     
     df
 }
 
+
 treatment_round2 <- treatment_round2 %>%
-    process_names_more()
+    process_names_more() %>%
+    select(-service_vet_doctor_satisfied_5,
+           -dft_point_manager_milk_collector_satisfied_5,
+           -quality_products_ku_5,
+           -quality_service_ku_5)
 
     
 treatment_round3 <- treatment_round3 %>%
-    process_names_more()
+    process_names_more() %>%
+    select(-service_vet_doctor_satisfied_5,
+           -dft_point_manager_milk_collector_satisfied_5,
+           -quality_products_ku_5,
+           -quality_service_ku_5)
 
 
 treatment_round4 <- treatment_round4 %>%
     process_names_more() %>%
     select(-text11) %>%
     mutate(vaccination = rowSums(treatment_round4[,grep("vaccination_de_worming_treatment_ai", 
-                                                        colnames(treatment_round4))], na.rm = TRUE)) %>%
+                                                        colnames(treatment_round4))], na.rm = TRUE),
+           others_satisfied = rowSums(treatment_round4[,grep("others_satisfied", 
+                                                             colnames(treatment_round4))], na.rm = TRUE)) %>%
     select(-vaccination_de_worming_treatment_ai_cow_women_1,
            -vaccination_de_worming_treatment_ai_cow_men_2,
-           -vaccination_de_worming_treatment_ai_cow_3)
+           -vaccination_de_worming_treatment_ai_cow_3,
+           -others_satisfied_4,
+           -others_satisfied_3,
+           -others_satisfied_2,
+           -others_satisfied_1)
 ```
 
 Now let's work on round 5 a bit.
+
+INCOME
+LOANS
 
 ```{r}
 colnames(treatment_round5)[74] <- "how_wash_hands"
@@ -454,7 +507,14 @@ colnames(control_round5)[130] <- "attend_meetings_at_a_distant_place_if_yes_from
 
 
 treatment_round5 <- treatment_round5 %>%
-    select(-my_name_is) %>%
+    select(-my_name_is,
+           -sl_1, -sl_2, -sl_3
+           -calf_identification_2,
+           -calf_identification_3,
+           -breed_2, -breed_3,
+           -selling_price_2, -selling_price_3,
+           -selling_month_2, -selling_month_3,
+           -sex_2, -sex_3) %>%
     rename(affected_by_disease_2 = affected_by_disease_yes_or_no_2,
            affected_by_disease_3 = affected_by_disease_what_did_you_do_3,
            affected_by_disease_4 = affected_by_disease_who_provide_treatment_4,
@@ -503,7 +563,14 @@ treatment_round5 <- treatment_round5 %>%
 
 
 control_round5 <- control_round5 %>%
-    select(-my_name_is) %>%
+    select(-my_name_is,
+           -sl_1, -sl_2, -sl_3
+           -calf_identification_2,
+           -calf_identification_3,
+           -breed_2, -breed_3,
+           -selling_price_2, -selling_price_3,
+           -selling_month_2, -selling_month_3,
+           -sex_2, -sex_3) %>%
     rename(affected_by_disease_2 = affected_by_disease_yes_or_no_2,
            affected_by_disease_3 = affected_by_disease_what_did_you_do_3,
            affected_by_disease_4 = affected_by_disease_who_provide_treatment_4,
@@ -547,12 +614,19 @@ control_round5 <- control_round5 %>%
            cow_died_yes_1_no_2 = did_any_cattle_die_during_last_6_months,
            cow_died_type_cow = type_death_cattle,
            cow_died_calf_sex = if_calf_sex,
-           causes_death_cow = what_was_cause_death_cow)
+           causes_death_cow = what_was_cause_death_cow,
+           causes_death_calf = what_was_cause_death_cattle)
 ```
 
 How are things looking?
 
 ```{r}
+names(treatment_round3)[!names(treatment_round3) %in% names(treatment_round2)]
+names(treatment_round2)[!names(treatment_round2) %in% names(treatment_round3)]
+
+names(treatment_round4)[!names(treatment_round4) %in% names(treatment_round2)]
+names(treatment_round2)[!names(treatment_round2) %in% names(treatment_round4)]
+
 names(treatment_round4)[!names(treatment_round4) %in% names(treatment_round5)]
 names(treatment_round5)[!names(treatment_round5) %in% names(treatment_round4)]
 
@@ -561,6 +635,61 @@ names(treatment_round5)[!names(treatment_round5) %in% names(treatment_round2)]
 
 names(control_round5)[!names(control_round5) %in% names(treatment_round5)]
 names(treatment_round5)[!names(treatment_round5) %in% names(control_round5)]
+```
+
+
+## Getting Round 1 Ready
+
+Round 1 is structured very, very differently than the rest of it, so we'll have to do this differently.
+
+```{r}
+treatment_round1_cows <- treatment_round1[,29:98]
+treatment_round1 <- treatment_round1[,-c(29:98)]
+#names(treatment_round1)
+```
+
+Let's get started.
+
+```{r, eval=FALSE}
+names(treatment_round1) <- names(treatment_round1) %>%
+    tolower()
+
+treatment_round1 <- treatment_round1 %>%
+    rename(entry_id = entryid,
+           household_number = `01baselinehouseholdnumber` = household_number,
+           census_number = `02censusnoapplicableforcontrol2andcontrol3producer`,
+           producer_name = `03anameoftherespondent`,
+           sex_respondent = `03bsexfemale1male2other3`,
+           name_household_head = `04nameofthehouseholdhead`,
+           location = `05locationnearestlandmark`,
+           para = `06para`,
+           village = `07villagename`,
+           union = `08unionname`,
+           thana = `09thananame`,
+           district = `10districtname`,
+           household_type = `11hhtype`,
+           interviewer_name = `12ainterviewername`,
+           interview_id = `12binterviewerid`,
+           supervisor_name = `13asupervisorname`,
+           supervisor_id = `13bsupervisorid`,
+           date_interview = `14dateofinterview`,
+           age_respondent = ageofrespondent,
+           no_of_family_members_total = nooffamilymembers,
+           are_you_sdvc_group_member = areyousdvcgroupmember,
+           group_code = groupcode,
+           producer_id = membercode,
+           group_name = whatisyourgroupname,
+           position_in_group = positioningroup,
+           total_consumption_ltr = milkconsumption,
+           total_free_distribution_ltr = freedistribution,
+           neighbors = salesneighbors,
+           collection_point = salesdft,
+           milk_collector = salescollector,
+           open_market = salesopenmarket,
+           sweetmeat_tea_stall = salesteastall,
+           direct_to_company = salesdirecttocompant)
+
+
 ```
 
 
