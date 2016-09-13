@@ -1,0 +1,2108 @@
+gpf_type,round,names
+treatment,1.0,DEO_ID
+treatment,1.0,EntryID
+treatment,1.0,01BaselineHouseholdNumber
+treatment,1.0,02CensusNoApplicableforControl2andControl3producer
+treatment,1.0,03aNameoftheRespondent
+treatment,1.0,03bSexFemale1Male2Other3
+treatment,1.0,04NameoftheHouseholdHead
+treatment,1.0,05Locationnearestlandmark
+treatment,1.0,06Para
+treatment,1.0,07VillageName
+treatment,1.0,08UnionName
+treatment,1.0,09ThanaName
+treatment,1.0,10DistrictName
+treatment,1.0,11HHtype
+treatment,1.0,12aInterviewerName
+treatment,1.0,12bInterviewerID
+treatment,1.0,13aSupervisorName
+treatment,1.0,13bSupervisorID
+treatment,1.0,14Dateofinterview
+treatment,1.0,Occupation_Primary
+treatment,1.0,Occupation_Secondary
+treatment,1.0,Ageofrespondent
+treatment,1.0,Nooffamilymembers
+treatment,1.0,AreyouSDVCgroupMember
+treatment,1.0,Groupcode
+treatment,1.0,MemberCode
+treatment,1.0,Whatisyourgroupname
+treatment,1.0,Positioningroup
+treatment,1.0,Cow1CowID
+treatment,1.0,Cow1BreedofCow
+treatment,1.0,Cow1TypeofCow
+treatment,1.0,Cow1ValueofCow
+treatment,1.0,Cow1DailyProductionofcow
+treatment,1.0,Cow1Lastcalvingdate
+treatment,1.0,Cow1Noofcalving
+treatment,1.0,Cow2CowID
+treatment,1.0,Cow2BreedofCow
+treatment,1.0,Cow2TypeofCow
+treatment,1.0,Cow2ValueofCow
+treatment,1.0,Cow2DailyProductionofCow
+treatment,1.0,Cow2Lastcalvingdate
+treatment,1.0,Cow2Noofcalving
+treatment,1.0,Cow3CowID
+treatment,1.0,Cow3BreedofCow
+treatment,1.0,Cow3TypeofCow
+treatment,1.0,Cow3ValueofCow
+treatment,1.0,Cow3DailyProductionofCow
+treatment,1.0,Cow3Lastcalvingdate
+treatment,1.0,Cow3Noofcalving
+treatment,1.0,Cow4CowID
+treatment,1.0,Cow4BreedofCow
+treatment,1.0,Cow4TypeofCow
+treatment,1.0,Cow4ValueofCow
+treatment,1.0,Cow4DailyProductionofCow
+treatment,1.0,Cow4Lastcalvingdate
+treatment,1.0,Cow4Noofcalving
+treatment,1.0,Cow5CowID
+treatment,1.0,Cow5BreedofCow
+treatment,1.0,Cow5TypeofCow
+treatment,1.0,Cow5ValueofCow
+treatment,1.0,Cow5DailyProductionofCow
+treatment,1.0,Cow5Lastcalvingdate
+treatment,1.0,Cow5Noofcalving
+treatment,1.0,Cow6CowID
+treatment,1.0,Cow6BreedofCow
+treatment,1.0,Cow6TypeofCow
+treatment,1.0,Cow6ValueofCow
+treatment,1.0,Cow6DailyProductionofCow
+treatment,1.0,Cow6Lastcalvingdate
+treatment,1.0,Cow6Noofcalving
+treatment,1.0,Cow7CowID
+treatment,1.0,Cow7BreedofCow
+treatment,1.0,Cow7TypeofCow
+treatment,1.0,Cow7ValueofCow
+treatment,1.0,Cow7DailyProductionofCow
+treatment,1.0,Cow7Lastcalvingdate
+treatment,1.0,Cow7Noofcalving
+treatment,1.0,Cow8CowID
+treatment,1.0,Cow8BreedofCow
+treatment,1.0,Cow8TypeofCow
+treatment,1.0,Cow8ValueofCow
+treatment,1.0,Cow8DailyProductionofCow
+treatment,1.0,Cow8Lastcalvingdate
+treatment,1.0,Cow8Noofcalving
+treatment,1.0,Cow9CowID
+treatment,1.0,Cow9BreedofCow
+treatment,1.0,Cow9TypeofCow
+treatment,1.0,Cow9ValueofCow
+treatment,1.0,Cow9DailyProductionofCow
+treatment,1.0,Cow9Lastcalvingdate
+treatment,1.0,Cow9Noofcalving
+treatment,1.0,Cow10CowID
+treatment,1.0,Cow10BreedofCow
+treatment,1.0,Cow10TypeofCow
+treatment,1.0,Cow10ValueofCow
+treatment,1.0,Cow10DailyProductionofCow
+treatment,1.0,Cow10Lastcalvingdate
+treatment,1.0,Cow10Noofcalving
+treatment,1.0,MilkConsumption
+treatment,1.0,Freedistribution
+treatment,1.0,Salesneighbors
+treatment,1.0,SalesDFT
+treatment,1.0,Salescollector
+treatment,1.0,SalesOpenmarket
+treatment,1.0,Salesteastall
+treatment,1.0,SalesDirecttocompant
+treatment,1.0,Spoilage
+treatment,1.0,Totalrecieptfromsales
+treatment,1.0,Whoconsumedmilkyesterday1
+treatment,1.0,Whoconsumedmilkyesterday2
+treatment,1.0,Whoconsumedmilkyesterday3
+treatment,1.0,Whoconsumedmilkyesterday4
+treatment,1.0,Whoconsumedmilkyesterday5
+treatment,1.0,Whowasgivenpriorityofyourfamilytoconsumemilkyesterday
+treatment,1.0,Whysshewasgivenprioritytoconsumemilk
+treatment,1.0,Areyoucultivatingfodder
+treatment,1.0,IfYescultivatedlandDec
+treatment,1.0,Whichtypeoffoddercultivating1
+treatment,1.0,Whichtypeoffoddercultivating2
+treatment,1.0,Whichtypeoffoddercultivating3
+treatment,1.0,Whichtypeoffoddercultivating4
+treatment,1.0,Doyoufedgreengrasstoyourcow
+treatment,1.0,Sourceofgrass1
+treatment,1.0,Sourceofgrass2
+treatment,1.0,Sourceofgrass3
+treatment,1.0,Whoprovidetreatmentservicetoyouranimal
+treatment,1.0,WhichTypeofthedoctorsheis1
+treatment,1.0,WhichTypeofthedoctorsheis2
+treatment,1.0,WhichTypeofthedoctorsheis3
+treatment,1.0,Howmanyvaccineshouldbegivenforcattle1
+treatment,1.0,Howmanyvaccineshouldbegivenforcattle2
+treatment,1.0,Whatarethose
+treatment,1.0,Whichvaccines
+treatment,1.0,Didyoudewormed
+treatment,1.0,Howmanydaysbefore
+treatment,1.0,Whosuggestedyou1
+treatment,1.0,Whosuggestedyou2
+treatment,1.0,WhodecideswhethervaccinationdewormingtreatmentAIisprovidedforcat
+treatment,1.0,WhodecideswhethervaccinationdewormingtreatmentAIisprovidedforc_A
+treatment,1.0,Whatarethedrinkingwatersourcesforyourcattle1
+treatment,1.0,Whatarethedrinkingwatersourcesforyourcattle2
+treatment,1.0,Doyouwashyourcattle
+treatment,1.0,Ifnowhy
+treatment,1.0,Ifyesinwhichinterval
+treatment,1.0,Measurementtakenforbiosecurity1
+treatment,1.0,Measurementtakenforbiosecurity2
+treatment,1.0,Measurementtakenforbiosecurity3
+treatment,1.0,Sexofthepersonwhoengagedwithcowrearing
+treatment,1.0,Sexofthepersonwhoengagedwithcattlefeedpurchase
+treatment,1.0,Sexofthepersonwhoengagedwithmilkselling
+treatment,1.0,Whotakesthecattlepurchasedecision1
+treatment,1.0,Whotakesthecattlepurchasedecision2
+treatment,1.0,Whotakesthecattlesalesdecision1
+treatment,1.0,Whotakesthecattlesalesdecision2
+treatment,1.0,Whodecideswheretosellmilk
+treatment,1.0,Whodecidesfromwheretopurchasefeedfodder1
+treatment,1.0,Whodecidesfromwheretopurchasefeedfodder2
+treatment,1.0,Whoengagedinmilkingthecow
+treatment,1.0,Ifyoudonotengagedinmilkingwhynot
+treatment,1.0,Doyouwashyourhandbeforeandaftermilking
+treatment,1.0,Ifyeshow
+treatment,1.0,Doyouwashyourmilkingpot
+treatment,1.0,Ifyeshow_A
+treatment,1.0,Doyouwashudderandteatbeforemilking
+treatment,1.0,How
+treatment,1.0,Doyouuseanythingontheudderandteatduringmilking
+treatment,1.0,IfYesWhat1
+treatment,1.0,IfYesWhat2
+treatment,1.0,Wheredoyoudisposecowdung1
+treatment,1.0,Wheredoyoudisposecowdung2
+treatment,1.0,Wheredoyoudisposecowdung3
+treatment,1.0,Whatdoyoudowithcowdung1
+treatment,1.0,Whatdoyoudowithcowdung2
+treatment,1.0,Whatdoyoudowithcowdung3
+treatment,1.0,Whatdoyoudowithcowdung4
+treatment,1.0,Whatdoyoudowithcowdung5
+treatment,1.0,Incomefromcowdungsoldduringlast3months
+treatment,1.0,Whattypesofcattlefeedsare
+treatment,1.0,Whichtypeoffeedincreasethemilkfat
+treatment,1.0,Mentionthenameoffewhybridfodder
+treatment,1.0,Mentionthenameoffewconcentratefeed
+treatment,1.0,Whatshouldbetheconditionofcowshed
+treatment,1.0,Whichtypeofcattleshouldvaccinate
+treatment,1.0,Whatarethesymptomsofwormaffectedcattle
+treatment,1.0,Inwhichintervaldewormingshouldbedone
+treatment,1.0,AfterheatdetectionwhichisthebesttimeforAI
+treatment,1.0,WhataretheadvantagesofAI
+treatment,1.0,TotalKnowledgeScore
+treatment,1.0,Properventilationsystemisavailableincowshedornot
+treatment,1.0,Cleanlinessofthefloorofcowshed
+treatment,1.0,Isthereanypropersloppingofthefloortothedrainornot
+treatment,1.0,Isthereanydisposalplaceforcowdungornot
+treatment,1.0,Cleanlinessofthemilkingplace
+treatment,1.0,TotalPracticeScore
+treatment,1.0,Doyouownedanycattle
+treatment,1.0,DidyougetownershipofcowafterjoiningSDVC
+treatment,1.0,DidyouinheritanycattlecowfromFatherHusbandOthers1
+treatment,1.0,DidyouinheritanycattlecowfromFatherHusbandOthers2
+treatment,1.0,Haveanyincomefromthosecattleduringlast3months
+treatment,1.0,Doyouhaveanyotherincomeduringlast3months
+treatment,1.0,Whotakedecisionforuseyourownincome1
+treatment,1.0,Whotakedecisionforuseyourownincome2
+treatment,1.0,Whotakedecisionforusethemilksalesincome1
+treatment,1.0,Whotakedecisionforusethemilksalesincome2
+treatment,1.0,Haveanyassetsbeenpurchasedwithmoneyyouhaveearnedduringlastmonths
+treatment,1.0,Ifyesputinformationinthefollowingtable
+treatment,1.0,Asset1Name
+treatment,1.0,Asset1Whomadedecisiontobuythisassets1
+treatment,1.0,Asset1Whomadedecisiontobuythisassets2
+treatment,1.0,Asset1Whocontrolthisasset1
+treatment,1.0,Asset1Whocontrolthisasset2
+treatment,1.0,Asset2Name
+treatment,1.0,Asset2Whomadedecisiontobuythisassets
+treatment,1.0,Asset2Whocontrolthisasset
+treatment,1.0,Asset3Name
+treatment,1.0,Asset3Whomadedecisiontobuythisassets
+treatment,1.0,Asset3Whocontrolthisasset
+treatment,1.0,Asset4Name
+treatment,1.0,Asset4Whomadedecisiontobuythisassets
+treatment,1.0,Asset4Whocontrolthisasset
+treatment,1.0,Asset5Name
+treatment,1.0,Asset5Whomadedecisiontobuythisassets
+treatment,1.0,Asset5Whocontrolthisasset
+treatment,1.0,Doyouhavetotakepermissiontoattendedgroupmeeting
+treatment,1.0,Ifyesfromwhom1
+treatment,1.0,Ifyesfromwhom2
+treatment,1.0,Ifyesfromwhom3
+treatment,1.0,Doyouhavetotakepermissiontoattendedmeetingatdistantplace
+treatment,1.0,Ifyesfromwhom1_A
+treatment,1.0,Ifyesfromwhom2_A
+treatment,1.0,Ifyesfromwhom3_A
+treatment,1.0,Doyouhavetotakepermissiontotravelatadistantplaceingeneralliketov
+treatment,1.0,Ifyesfromwhom1_B
+treatment,1.0,Ifyesfromwhom2_B
+treatment,1.0,Ifyesfromwhom3_B
+treatment,1.0,DoyourhusbandhelpyouinyourdaytodayHHactivities
+treatment,1.0,CattleFeeding
+treatment,1.0,Cattlewash
+treatment,1.0,Milking
+treatment,1.0,GrassCollection
+treatment,1.0,Childteaching
+treatment,1.0,FeedtheChildren
+treatment,1.0,Washchildern
+treatment,1.0,Cooking
+treatment,1.0,Homearrangement
+treatment,1.0,Housecleaning
+treatment,1.0,Others
+treatment,1.0,Doyoufaceanyobstructionfromyourfamily
+treatment,1.0,Ifyesinwhichcaseobstaclesapplier
+treatment,1.0,Assetpurchaseofyourown1
+treatment,1.0,Assetpurchaseofyourown2
+treatment,1.0,Assetpurchaseofyourown3
+treatment,1.0,IncomeGeneratingActivitiesatHome1
+treatment,1.0,IncomeGeneratingActivitiesatHome2
+treatment,1.0,IncomeGeneratingActivitiesatHome3
+treatment,1.0,IncomeGeneratingActivitiesoutsideofHome1
+treatment,1.0,IncomeGeneratingActivitiesoutsideofHome2
+treatment,1.0,IncomeGeneratingActivitiesoutsideofHome3
+treatment,1.0,Ownassetsales1
+treatment,1.0,Ownassetsales2
+treatment,1.0,Ownassetsales3
+treatment,1.0,Spendownincome1
+treatment,1.0,Spendownincome2
+treatment,1.0,Attendmeetingtrainingatdistantplace1
+treatment,1.0,Attendmeetingtrainingatdistantplace2
+treatment,1.0,RiceBran_Amount
+treatment,1.0,RiceBran_Unit
+treatment,1.0,RiceBran_Source1
+treatment,1.0,RiceBran_Source2
+treatment,1.0,RiceBran_Taka
+treatment,1.0,WheatBran_Amount
+treatment,1.0,WheatBran_Unit
+treatment,1.0,WheatBran_Source
+treatment,1.0,WheatBran_Taka
+treatment,1.0,PulseHusk_Amount
+treatment,1.0,PulseHusk_Unit
+treatment,1.0,PulseHusk_Source
+treatment,1.0,PulseHusk_Taka
+treatment,1.0,BrokenRice_Amount
+treatment,1.0,BrokenRice_Unit
+treatment,1.0,BrokenRice_Source1
+treatment,1.0,BrokenRice_Source2
+treatment,1.0,BrokenRice_Taka
+treatment,1.0,Molasses_Amount
+treatment,1.0,Molasses_Unit
+treatment,1.0,Molasses_Source
+treatment,1.0,Molasses_Taka
+treatment,1.0,BrokenMaize_Amount
+treatment,1.0,BrokenMaize_Unit
+treatment,1.0,BrokenMaize_Source
+treatment,1.0,BrokenMaize_Taka
+treatment,1.0,CoconutoilCake_Amount
+treatment,1.0,CoconutoilCake_Unit
+treatment,1.0,CoconutoilCake_Source
+treatment,1.0,CoconutoilCake_Taka
+treatment,1.0,MustardoilCake_Amount
+treatment,1.0,MustardoilCake_Unit
+treatment,1.0,MustardoilCake_Source1
+treatment,1.0,MustardoilCake_Source2
+treatment,1.0,MustardoilCake_Taka
+treatment,1.0,Mineralmix_Amount
+treatment,1.0,Mineralmix_Unit
+treatment,1.0,Mineralmix_Source
+treatment,1.0,Mineralmix_Taka
+treatment,1.0,DCP_Amount
+treatment,1.0,DCP_Unit
+treatment,1.0,DCP_Source
+treatment,1.0,DCP_Taka
+treatment,1.0,Straw_Amount
+treatment,1.0,Straw_Unit
+treatment,1.0,Straw_Source1
+treatment,1.0,Straw_Source2
+treatment,1.0,Straw_Source3
+treatment,1.0,Straw_Taka
+treatment,1.0,GreenGrass_Amount
+treatment,1.0,GreenGrass_Unit
+treatment,1.0,GreenGrass_Source1
+treatment,1.0,GreenGrass_Source2
+treatment,1.0,GreenGrass_Source3
+treatment,1.0,GreenGrass_Taka
+treatment,1.0,ReadyFeed_Amount
+treatment,1.0,ReadyFeed_Unit
+treatment,1.0,ReadyFeed_Source1
+treatment,1.0,ReadyFeed_Source2
+treatment,1.0,ReadyFeed_Taka
+treatment,1.0,Total_Amount
+treatment,1.0,Total_Taka
+treatment,1.0,AffectedbydiseaseYesNo
+treatment,1.0,ActiontakenAffectedbydisease
+treatment,1.0,WhoprovidedTreatment1
+treatment,1.0,WhoprovidedTreatment2
+treatment,1.0,WhoprovidedTreatment3
+treatment,1.0,TreatmentFees
+treatment,1.0,DiagnosisCost
+treatment,1.0,MedicineCost
+treatment,1.0,TotalTreatmentCost
+treatment,1.0,VaccinatedYesNo
+treatment,1.0,WhoprovidedVaccinne1
+treatment,1.0,WhoprovidedVaccinne2
+treatment,1.0,Feeforvaccination
+treatment,1.0,Diagnosiscostforvaccination
+treatment,1.0,VaccineCost
+treatment,1.0,Totalvaccinationcost
+treatment,1.0,DewormedYesNo
+treatment,1.0,ProvidedDewormed1
+treatment,1.0,ProvidedDewormed2
+treatment,1.0,Totaldewormingcost
+treatment,1.0,ProvidedAIYesNo
+treatment,1.0,WhoProvidedAI1
+treatment,1.0,WhoProvidedAI2
+treatment,1.0,TotalAIcost
+treatment,1.0,ProvidedNIYesNo
+treatment,1.0,NIProviderSource
+treatment,1.0,TotalNIcost
+treatment,1.0,TotalCost
+treatment,1.0,Didyoupurchaseanycattle
+treatment,1.0,Howmanycattlepurchase
+treatment,1.0,Typeofcattlepurchased1
+treatment,1.0,Typeofcattlepurchased2
+treatment,1.0,Typeofcattlepurchased3
+treatment,1.0,Breedtypeofpurchasedcattle
+treatment,1.0,Didyousaleanycattle
+treatment,1.0,Howmanycattlesold
+treatment,1.0,Typeofcattlesold1
+treatment,1.0,Typeofcattlesold2
+treatment,1.0,Typeofcattlesold3
+treatment,1.0,Typeofcattlesold4
+treatment,1.0,Typeofcattlesold5
+treatment,1.0,Typeofcattlesold6
+treatment,1.0,Whysoldthem1
+treatment,1.0,Whysoldthem2
+treatment,1.0,Didyousellanycalf
+treatment,1.0,Howmanycalfsold
+treatment,1.0,Ccalf1CalfID
+treatment,1.0,Calf1Breed
+treatment,1.0,Calf1Sex
+treatment,1.0,Calf1Price
+treatment,1.0,Calf1SoldMonth
+treatment,1.0,Ccalf2CalfID
+treatment,1.0,Calf2Breed
+treatment,1.0,Calf2Sex
+treatment,1.0,Calf2Price
+treatment,1.0,Calf2SoldMonth
+treatment,1.0,Ccalf3CalfID
+treatment,1.0,Calf3Breed
+treatment,1.0,Calf3Sex
+treatment,1.0,Calf3Price
+treatment,1.0,Calf3SoldMonth
+treatment,1.0,Totalcalfsaleincome
+treatment,1.0,Didyouhaveanycalfborninthelast6months
+treatment,1.0,Howlongwasthedryperiod
+treatment,1.0,DiedanyCattle
+treatment,1.0,Yeshowmany
+treatment,1.0,TypeofdeadCattle1
+treatment,1.0,TypeofdeadCattle2
+treatment,1.0,WhatdidyoudowithdeadCattle1
+treatment,1.0,WhatdidyoudowithdeadCattle2
+treatment,1.0,Wheredidyougetthemoneytofinanceyourdairy1
+treatment,1.0,Wheredidyougetthemoneytofinanceyourdairy2
+treatment,1.0,Wheredidyougetthemoneytofinanceyourdairy3
+treatment,1.0,Ifreceiveanyloanshowmuch
+treatment,1.0,LoanSource1
+treatment,1.0,LoanSource2
+treatment,1.0,LoanSource3
+treatment,1.0,LoanSource4
+treatment,1.0,Ifnottakenloanhaveanyplantoreceiveloan
+treatment,1.0,Ifhaveplanfromwheretoreceiveloan1
+treatment,1.0,Ifhaveplanfromwheretoreceiveloan2
+treatment,1.0,Ifhaveplanfromwheretoreceiveloan3
+treatment,1.0,Ifhaveplanfromwheretoreceiveloan4
+treatment,1.0,Whatisthenameofvetdoctorserveinyourgroup
+treatment,1.0,WhattypeofthevetDoctoris1
+treatment,1.0,WhattypeofthevetDoctoris2
+treatment,1.0,WhattypeofthevetDoctoris3
+treatment,1.0,HowmanytimesthevetDoctorvisitedyourfarm
+treatment,1.0,KnowledgeLevelofthatvetDoctor
+treatment,1.0,SkillLevelofthatvetDoctor
+treatment,1.0,ResponsivenessofthatvetDoctorwhencall
+treatment,1.0,RangeofFeereceived
+treatment,1.0,Doesheprovideprescription
+treatment,1.0,AreyousatisfiedwiththeserviceofvetDoctor
+treatment,1.0,Explainyourcomments
+treatment,1.0,Wheredoyousellmilk1
+treatment,1.0,Wheredoyousellmilk2
+treatment,1.0,Whydoyouchoosetosellmilkhere
+treatment,1.0,LevelofSatisfactionwithDFTpointormilkcollector
+treatment,1.0,Areyousatisfiedwiththemethodsofmeasurement
+treatment,1.0,Describewhy
+treatment,1.0,Doyouthinkthemilksalestransactionsarefair
+treatment,1.0,Describewhy_A
+treatment,1.0,Mainlywhoisresponsibleforsellingthemilk1
+treatment,1.0,Mainlywhoisresponsibleforsellingthemilk2
+treatment,1.0,Mainlywhoreceivespaymentfrommilksales1
+treatment,1.0,Mainlywhoreceivespaymentfrommilksales2
+treatment,1.0,DescribehowyoudecidedwhowillreceivepaymentinHH
+treatment,1.0,Wheredoyoupurchaseyourinputs1
+treatment,1.0,Wheredoyoupurchaseyourinputs2
+treatment,1.0,Wheredoyoupurchaseyourinputs3
+treatment,1.0,Haveyourecentlychangedwhereyoupurchaseyourinputs
+treatment,1.0,Wheredidyoupreviouslypurchaseyourinputs1
+treatment,1.0,Wheredidyoupreviouslypurchaseyourinputs2
+treatment,1.0,Wheredidyoupreviouslypurchaseyourinputs3
+treatment,1.0,HowoftendidyougototheinputKUshopinthepast6months
+treatment,1.0,Howwouldyouratethequalityoftheproductsyoupurchasethere
+treatment,1.0,Howwouldyouratethequalityoftheserviceyoupurchasethere
+treatment,1.0,Didyouobserveanychangeindairyrelatedactivities
+treatment,1.0,Ifyeswhatarethey
+treatment,1.0,Whatarethereasonsforthesechanges
+treatment,1.0,IsthereanyorganizationGovtinstituteworkingherefordairydevelopme
+treatment,1.0,Ifyeswhatactivitiesaretheyarecontinuingfordairydevelopment
+treatment,1.0,WhatistheroleofFarmerLeaderFlforgroupdevelopment
+treatment,1.0,WhattypeeffectiveactiontakenbyFLsforgroupdevelopment
+treatment,1.0,Howthedecisionsaretakeninthegroup1
+treatment,1.0,Howthedecisionsaretakeninthegroup2
+treatment,1.0,LevelofsatisfactionofFLsactivities
+treatment,1.0,WhatdoyouthinkDFTcontributingtoincreasingdecreasingyourGroupcohe
+treatment,1.0,OverallcommentsIfany
+treatment,1.0,V458
+treatment,1.0,V459
+treatment,1.0,V460
+treatment,1.0,V461
+treatment,1.0,V462
+treatment,1.0,V463
+treatment,1.0,V464
+treatment,1.0,V465
+treatment,1.0,V466
+treatment,1.0,V467
+treatment,1.0,V468
+treatment,1.0,V469
+treatment,2.0,DEO SL
+treatment,2.0,Producer ID
+treatment,2.0,Name of the Respondent
+treatment,2.0,Para Name
+treatment,2.0,Village Name
+treatment,2.0,Union Name
+treatment,2.0,Union GEO Code
+treatment,2.0,Thana Name
+treatment,2.0,Thana GEO Code
+treatment,2.0,District Name
+treatment,2.0,District GEO Code
+treatment,2.0,HH Type
+treatment,2.0,What is your group Name
+treatment,2.0,Position in group
+treatment,2.0,Hello My Name is
+treatment,2.0,Do you agree to participate in the survey?
+treatment,2.0,Interviewer Name
+treatment,2.0,Interviewer ID
+treatment,2.0,Supervisor Name
+treatment,2.0,Date of Interview
+treatment,2.0,Sex of the Respondent
+treatment,2.0,Age of Respondent
+treatment,2.0,Marital Status of the Respondent
+treatment,2.0,Educational Status of the Respondent
+treatment,2.0,Occupation Primary
+treatment,2.0,Occupation Secondary
+treatment,2.0,Name of the Household Head
+treatment,2.0,Relationship with Household Head
+treatment,2.0,No of the Family Nennbers (Total)
+treatment,2.0,Men Below 5 Years
+treatment,2.0,Women Below 5 years
+treatment,2.0,Men 5-18 Years
+treatment,2.0,Women 5-18 years
+treatment,2.0,Men 18-64 Years
+treatment,2.0,Women 18-64 years
+treatment,2.0,Men 64 Years Above
+treatment,2.0,Women 64 years above
+treatment,2.0,Total Comsumption (Ltr)
+treatment,2.0,Total Free Distribution (Ltr)
+treatment,2.0,Neighbours
+treatment,2.0,Collection Point
+treatment,2.0,Milk Collector
+treatment,2.0,Open Market
+treatment,2.0,Sweetmeat/Tea Stall
+treatment,2.0,Direct to Company
+treatment,2.0,Yesterday total spoilage(Ltr)
+treatment,2.0,Yesterday total Income from milk sale
+treatment,2.0,Within your household who given priority to consumed milk
+treatment,2.0,Why s/he was given priority to consumed milk?
+treatment,2.0,Are you Cultivating fodder?
+treatment,2.0,If Yes Cultivated land (Dec)
+treatment,2.0,Which type of fodder you cultivation?
+treatment,2.0,What is the drinking water sources for your cattle?
+treatment,2.0,Do you wash your cattle?
+treatment,2.0,If Not why?
+treatment,2.0,If you wash your cattle how often?
+treatment,2.0,Measurement taken for bio-security
+treatment,2.0,Cow Rearing Women =1
+treatment,2.0,Cow Rearing Men =2
+treatment,2.0,Cow Rearing Both = 3
+treatment,2.0,Feed Purchase Men = 2
+treatment,2.0,Feed Purchase Women = 1
+treatment,2.0,Feed Purchase Both = 3
+treatment,2.0,Milking The Cow Women = 1
+treatment,2.0,Milking The Cow Men = 2
+treatment,2.0,Milking The Cow Both = 3
+treatment,2.0,Milk Selling Women = 1
+treatment,2.0,Milk Selling Men = 2
+treatment,2.0,Milk Selling Both = 3
+treatment,2.0,If you do not engaged in milking why not?
+treatment,2.0,Cattle Purchase Wife only = 1
+treatment,2.0,Cattle Purchase Husband only = 2
+treatment,2.0,Cattle Purchase Jointly = 3
+treatment,2.0,Cattle Purchase Other Male Member = 4
+treatment,2.0,Cattle Purchase Other Female Member = 5
+treatment,2.0,Cattle Sales Wife Only = 1
+treatment,2.0,Cattle Sales Husband Only = 2
+treatment,2.0,Cattle Sales Jointly = 3
+treatment,2.0,Cattle Sales Other Male Member = 4
+treatment,2.0,Cattle Sales Other Female Member = 5
+treatment,2.0,Where to Sell Milk Wife Only = 1
+treatment,2.0,Where to Sell Milk Husband Only = 2
+treatment,2.0,Where to Sell Milk Jointly = 3
+treatment,2.0,Where to Sell Milk Other Male Member = 4
+treatment,2.0,Where to Sell Milk Other Female Member = 5
+treatment,2.0,Where to Purchase Feed/Fooder Wife only = 1
+treatment,2.0,Where to Purchase Feed/Fooder  Husband only = 2
+treatment,2.0,Where to Purchase Feed/Fooder  Jointly = 3
+treatment,2.0,Where to Purchase Feed/Fooder  Other Male Member = 4
+treatment,2.0,Where to Purchase Feed/Fooder  Other Female Member = 5
+treatment,2.0,From where vaccination/de-worming Wife Only = 1
+treatment,2.0,From where vaccination/de-worming Husband Only = 2
+treatment,2.0,From where vaccination/de-worming Jointly = 3
+treatment,2.0,From where vaccination/de-worming Other Male Member = 4
+treatment,2.0,From where vaccination/de-worming Other Female Member = 5
+treatment,2.0,Where do you dispose cowdung?
+treatment,2.0,What do you do with cowdung?
+treatment,2.0,Income from cowdung sold during last 6 months
+treatment,2.0,Amount Rice Bran
+treatment,2.0,Amount Wheat Bran
+treatment,2.0,Amount Pulse Husk
+treatment,2.0,Amount Broken Rice
+treatment,2.0,Amount Molasess
+treatment,2.0,Amount Broken Maize
+treatment,2.0,Amount Coconut Oil Cake
+treatment,2.0,Amount Mustard Oil Cake
+treatment,2.0,Amount Mineral Mix
+treatment,2.0,Amount DCP
+treatment,2.0,Amount Straw
+treatment,2.0,Amount Green Grass
+treatment,2.0,Amount Ready Feed
+treatment,2.0,Amount Total
+treatment,2.0,Unit Rice Bran
+treatment,2.0,Unit Wheat Bran
+treatment,2.0,Unit Pulse Husk
+treatment,2.0,Unit Broken Rice
+treatment,2.0,Unit Molasess
+treatment,2.0,Unit Broken Maize
+treatment,2.0,Unit Coconut Oil Cake
+treatment,2.0,Unit Mustard Oil Cake
+treatment,2.0,Unit Mineral Mix
+treatment,2.0,Unit DCP
+treatment,2.0,Unit Straw
+treatment,2.0,Unit Green Grass
+treatment,2.0,Unit Ready Feed
+treatment,2.0,Source Rice Bran
+treatment,2.0,Source Wheat Bran
+treatment,2.0,Source Pulse Husk
+treatment,2.0,Source Broken Rice
+treatment,2.0,Source Molasess
+treatment,2.0,Source Broken Maize
+treatment,2.0,Source Coconut Oil Cake
+treatment,2.0,Source Mustard Oil Cake
+treatment,2.0,Source Mineral Mix
+treatment,2.0,Source DCP
+treatment,2.0,Source Straw
+treatment,2.0,Source Green Grass
+treatment,2.0,Source Ready Feed
+treatment,2.0,Taka Rice Bran
+treatment,2.0,Taka Wheat Bran
+treatment,2.0,Taka Pulse Husk
+treatment,2.0,Taka Broken Rice
+treatment,2.0,Taka Molasess
+treatment,2.0,Taka Broken Maize
+treatment,2.0,Taka Coconut Oil Cake
+treatment,2.0,Taka Mustard Oil Cake
+treatment,2.0,Taka Mineral Mix
+treatment,2.0,Taka DCP
+treatment,2.0,Taka Straw
+treatment,2.0,Taka Green Grass
+treatment,2.0,Taka Ready Feed
+treatment,2.0,Taka Total
+treatment,2.0,Dewormed? (5)
+treatment,2.0,Vaccinated? (6)
+treatment,2.0,Affected by disease? (5)
+treatment,2.0,Affected by disease? (2)
+treatment,2.0,Affected by disease? (3)
+treatment,2.0,Affected by disease? (4)
+treatment,2.0,Affected by disease? (6)
+treatment,2.0,Affected by disease? (7)
+treatment,2.0,Affected by disease? (8)
+treatment,2.0,Affected by disease? Total (9)
+treatment,2.0,Vaccinated? (2)
+treatment,2.0,Vaccinated? (4)
+treatment,2.0,Vaccinated? (5)
+treatment,2.0,Vaccinated? (7)
+treatment,2.0,Vaccinated? (8)
+treatment,2.0,Vaccinated? Total (9)
+treatment,2.0,Dewormed? (2)
+treatment,2.0,Dewormed? (4)
+treatment,2.0,Dewormed? (6)
+treatment,2.0,Dewormed? (7)
+treatment,2.0,Dewormed? (8)
+treatment,2.0,Dewormed? (9)
+treatment,2.0,Provided AI (2)
+treatment,2.0,Provided AI (4)
+treatment,2.0,Provided AI  (5)
+treatment,2.0,Provided AI  (9)
+treatment,2.0,Provided NI (2)
+treatment,2.0,Provided NI (4)
+treatment,2.0,Provided NI (5)
+treatment,2.0,Provided NI (9)
+treatment,2.0,Total Expenditure
+treatment,2.0,Cow Buy (Yes/No)
+treatment,2.0,Cow Buy If yes how many
+treatment,2.0,Cow Buy  Type of Cow
+treatment,2.0,Cow Buy Breed of Cow
+treatment,2.0,Cow Buy Calf Sex
+treatment,2.0,Cow Buy Price of Cow
+treatment,2.0,Cow Buy Selling Month
+treatment,2.0,Calf Buy (Yes/No)
+treatment,2.0,Calf Buy If Yes How Many
+treatment,2.0,Calf Buy Type of Cow
+treatment,2.0,Calf Buy Breed of Cow
+treatment,2.0,Calf Buy Calf Sex
+treatment,2.0,Calf Buy Price of Cow
+treatment,2.0,Calf Buy Selling Month
+treatment,2.0,Cow Sell (Yes/No)
+treatment,2.0,Cow Sell If yes How Many
+treatment,2.0,Cow Sell Type of Cow
+treatment,2.0,Cow Sell Breed of Cow
+treatment,2.0,Cow Sell Calf Sex
+treatment,2.0,Cow Sell Price of Cow
+treatment,2.0,Cow Sell Selling Month
+treatment,2.0,Calf Sell (yes/No)
+treatment,2.0,Calf Sell If Yes How Many
+treatment,2.0,Calf Sell Type of Cow
+treatment,2.0,Calf Sell Breed of Cow
+treatment,2.0,Calf Sell Calf Sex
+treatment,2.0,Calf Sell Price of Cow
+treatment,2.0,Calf Sell Selling Month
+treatment,2.0,If You sell Cow Why Sold?
+treatment,2.0,Did you Have any Calf Born in the Last 6 Months?
+treatment,2.0,How Many Calf Born?
+treatment,2.0,How Long was the dry period
+treatment,2.0,"Cow Died (Yes=1,No=2)"
+treatment,2.0,Cow Died  If Yes How many
+treatment,2.0,Cow Died Type of Cow
+treatment,2.0,Cow Died Breed of Cow
+treatment,2.0,Cow Died Calf Sex
+treatment,2.0,"Calf Died (Yes =1, No =2)"
+treatment,2.0,Calf Died If Yes How Many
+treatment,2.0,Calf Died Type of Cow
+treatment,2.0,Calf Died Breed of Cow
+treatment,2.0,Calf Died Calf Sex
+treatment,2.0,What did you do with dead Cattle?
+treatment,2.0,Where did yu get the money to finance your dairy activities
+treatment,2.0,If receive any loans during how mutch
+treatment,2.0,Loan Source
+treatment,2.0,If not have you any plans to receive a loan?
+treatment,2.0,If you have plans to get a loan where will you get if from?
+treatment,2.0,What is the name of the doctor who provides cattle treatment to
+treatment,2.0,What type of the vet doctor is?
+treatment,2.0,How many times has the vet Doctor visited your farm is thelast 3
+treatment,2.0,Knowledge Level Very Good=5
+treatment,2.0,Knowledge Level Good =4
+treatment,2.0,Knowledge Level Moderate =3
+treatment,2.0,Knowledge Level Poor = 2
+treatment,2.0,Knowledge Level Un-satisfactory =1
+treatment,2.0,Skill Level Very Good =5
+treatment,2.0,Skill Level Good =4
+treatment,2.0,Skill Level Moderate =3
+treatment,2.0,Skill Level Poor = 2
+treatment,2.0,Skill Level Un-Satisfactory =1
+treatment,2.0,Responsivness of that vet Doctor when called
+treatment,2.0,Range of Fee received
+treatment,2.0,Does the vet Doctor Provides prescription?
+treatment,2.0,Where do you sell milk in general
+treatment,2.0,Where do you sell milk most often
+treatment,2.0,Why do you chose to sell milk here
+treatment,2.0,Mainly who is responsible for selling the milk
+treatment,2.0,Mainly who recieves payment from milk sales
+treatment,2.0,Are you satiesfied with the methods of measurement of milk
+treatment,2.0,Explain
+treatment,2.0,Do you think the milk transactions are fair?
+treatment,2.0,Explains
+treatment,2.0,Where do you purchase your inputs?
+treatment,2.0,Have you recently changed where you purchase your inputs
+treatment,2.0,Where did you previously purchase your inputs?
+treatment,2.0,How Often have you gone to the KU inpur shop during last 3 Month
+treatment,2.0,Service of the Vet Doctor Highly Satiesfied =5
+treatment,2.0,Service of the Vet Doctor Satiesfied =4
+treatment,2.0,Service of the Vet Doctor Moderately Satiesfied =3
+treatment,2.0,Service of the Vet Doctor Not Satiesfied =2
+treatment,2.0,Service of the Vet Doctor Dissatiesfied =1
+treatment,2.0,DFT point manager of milk collector Highly Satiesfied =5
+treatment,2.0,DFT point manager of milk collector Satiesfied =4
+treatment,2.0,DFT point manager of milk collector Moderately Satiesfied =3
+treatment,2.0,DFT point manager of milk collector Not Satiesfied =2
+treatment,2.0,DFT point manager of milk collector Dissatiesfied =1
+treatment,2.0,Quality of the products you purchase from KU input Shop Highly 5
+treatment,2.0,Quality of the products you purchase from KU inpur Shop 4
+treatment,2.0,Quality of the products you purchase from KU inpur Shop 3
+treatment,2.0,Quality of the products you purchase from KU inpur Shop 2
+treatment,2.0,Quality of the products you purchase from KU inpur Shop 1
+treatment,2.0,Quality of the service you purchase from KU inpur shop 5
+treatment,2.0,Quality of the service you purchase from KU inpur shop 4
+treatment,2.0,Quality of the service you purchase from KU inpur shop 3
+treatment,2.0,Quality of the service you purchase from KU inpur shop 2
+treatment,2.0,Quality of the service you purchase from KU inpur shop 1
+treatment,2.0,What type effective action taken by Fls for group development
+treatment,2.0,How are the decission taken in the group?
+treatment,2.0,Level of satiesfaction of Fls activities?
+treatment,2.0,Do you own any Cattle
+treatment,2.0,Did you get ownership of cow after joining SDVC
+treatment,2.0,How did you get the ownership of cow?
+treatment,2.0,Did you earned any income during last 6 months?
+treatment,2.0,Income from own cattle Taka
+treatment,2.0,Income from any other income source Taka
+treatment,2.0,Who Makes Decisions for Spend the money you earned? Self =1
+treatment,2.0,Who Makes Decisions for Spend the money you earned?  Husband =2
+treatment,2.0,Who Makes Decisions for Spend the money you earned? Jointly =3
+treatment,2.0,WhoMakesDecisionsForSpendingMoney Other Male Member =4
+treatment,2.0,WhoMakesDecisionsForSpendingMoney Other Female Member = 5
+treatment,2.0,Who makes Decision for Use the Milk Sales Income Self=1
+treatment,2.0,Who makes Decision for Use the Milk Sales Income Husband=2
+treatment,2.0,Who makes Decision for Use the Milk Sales Income Jointly=3
+treatment,2.0,Who makes Decision for Use the Milk Sales Income Other Male =4
+treatment,2.0,Who makes Decision for Use the Milk Sales Income Other Female =5
+treatment,2.0,Attended group meetings within the village Do you have to take p
+treatment,2.0,Attended group meetings within the village If Yes From whom
+treatment,2.0,Attend meetings at a distant place Do you have to take Permissio
+treatment,2.0,Attend meetings at a distant place If Yes from Whom
+treatment,2.0,Travel to distant place in general like visit to relativesHse Do
+treatment,2.0,Travel to distant place in general like visit to relativesHse If
+treatment,2.0,Does your husband help you in your day to day Household Activiti
+treatment,2.0,Cattle Feeding
+treatment,2.0,Cattle Wash
+treatment,2.0,Grass Collection
+treatment,2.0,Milking
+treatment,2.0,Child Teaching
+treatment,2.0,Feed the Children
+treatment,2.0,Wash the Children
+treatment,2.0,Cooking
+treatment,2.0,Home arrangement
+treatment,2.0,House Clearing
+treatment,2.0,Others (Specify)
+treatment,2.0,Do you face any obstruction from your family for own income
+treatment,2.0,Asset purchase of your own
+treatment,2.0,Income Generating Activities at Home
+treatment,2.0,Income Generating Activities outside at Home
+treatment,2.0,Own asset sales
+treatment,2.0,Spend own asset
+treatment,2.0,Attend meeting/training at distant place
+treatment,2.0,Overall Comments
+treatment,2.0,Remarks
+treatment,2.0,Have any assets been purchased with money you have earnedlast 6
+treatment,2.0,Asset 1: Name of the Asset
+treatment,2.0,Asset 1: Who Made decission to buy this assets
+treatment,2.0,Asset 1: Who control this asset
+treatment,2.0,Asset 2: Name of the Asset
+treatment,2.0,Asset 2:Who made decission to buy this assets
+treatment,2.0,Asset 2: Who Control this asset
+treatment,2.0,Asset 3: Name of the Asset
+treatment,2.0,Asset 3: Who made decission to buy this asset
+treatment,2.0,Asset 3: Who control this asset
+treatment,2.0,Asset 4: Name of the asset
+treatment,2.0,Asset 4: Who made decission to buy this asset
+treatment,2.0,Asset 4: Who control this asset
+cows,2.0,DEO SL
+cows,2.0,SL No
+cows,2.0,COW SL
+cows,2.0,Cow Identity
+cows,2.0,Bread of Cow
+cows,2.0,Type of Cow
+cows,2.0,Value of Cow in BDT
+cows,2.0,Daily Production of Cow
+cows,2.0,Last Calving Date
+cows,2.0,No of Calving
+treatment,3.0,DEO SL
+treatment,3.0,Producer ID
+treatment,3.0,Name of the Respondent
+treatment,3.0,Para Name
+treatment,3.0,Village Name
+treatment,3.0,Union Name
+treatment,3.0,Union GEO Code
+treatment,3.0,Thana Name
+treatment,3.0,Thana GEO Code
+treatment,3.0,District Name
+treatment,3.0,District GEO Code
+treatment,3.0,HH Type
+treatment,3.0,What is your group Name
+treatment,3.0,Position in group
+treatment,3.0,Hello My Name is
+treatment,3.0,Do you agree to participate in the survey?
+treatment,3.0,Interviewer Name
+treatment,3.0,Interviewer ID
+treatment,3.0,Supervisor Name
+treatment,3.0,Date of Interview
+treatment,3.0,Sex of the Respondent
+treatment,3.0,Age of Respondent
+treatment,3.0,Marital Status of the Respondent
+treatment,3.0,Educational Status of the Respondent
+treatment,3.0,Occupation Primary
+treatment,3.0,Occupation Secondary
+treatment,3.0,Name of the Household Head
+treatment,3.0,Relationship with Household Head
+treatment,3.0,No of the Family Nennbers (Total)
+treatment,3.0,Men Below 5 Years
+treatment,3.0,Women Below 5 years
+treatment,3.0,Men 5-18 Years
+treatment,3.0,Women 5-18 years
+treatment,3.0,Men 18-64 Years
+treatment,3.0,Women 18-64 years
+treatment,3.0,Men 64 Years Above
+treatment,3.0,Women 64 years above
+treatment,3.0,Total Comsumption (Ltr)
+treatment,3.0,Total Free Distribution (Ltr)
+treatment,3.0,Neighbours
+treatment,3.0,Collection Point
+treatment,3.0,Milk Collector
+treatment,3.0,Open Market
+treatment,3.0,Sweetmeat/Tea Stall
+treatment,3.0,Direct to Company
+treatment,3.0,Yesterday total spoilage(Ltr)
+treatment,3.0,Yesterday total Income from milk sale
+treatment,3.0,Within your household who given priority to consumed milk
+treatment,3.0,Why s/he was given priority to consumed milk?
+treatment,3.0,Are you Cultivating fodder?
+treatment,3.0,If Yes Cultivated land (Dec)
+treatment,3.0,Which type of fodder you cultivation?
+treatment,3.0,What is the drinking water sources for your cattle?
+treatment,3.0,Do you wash your cattle?
+treatment,3.0,If Not why?
+treatment,3.0,If you wash your cattle how often?
+treatment,3.0,Measurement taken for bio-security
+treatment,3.0,Cow Rearing Women =1
+treatment,3.0,Cow Rearing Men =2
+treatment,3.0,Cow Rearing Both = 3
+treatment,3.0,Feed Purchase Women = 1
+treatment,3.0,Feed Purchase Men = 2
+treatment,3.0,Feed Purchase Both = 3
+treatment,3.0,Milking The Cow Women = 1
+treatment,3.0,Milking The Cow Men = 2
+treatment,3.0,Milking The Cow Both = 3
+treatment,3.0,Milk Selling Women = 1
+treatment,3.0,Milk Selling Men = 2
+treatment,3.0,Milk Selling Both = 3
+treatment,3.0,If you do not engaged in milking why not?
+treatment,3.0,Cattle Purchase Wife only = 1
+treatment,3.0,Cattle Purchase Husband only = 2
+treatment,3.0,Cattle Purchase Jointly = 3
+treatment,3.0,Cattle Purchase Other Male Member = 4
+treatment,3.0,Cattle Purchase Other Female Member = 5
+treatment,3.0,Cattle Sales Wife Only = 1
+treatment,3.0,Cattle Sales Husband Only = 2
+treatment,3.0,Cattle Sales Jointly = 3
+treatment,3.0,Cattle Sales Other Male Member = 4
+treatment,3.0,Cattle Sales Other Female Member = 5
+treatment,3.0,Where to Sell Milk Wife Only = 1
+treatment,3.0,Where to Sell Milk Husband Only = 2
+treatment,3.0,Where to Sell Milk Jointly = 3
+treatment,3.0,Where to Sell Milk Other Male Member = 4
+treatment,3.0,Where to Sell Milk Other Female Member = 5
+treatment,3.0,Where to Purchase Feed/Fooder Wife only = 1
+treatment,3.0,Where to Purchase Feed/Fooder  Husband only = 2
+treatment,3.0,Where to Purchase Feed/Fooder  Jointly = 3
+treatment,3.0,Where to Purchase Feed/Fooder  Other Male Member = 4
+treatment,3.0,Where to Purchase Feed/Fooder  Other Female Member = 5
+treatment,3.0,From where vaccination/de-worming Wife Only = 1
+treatment,3.0,From where vaccination/de-worming Husband Only = 2
+treatment,3.0,From where vaccination/de-worming Jointly = 3
+treatment,3.0,From where vaccination/de-worming Other Male Member = 4
+treatment,3.0,From where vaccination/de-worming Other Female Member = 5
+treatment,3.0,Where do you dispose cowdung?
+treatment,3.0,What do you do with cowdung?
+treatment,3.0,Income from cowdung sold during last 6 months
+treatment,3.0,Amount Rice Bran
+treatment,3.0,Amount Wheat Bran
+treatment,3.0,Amount Pulse Husk
+treatment,3.0,Amount Broken Rice
+treatment,3.0,Amount Molasess
+treatment,3.0,Amount Broken Maize
+treatment,3.0,Amount Coconut Oil Cake
+treatment,3.0,Amount Mustard Oil Cake
+treatment,3.0,Amount Mineral Mix
+treatment,3.0,Amount DCP
+treatment,3.0,Amount Straw
+treatment,3.0,Amount Green Grass
+treatment,3.0,Amount Ready Feed
+treatment,3.0,Amount Total
+treatment,3.0,Unit Rice Bran
+treatment,3.0,Unit Wheat Bran
+treatment,3.0,Unit Pulse Husk
+treatment,3.0,Unit Broken Rice
+treatment,3.0,Unit Molasess
+treatment,3.0,Unit Broken Maize
+treatment,3.0,Unit Coconut Oil Cake
+treatment,3.0,Unit Mustard Oil Cake
+treatment,3.0,Unit Mineral Mix
+treatment,3.0,Unit DCP
+treatment,3.0,Unit Straw
+treatment,3.0,Unit Green Grass
+treatment,3.0,Unit Ready Feed
+treatment,3.0,Source Rice Bran
+treatment,3.0,Source Wheat Bran
+treatment,3.0,Source Pulse Husk
+treatment,3.0,Source Broken Rice
+treatment,3.0,Source Molasess
+treatment,3.0,Source Broken Maize
+treatment,3.0,Source Coconut Oil Cake
+treatment,3.0,Source Mustard Oil Cake
+treatment,3.0,Source Mineral Mix
+treatment,3.0,Source DCP
+treatment,3.0,Source Straw
+treatment,3.0,Source Green Grass
+treatment,3.0,Source Ready Feed
+treatment,3.0,Taka Rice Bran
+treatment,3.0,Taka Wheat Bran
+treatment,3.0,Taka Pulse Husk
+treatment,3.0,Taka Broken Rice
+treatment,3.0,Taka Molasess
+treatment,3.0,Taka Broken Maize
+treatment,3.0,Taka Coconut Oil Cake
+treatment,3.0,Taka Mustard Oil Cake
+treatment,3.0,Taka Mineral Mix
+treatment,3.0,Taka DCP
+treatment,3.0,Taka Straw
+treatment,3.0,Taka Green Grass
+treatment,3.0,Taka Ready Feed
+treatment,3.0,Taka Total
+treatment,3.0,Affected by disease? (2)
+treatment,3.0,Affected by disease? (3)
+treatment,3.0,Affected by disease? (4)
+treatment,3.0,Affected by disease? (5)
+treatment,3.0,Affected by disease? (6)
+treatment,3.0,Affected by disease? (7)
+treatment,3.0,Affected by disease? (8)
+treatment,3.0,Affected by disease? Total (9)
+treatment,3.0,Vaccinated? (2)
+treatment,3.0,Vaccinated? (4)
+treatment,3.0,Vaccinated? (5)
+treatment,3.0,Vaccinated? (6)
+treatment,3.0,Vaccinated? (7)
+treatment,3.0,Vaccinated? (8)
+treatment,3.0,Vaccinated? Total (9)
+treatment,3.0,Dewormed? (2)
+treatment,3.0,Dewormed? (4)
+treatment,3.0,Dewormed? (5)
+treatment,3.0,Dewormed? (6)
+treatment,3.0,Dewormed? (7)
+treatment,3.0,Dewormed? (8)
+treatment,3.0,Dewormed? (9)
+treatment,3.0,Provided AI (2)
+treatment,3.0,Provided AI (4)
+treatment,3.0,Provided AI  (5)
+treatment,3.0,Provided AI  (9)
+treatment,3.0,Provided NI (2)
+treatment,3.0,Provided NI (4)
+treatment,3.0,Provided NI (5)
+treatment,3.0,Provided NI (9)
+treatment,3.0,Total Expenditure
+treatment,3.0,Cow Buy (Yes/No)
+treatment,3.0,Cow Buy If yes how many
+treatment,3.0,Cow Buy  Type of Cow
+treatment,3.0,Cow Buy Breed of Cow
+treatment,3.0,Cow Buy Calf Sex
+treatment,3.0,Cow Buy Price of Cow
+treatment,3.0,Cow Buy Selling Month
+treatment,3.0,Calf Buy (Yes/No)
+treatment,3.0,Calf Buy If Yes How Many
+treatment,3.0,Calf Buy Type of Cow
+treatment,3.0,Calf Buy Breed of Cow
+treatment,3.0,Calf Buy Calf Sex
+treatment,3.0,Calf Buy Price of Cow
+treatment,3.0,Calf Buy Selling Month
+treatment,3.0,Cow Sell (Yes/No)
+treatment,3.0,Cow Sell If yes How Many
+treatment,3.0,Cow Sell Type of Cow
+treatment,3.0,Cow Sell Breed of Cow
+treatment,3.0,Cow Sell Calf Sex
+treatment,3.0,Cow Sell Price of Cow
+treatment,3.0,Cow Sell Selling Month
+treatment,3.0,Calf Sell (yes/No)
+treatment,3.0,Calf Sell If Yes How Many
+treatment,3.0,Calf Sell Type of Cow
+treatment,3.0,Calf Sell Breed of Cow
+treatment,3.0,Calf Sell Calf Sex
+treatment,3.0,Calf Sell Price of Cow
+treatment,3.0,Calf Sell Selling Month
+treatment,3.0,If You sell Cow Why Sold?
+treatment,3.0,Did you Have any Calf Born in the Last 6 Months?
+treatment,3.0,How Many Calf Born?
+treatment,3.0,How Long was the dry period
+treatment,3.0,"Cow Died (Yes=1,No=2)"
+treatment,3.0,Cow Died  If Yes How many
+treatment,3.0,Cow Died Type of Cow
+treatment,3.0,Cow Died Breed of Cow
+treatment,3.0,Cow Died Calf Sex
+treatment,3.0,"Calf Died (Yes =1, No =2)"
+treatment,3.0,Calf Died If Yes How Many
+treatment,3.0,Calf Died Type of Cow
+treatment,3.0,Calf Died Breed of Cow
+treatment,3.0,Calf Died Calf Sex
+treatment,3.0,What did you do with dead Cattle?
+treatment,3.0,Where did yu get the money to finance your dairy activities
+treatment,3.0,If receive any loans during how mutch
+treatment,3.0,Loan Source
+treatment,3.0,If not have you any plans to receive a loan?
+treatment,3.0,If you have plans to get a loan where will you get if from?
+treatment,3.0,What is the name of the doctor who provides cattle treatment to
+treatment,3.0,What type of the vet doctor is?
+treatment,3.0,How many times has the vet Doctor visited your farm is thelast 3
+treatment,3.0,Knowledge Level Very Good=5
+treatment,3.0,Knowledge Level Good =4
+treatment,3.0,Knowledge Level Moderate =3
+treatment,3.0,Knowledge Level Poor = 2
+treatment,3.0,Knowledge Level Un-satisfactory =1
+treatment,3.0,Skill Level Very Good =5
+treatment,3.0,Skill Level Good =4
+treatment,3.0,Skill Level Moderate =3
+treatment,3.0,Skill Level Poor = 2
+treatment,3.0,Skill Level Un-Satisfactory =1
+treatment,3.0,Responsivness of that vet Doctor when called
+treatment,3.0,Range of Fee received
+treatment,3.0,Does the vet Doctor Provides prescription?
+treatment,3.0,Where do you sell milk in general
+treatment,3.0,Where do you sell milk most often
+treatment,3.0,Why do you chose to sell milk here
+treatment,3.0,Mainly who is responsible for selling the milk
+treatment,3.0,Mainly who recieves payment from milk sales
+treatment,3.0,Are you satiesfied with the methods of measurement of milk
+treatment,3.0,Explain
+treatment,3.0,Do you think the milk transactions are fair?
+treatment,3.0,Explains
+treatment,3.0,Where do you purchase your inputs?
+treatment,3.0,Have you recently changed where you purchase your inputs
+treatment,3.0,Where did you previously purchase your inputs?
+treatment,3.0,How Often have you gone to the KU inpur shop during last 3 Month
+treatment,3.0,Service of the Vet Doctor Highly Satiesfied =5
+treatment,3.0,Service of the Vet Doctor Satiesfied =4
+treatment,3.0,Service of the Vet Doctor Moderately Satiesfied =3
+treatment,3.0,Service of the Vet Doctor Not Satiesfied =2
+treatment,3.0,Service of the Vet Doctor Dissatiesfied =1
+treatment,3.0,DFT point manager of milk collector Highly Satiesfied =5
+treatment,3.0,DFT point manager of milk collector Satiesfied =4
+treatment,3.0,DFT point manager of milk collector Moderately Satiesfied =3
+treatment,3.0,DFT point manager of milk collector Not Satiesfied =2
+treatment,3.0,DFT point manager of milk collector Dissatiesfied =1
+treatment,3.0,Quality of the products you purchase from KU input Shop Highly 5
+treatment,3.0,Quality of the products you purchase from KU inpur Shop 4
+treatment,3.0,Quality of the products you purchase from KU inpur Shop 3
+treatment,3.0,Quality of the products you purchase from KU inpur Shop 2
+treatment,3.0,Quality of the products you purchase from KU inpur Shop 1
+treatment,3.0,Quality of the service you purchase from KU inpur shop 5
+treatment,3.0,Quality of the service you purchase from KU inpur shop 4
+treatment,3.0,Quality of the service you purchase from KU inpur shop 3
+treatment,3.0,Quality of the service you purchase from KU inpur shop 2
+treatment,3.0,Quality of the service you purchase from KU inpur shop 1
+treatment,3.0,What type effective action taken by Fls for group development
+treatment,3.0,How are the decission taken in the group?
+treatment,3.0,Level of satiesfaction of Fls activities?
+treatment,3.0,Do you own any Cattle
+treatment,3.0,Did you get ownership of cow after joining SDVC
+treatment,3.0,How did you get the ownership of cow?
+treatment,3.0,Did you earned any income during last 6 months?
+treatment,3.0,Income from own cattle Taka
+treatment,3.0,Income from any other income source Taka
+treatment,3.0,Who Makes Decisions for Spend the money you earned? Self =1
+treatment,3.0,Who Makes Decisions for Spend the money you earned?  Husband =2
+treatment,3.0,Who Makes Decisions for Spend the money you earned? Jointly =3
+treatment,3.0,WhoMakesDecisionsForSpendingMoney Other Male Member =4
+treatment,3.0,WhoMakesDecisionsForSpendingMoney Other Female Member = 5
+treatment,3.0,Who makes Decision for Use the Milk Sales Income Self=1
+treatment,3.0,Who makes Decision for Use the Milk Sales Income Husband=2
+treatment,3.0,Who makes Decision for Use the Milk Sales Income Jointly=3
+treatment,3.0,Who makes Decision for Use the Milk Sales Income Other Male =4
+treatment,3.0,Who makes Decision for Use the Milk Sales Income Other Female =5
+treatment,3.0,Attended group meetings within the village Do you have to take p
+treatment,3.0,Attended group meetings within the village If Yes From whom
+treatment,3.0,Attend meetings at a distant place Do you have to take Permissio
+treatment,3.0,Attend meetings at a distant place If Yes from Whom
+treatment,3.0,Travel to distant place in general like visit to relativesHse Do
+treatment,3.0,Travel to distant place in general like visit to relativesHse If
+treatment,3.0,Does your husband help you in your day to day Household Activiti
+treatment,3.0,Cattle Feeding
+treatment,3.0,Cattle Wash
+treatment,3.0,Grass Collection
+treatment,3.0,Milking
+treatment,3.0,Child Teaching
+treatment,3.0,Feed the Children
+treatment,3.0,Wash the Children
+treatment,3.0,Cooking
+treatment,3.0,Home arrangement
+treatment,3.0,House Clearing
+treatment,3.0,Others (Specify)
+treatment,3.0,Do you face any obstruction from your family for own income
+treatment,3.0,Asset purchase of your own
+treatment,3.0,Income Generating Activities at Home
+treatment,3.0,Income Generating Activities outside at Home
+treatment,3.0,Own asset sales
+treatment,3.0,Spend own asset
+treatment,3.0,Attend meeting/training at distant place
+treatment,3.0,Overall Comments
+treatment,3.0,Remarks
+treatment,3.0,Have any assets been purchased with money you have earnedlast 6
+treatment,3.0,Asset 1: Name of the Asset
+treatment,3.0,Asset 1: Who Made decission to buy this assets
+treatment,3.0,Asset 1: Who control this asset
+treatment,3.0,Asset 2: Name of the Asset
+treatment,3.0,Asset 2:Who made decission to buy this assets
+treatment,3.0,Asset 2: Who Control this asset
+treatment,3.0,Asset 3: Name of the Asset
+treatment,3.0,Asset 3: Who made decission to buy this asset
+treatment,3.0,Asset 3: Who control this asset
+treatment,3.0,Asset 4: Name of the asset
+treatment,3.0,Asset 4: Who made decission to buy this asset
+treatment,3.0,Asset 4: Who control this asset
+cows,3.0,DEO SL
+cows,3.0,SL No
+cows,3.0,COW SL
+cows,3.0,Cow Identity
+cows,3.0,Bread of Cow
+cows,3.0,Type of Cow
+cows,3.0,Value of Cow in BDT
+cows,3.0,Daily Production of Cow
+cows,3.0,Last Calving Date
+cows,3.0,No of Calving
+treatment,4.0,DEO SL
+treatment,4.0,Producer ID
+treatment,4.0,Name of the Respondent
+treatment,4.0,Para Name
+treatment,4.0,Village Name
+treatment,4.0,Union Name
+treatment,4.0,Union GEO Code
+treatment,4.0,Thana Name
+treatment,4.0,Thana GEO Code
+treatment,4.0,District Name
+treatment,4.0,District GEO Code
+treatment,4.0,HH Type
+treatment,4.0,What is your group Name
+treatment,4.0,Position in group
+treatment,4.0,Hello My Name is
+treatment,4.0,Do you agree to participate in the survey?
+treatment,4.0,Interviewer Name
+treatment,4.0,Interviewer ID
+treatment,4.0,Supervisor Name
+treatment,4.0,Date of Interview
+treatment,4.0,Sex of the Respondent
+treatment,4.0,Age of Respondent
+treatment,4.0,Marital Status of the Respondent
+treatment,4.0,Educational Status of the Respondent
+treatment,4.0,Occupation Primary
+treatment,4.0,Occupation Secondary
+treatment,4.0,Name of the Household Head
+treatment,4.0,Relationship with Household Head
+treatment,4.0,No of the Family Nennbers (Total)
+treatment,4.0,Men Below 5 Years
+treatment,4.0,Women Below 5 years
+treatment,4.0,Men 5-18 Years
+treatment,4.0,Women 5-18 years
+treatment,4.0,Men 18-64 Years
+treatment,4.0,Women 18-64 years
+treatment,4.0,Men 64 Years Above
+treatment,4.0,Women 64 years above
+treatment,4.0,Total Comsumption (Ltr)
+treatment,4.0,Total Free Distribution (Ltr)
+treatment,4.0,Neighbours
+treatment,4.0,Collection Point
+treatment,4.0,Milk Collector
+treatment,4.0,Open Market
+treatment,4.0,Sweetmeat/Tea Stall
+treatment,4.0,Direct to Company
+treatment,4.0,Yesterday total spoilage(Ltr)
+treatment,4.0,Yesterday total Income from milk sale
+treatment,4.0,Within your household who given priority to consumed milk
+treatment,4.0,Why s/he was given priority to consumed milk?
+treatment,4.0,How Many Members consumed Milk
+treatment,4.0,1 Are you Cultivating fodder?
+treatment,4.0,2 If Yes Cultivated land (Dec)
+treatment,4.0,3 Which type of fodder you cultivation?
+treatment,4.0,4 What is the drinking water sources for your cattle?
+treatment,4.0,Text11
+treatment,4.0,6 Do you wash your cattle?
+treatment,4.0,7 If Not why?
+treatment,4.0,8 If you wash your cattle how often?
+treatment,4.0,9 Measurement taken for bio-security
+treatment,4.0,Cow Rearing Women =1
+treatment,4.0,Cow Rearing Men =2
+treatment,4.0,Cow Rearing Both = 3
+treatment,4.0,Feed Purchase Women = 1
+treatment,4.0,Feed Purchase Men = 2
+treatment,4.0,Feed Purchase Both = 3
+treatment,4.0,Milking The Cow Women = 1
+treatment,4.0,Milking The Cow Men = 2
+treatment,4.0,Milking The Cow Both = 3
+treatment,4.0,Milk Selling Women = 1
+treatment,4.0,Milk Selling Men = 2
+treatment,4.0,Milk Selling Both = 3
+treatment,4.0,Vaccination/de-worming/treatment/AI of cow Women = 1
+treatment,4.0,Vaccination/de-worming/treatment/AI of cow Men = 2
+treatment,4.0,Vaccination/de-worming/treatment/AI of cow = 3
+treatment,4.0,11 If you do not engaged in milking why not?
+treatment,4.0,Cattle Purchase Wife only = 1
+treatment,4.0,Cattle Purchase Husband only = 2
+treatment,4.0,Cattle Purchase Jointly = 3
+treatment,4.0,Cattle Purchase Other Male Member = 4
+treatment,4.0,Cattle Purchase Other Female Member = 5
+treatment,4.0,Cattle Sales Wife Only = 1
+treatment,4.0,Cattle Sales Husband Only = 2
+treatment,4.0,Cattle Sales Jointly = 3
+treatment,4.0,Cattle Sales Other Male Member = 4
+treatment,4.0,Cattle Sales Other Female Member = 5
+treatment,4.0,Where to Sell Milk Wife Only = 1
+treatment,4.0,Where to Sell Milk Husband Only = 2
+treatment,4.0,Where to Sell Milk Jointly = 3
+treatment,4.0,Where to Sell Milk Other Male Member = 4
+treatment,4.0,Where to Sell Milk Other Female Member = 5
+treatment,4.0,Where to Purchase Feed/Fooder Wife only = 1
+treatment,4.0,Where to Purchase Feed/Fooder  Husband only = 2
+treatment,4.0,Where to Purchase Feed/Fooder  Jointly = 3
+treatment,4.0,Where to Purchase Feed/Fooder  Other Male Member = 4
+treatment,4.0,Where to Purchase Feed/Fooder  Other Female Member = 5
+treatment,4.0,From where vaccination/de-worming Wife Only = 1
+treatment,4.0,From where vaccination/de-worming Husband Only = 2
+treatment,4.0,From where vaccination/de-worming Jointly = 3
+treatment,4.0,From where vaccination/de-worming Other Male Member = 4
+treatment,4.0,From where vaccination/de-worming Other Female Member = 5
+treatment,4.0,13 Where do you dispose cowdung?
+treatment,4.0,14 What do you do with cowdung?
+treatment,4.0,15 Income from cowdung sold during last 6 months
+treatment,4.0,Amount Rice Bran
+treatment,4.0,Amount Wheat Bran
+treatment,4.0,Amount Pulse Husk
+treatment,4.0,Amount Broken Rice
+treatment,4.0,Amount Molasess
+treatment,4.0,Amount Broken Maize
+treatment,4.0,Amount Coconut Oil Cake
+treatment,4.0,Amount Mustard Oil Cake
+treatment,4.0,Amount Mineral Mix
+treatment,4.0,Amount DCP
+treatment,4.0,Amount Straw
+treatment,4.0,Amount Green Grass
+treatment,4.0,Amount Ready Feed
+treatment,4.0,Amount Total
+treatment,4.0,Unit Rice Bran
+treatment,4.0,Unit Wheat Bran
+treatment,4.0,Unit Pulse Husk
+treatment,4.0,Unit Broken Rice
+treatment,4.0,Unit Molasess
+treatment,4.0,Unit Broken Maize
+treatment,4.0,Unit Coconut Oil Cake
+treatment,4.0,Unit Mustard Oil Cake
+treatment,4.0,Unit Mineral Mix
+treatment,4.0,Unit DCP
+treatment,4.0,Unit Straw
+treatment,4.0,Unit Green Grass
+treatment,4.0,Unit Ready Feed
+treatment,4.0,Source Rice Bran
+treatment,4.0,Source Wheat Bran
+treatment,4.0,Source Pulse Husk
+treatment,4.0,Source Broken Rice
+treatment,4.0,Source Molasess
+treatment,4.0,Source Broken Maize
+treatment,4.0,Source Coconut Oil Cake
+treatment,4.0,Source Mustard Oil Cake
+treatment,4.0,Source Mineral Mix
+treatment,4.0,Source DCP
+treatment,4.0,Source Straw
+treatment,4.0,Source Green Grass
+treatment,4.0,Source Ready Feed
+treatment,4.0,Taka Rice Bran
+treatment,4.0,Taka Wheat Bran
+treatment,4.0,Taka Pulse Husk
+treatment,4.0,Taka Broken Rice
+treatment,4.0,Taka Molasess
+treatment,4.0,Taka Broken Maize
+treatment,4.0,Taka Coconut Oil Cake
+treatment,4.0,Taka Mustard Oil Cake
+treatment,4.0,Taka Mineral Mix
+treatment,4.0,Taka DCP
+treatment,4.0,Taka Straw
+treatment,4.0,Taka Green Grass
+treatment,4.0,Taka Ready Feed
+treatment,4.0,Taka Total
+treatment,4.0,Affected by disease? (2)
+treatment,4.0,Affected by disease? (3)
+treatment,4.0,Affected by disease? (4)
+treatment,4.0,Affected by disease? (5)
+treatment,4.0,Affected by disease? (6)
+treatment,4.0,Affected by disease? (7)
+treatment,4.0,Affected by disease? (8)
+treatment,4.0,Affected by disease? Total (9)
+treatment,4.0,Vaccinated? (2)
+treatment,4.0,Vaccinated? (4)
+treatment,4.0,Vaccinated? (5)
+treatment,4.0,Vaccinated? (6)
+treatment,4.0,Vaccinated? (7)
+treatment,4.0,Vaccinated? (8)
+treatment,4.0,Vaccinated? Total (9)
+treatment,4.0,Dewormed? (2)
+treatment,4.0,Dewormed? (4)
+treatment,4.0,Dewormed? (5)
+treatment,4.0,Dewormed? (6)
+treatment,4.0,Dewormed? (7)
+treatment,4.0,Dewormed? (8)
+treatment,4.0,Dewormed? (9)
+treatment,4.0,Provided AI (2)
+treatment,4.0,Provided AI (4)
+treatment,4.0,Provided AI  (5)
+treatment,4.0,Provided AI  (9)
+treatment,4.0,Provided NI (2)
+treatment,4.0,Provided NI (4)
+treatment,4.0,Provided NI (5)
+treatment,4.0,Provided NI (9)
+treatment,4.0,Total Expenditure
+treatment,4.0,Cow Buy (Yes/No)
+treatment,4.0,Cow Buy If yes how many
+treatment,4.0,Cow Buy  Type of Cow
+treatment,4.0,Cow Buy Breed of Cow
+treatment,4.0,Cow Buy Calf Sex
+treatment,4.0,Cow Buy Price of Cow
+treatment,4.0,Cow Buy Selling Month
+treatment,4.0,Calf Buy (Yes/No)
+treatment,4.0,Calf Buy If Yes How Many
+treatment,4.0,Calf Buy Type of Cow
+treatment,4.0,Calf Buy Breed of Cow
+treatment,4.0,Calf Buy Calf Sex
+treatment,4.0,Calf Buy Price of Cow
+treatment,4.0,Calf Buy Selling Month
+treatment,4.0,Cow Sell (Yes/No)
+treatment,4.0,Cow Sell If yes How Many
+treatment,4.0,Cow Sell Type of Cow
+treatment,4.0,Cow Sell Breed of Cow
+treatment,4.0,Cow Sell Calf Sex
+treatment,4.0,Cow Sell Price of Cow
+treatment,4.0,Cow Sell Selling Month
+treatment,4.0,Calf Sell (yes/No)
+treatment,4.0,Calf Sell If Yes How Many
+treatment,4.0,Calf Sell Type of Cow
+treatment,4.0,Calf Sell Breed of Cow
+treatment,4.0,Calf Sell Calf Sex
+treatment,4.0,Calf Sell Price of Cow
+treatment,4.0,Calf Sell Selling Month
+treatment,4.0,If You sell Cow Why Sold?
+treatment,4.0,Did you Have any Calf Born in the Last 6 Months?
+treatment,4.0,How Many Calf Born?
+treatment,4.0,How Long was the dry period
+treatment,4.0,"Cow Died (Yes=1,No=2)"
+treatment,4.0,Cow Died  If Yes How many
+treatment,4.0,Cow Died Type of Cow
+treatment,4.0,Cow Died Breed of Cow
+treatment,4.0,Cow Died Calf Sex
+treatment,4.0,Causes of Death COW
+treatment,4.0,"Calf Died (Yes =1, No =2)"
+treatment,4.0,Calf Died If Yes How Many
+treatment,4.0,Calf Died Type of Cow
+treatment,4.0,Calf Died Breed of Cow
+treatment,4.0,Calf Died Calf Sex
+treatment,4.0,Causes of Death Calf
+treatment,4.0,What did you do with dead Cattle?
+treatment,4.0,Where did yu get the money to finance your dairy activities
+treatment,4.0,If receive any loans during how mutch
+treatment,4.0,Loan Source
+treatment,4.0,If not have you any plans to receive a loan?
+treatment,4.0,If you have plans to get a loan where will you get if from?
+treatment,4.0,What is the name of the doctor who provides cattle treatment to
+treatment,4.0,What type of the vet doctor is?
+treatment,4.0,What services do you receive from him/her?
+treatment,4.0,How many times has the vet Doctor visited your farm is thelast 3
+treatment,4.0,Knowledge Level Very Good=5
+treatment,4.0,Knowledge Level Good =4
+treatment,4.0,Knowledge Level Moderate =3
+treatment,4.0,Knowledge Level Poor = 2
+treatment,4.0,Knowledge Level Un-satisfactory =1
+treatment,4.0,Skill Level Very Good =5
+treatment,4.0,Skill Level Good =4
+treatment,4.0,Skill Level Moderate =3
+treatment,4.0,Skill Level Poor = 2
+treatment,4.0,Skill Level Un-Satisfactory =1
+treatment,4.0,Responsivness of that vet Doctor when called
+treatment,4.0,Range of Fee received
+treatment,4.0,Does the vet Doctor Provides prescription?
+treatment,4.0,Where do you sell milk in general
+treatment,4.0,"2 If not selling milk to DFT, Why do you not sell milk to DFT ?"
+treatment,4.0,Where do you sell milk most often
+treatment,4.0,Why do you chose to sell milk here
+treatment,4.0,Mainly who is responsible for selling the milk
+treatment,4.0,Mainly who recieves payment from milk sales
+treatment,4.0,Are you satisfied with the overall services of DFT
+treatment,4.0,Describe
+treatment,4.0,Are you satiesfied with the methods of measurement of milk
+treatment,4.0,Explain
+treatment,4.0,Do you think the milk transactions are fair?
+treatment,4.0,Explains
+treatment,4.0,Where do you purchase your inputs?
+treatment,4.0,Have you recently changed where you purchase your inputs
+treatment,4.0,Where did you previously purchase your inputs?
+treatment,4.0,How Often have you gone to the KU inpur shop during last 3 Month
+treatment,4.0,Service of the Vet Doctor Highly Satiesfied =4
+treatment,4.0,Service of the Vet Doctor Satiesfied =3
+treatment,4.0,Service of the Vet Doctor Moderately Satiesfied =2
+treatment,4.0,Service of the Vet Doctor Not Satiesfied =1
+treatment,4.0,DFT point manager of milk collector Highly Satiesfied =4
+treatment,4.0,DFT point manager of milk collector Satiesfied =3
+treatment,4.0,DFT point manager of milk collector Moderately Satiesfied =2
+treatment,4.0,DFT point manager of milk collector Not Satiesfied =1
+treatment,4.0,Quality of the products you purchase from KU input Shop Highly 4
+treatment,4.0,Quality of the products you purchase from KU inpur Shop 3
+treatment,4.0,Quality of the products you purchase from KU inpur Shop 2
+treatment,4.0,Quality of the products you purchase from KU inpur Shop 1
+treatment,4.0,Quality of the service you purchase from KU inpur shop 4
+treatment,4.0,Quality of the service you purchase from KU inpur shop 3
+treatment,4.0,Quality of the service you purchase from KU inpur shop 2
+treatment,4.0,Quality of the service you purchase from KU inpur shop 1
+treatment,4.0,Others Highly Satiesfied 4
+treatment,4.0,Others Satiesfied 3
+treatment,4.0,Others Moderately Satiesfied 2
+treatment,4.0,Others Not Satiesfied 1
+treatment,4.0,What products/services do you expect from KU shop?
+treatment,4.0,What type effective action taken by Fls for group development
+treatment,4.0,How are the decission taken in the group?
+treatment,4.0,Level of satiesfaction of Fls activities?
+treatment,4.0,Do you own any Cattle
+treatment,4.0,Did you get ownership of cow after joining SDVC
+treatment,4.0,How did you get the ownership of cow?
+treatment,4.0,Did you earned any income during last 6 months?
+treatment,4.0,Income from own cattle Taka
+treatment,4.0,Income from any other income source Taka
+treatment,4.0,Who Makes Decisions for Spend the money you earned? Self =1
+treatment,4.0,Who Makes Decisions for Spend the money you earned?  Husband =2
+treatment,4.0,Who Makes Decisions for Spend the money you earned? Jointly =3
+treatment,4.0,WhoMakesDecisionsForSpendingMoney Other Male Member =4
+treatment,4.0,WhoMakesDecisionsForSpendingMoney Other Female Member = 5
+treatment,4.0,Who makes Decision for Use the Milk Sales Income Self=1
+treatment,4.0,Who makes Decision for Use the Milk Sales Income Husband=2
+treatment,4.0,Who makes Decision for Use the Milk Sales Income Jointly=3
+treatment,4.0,Who makes Decision for Use the Milk Sales Income Other Male =4
+treatment,4.0,Who makes Decision for Use the Milk Sales Income Other Female =5
+treatment,4.0,Attended group meetings within the village Do you have to take p
+treatment,4.0,Attended group meetings within the village If Yes From whom
+treatment,4.0,Attend meetings at a distant place Do you have to take Permissio
+treatment,4.0,Attend meetings at a distant place If Yes from Whom
+treatment,4.0,Travel to distant place in general like visit to relativesHse Do
+treatment,4.0,Travel to distant place in general like visit to relativesHse If
+treatment,4.0,Does your husband help you in your day to day Household Activiti
+treatment,4.0,Cattle Grazing
+treatment,4.0,Cattle Feeding
+treatment,4.0,Cattle Wash
+treatment,4.0,Grass Collection
+treatment,4.0,Milking
+treatment,4.0,Child Teaching
+treatment,4.0,Feed the Children
+treatment,4.0,Wash the Children
+treatment,4.0,Cooking
+treatment,4.0,Home arrangement
+treatment,4.0,House Clearing
+treatment,4.0,Others (Specify)
+treatment,4.0,Do you face any obstruction from your family for own income
+treatment,4.0,Asset purchase of your own
+treatment,4.0,Income Generating Activities at Home
+treatment,4.0,Income Generating Activities outside at Home
+treatment,4.0,Own asset sales
+treatment,4.0,Spend own asset
+treatment,4.0,Attend meeting/training at distant place
+treatment,4.0,Overall Comments
+treatment,4.0,Remarks
+treatment,4.0,Have any assets been purchased with money you have earnedlast 6
+treatment,4.0,Asset 1: Name of the Asset
+treatment,4.0,Asset 1: Who Made decission to buy this assets
+treatment,4.0,Asset 1: Who control this asset
+treatment,4.0,Asset 2: Name of the Asset
+treatment,4.0,Asset 2:Who made decission to buy this assets
+treatment,4.0,Asset 2: Who Control this asset
+treatment,4.0,Asset 3: Name of the Asset
+treatment,4.0,Asset 3: Who made decission to buy this asset
+treatment,4.0,Asset 3: Who control this asset
+treatment,4.0,Asset 4: Name of the asset
+treatment,4.0,Asset 4: Who made decission to buy this asset
+treatment,4.0,Asset 4: Who control this asset
+cows,4.0,Serial No
+cows,4.0,DEO SL
+cows,4.0,COW SL
+cows,4.0,Cow Identity
+cows,4.0,Bread of Cow
+cows,4.0,Type of Cow
+cows,4.0,Value of Cow in BDT
+cows,4.0,Daily Production of Cow
+cows,4.0,Last Calving Date
+cows,4.0,No of Calving
+treatment,5.0,DEO ID
+treatment,5.0,Producer ID
+treatment,5.0,1.1 Respondents Name
+treatment,5.0,1.2 Location
+treatment,5.0,1.3 Para
+treatment,5.0,1.4 Village
+treatment,5.0,1.5 Union
+treatment,5.0,1.6 Thana
+treatment,5.0,1.7 District
+treatment,5.0,1.8 Household Type
+treatment,5.0,My Name Is
+treatment,5.0,1.9 Interviewer Name
+treatment,5.0,Interviewer ID
+treatment,5.0,1.10 Supervisor Name
+treatment,5.0,Supervisor ID
+treatment,5.0,1.11 Date of Interview
+treatment,5.0,2.1 Sex of the Respondent
+treatment,5.0,2.2 Occupation Primary
+treatment,5.0,2.2 Occupation Secondary
+treatment,5.0,2.3 Age of Respondent
+treatment,5.0,2.4 Respondent's Education
+treatment,5.0,2.5 Marital Status of the Respondent
+treatment,5.0,2.6 No of the Family Members (Total)
+treatment,5.0,Men Below 5 Years
+treatment,5.0,Men 5-18 Years
+treatment,5.0,Men 18-64 Years
+treatment,5.0,Men 64 Years Above
+treatment,5.0,Women Below 5 years
+treatment,5.0,Women 5-18 years
+treatment,5.0,Women 18-64 years
+treatment,5.0,Women 64 years above
+treatment,5.0,2.7 Name of the Household Head
+treatment,5.0,2.8 Relationship with Household Head
+treatment,5.0,2.9 Are you SDVC group Member?
+treatment,5.0,2.10 What is your group name?
+treatment,5.0,2.11 Position in group
+treatment,5.0,Total Comsumption (Ltr)
+treatment,5.0,Total Free Distribution (Ltr)
+treatment,5.0,Neighbours
+treatment,5.0,Collection Point
+treatment,5.0,Milk Collector
+treatment,5.0,Open Market
+treatment,5.0,Sweetmeat/Tea Stall
+treatment,5.0,Direct to Company
+treatment,5.0,Yesterday total spoilage(Ltr)
+treatment,5.0,Yesterday total Income from milk sale
+treatment,5.0,3/3 Within your household who given priority to consumed milk
+treatment,5.0,3/4 Why s/he was given priority to consumed milk?
+treatment,5.0,3/5 How Many Members consumed Milk
+treatment,5.0,4/1 Are you Cultivating fodder?
+treatment,5.0,4/1/1 If Yes Cultivated land (Dec)
+treatment,5.0,4/1/2 Which type of fodder you cultivating?
+treatment,5.0,4/2 Do you feed green grass to your Cow?
+treatment,5.0,4/3 Source of Grass
+treatment,5.0,4/4 How many vaccines should be given for cattle
+treatment,5.0,4/5 Which vaccines have you given to your cattle ?
+treatment,5.0,4/6 Have you dewormed your cattle in the last 6 months?
+treatment,5.0,4/7 What are the drinking water sources for your cattle?
+treatment,5.0,4/8 Do you wash your cattle?
+treatment,5.0,4/8/1  If Not why?
+treatment,5.0,4/8/1/2  If yes how often?
+treatment,5.0,4/9 Measurement taken for bio security
+treatment,5.0,4/10/1 Cow rearing
+treatment,5.0,4/10/2 Feed Practice
+treatment,5.0,4/10/3 Milking the cow
+treatment,5.0,4/10/4 Milk selling
+treatment,5.0,4/10/5 Vaccination
+treatment,5.0,4/11/1 Cattle Purchase
+treatment,5.0,4/11/2 Cattle Sales
+treatment,5.0,4/11/3 Where to sale milk
+treatment,5.0,4/11/4 Where to purchase food
+treatment,5.0,4/11/5 From where vaccination taken
+treatment,5.0,4/12 Do you wash your hans before milking
+treatment,5.0,4/12/1 If Yes How?
+treatment,5.0,4/13 Do you wash your milking pot?
+treatment,5.0,4/13/1 If yes How?
+treatment,5.0,4/14 Do you wash under & teat before milking
+treatment,5.0,4/14/1 If yes How?
+treatment,5.0,4/15 Do you use anything on the under & teat during milking?
+treatment,5.0,4/15/1 If yes what?
+treatment,5.0,4/16 How do you feed cows?
+treatment,5.0,4/17 Where do you dispose cowdung?
+treatment,5.0,4/18  What do you do with cowdung?
+treatment,5.0,4/19 Income from cowdung sold during last 6 months
+treatment,5.0,5/1 What types of cattle feeds are there?
+treatment,5.0,5/2 Which type of feed increase the milk fat%
+treatment,5.0,5/3 Mention the name of a few hybrid fodders
+treatment,5.0,5/4 Mention the name of few concentrated feeds
+treatment,5.0,5/5 What should be the condition of cow shed?
+treatment,5.0,5/6 Which type of cattle should get vaccinated?
+treatment,5.0,5/7 What are the symptoms of worm affected cattle?
+treatment,5.0,5/8 In which interval should de-worming should be done?
+treatment,5.0,5/9 How long after heat detectionis the best time for AI?
+treatment,5.0,5/10 What are the advantages of AI?
+treatment,5.0,5 Total Score
+treatment,5.0,6/1 Proper ventilation system is available in cow shed
+treatment,5.0,6/2 Cleanliness of the floor of cow shed
+treatment,5.0,6/3 There is proper slopping of the floor to the drain
+treatment,5.0,6/4 There is a disposal place for cow dung
+treatment,5.0,6/5 Cleanliness of the milking place
+treatment,5.0,6 Total Score
+treatment,5.0,7/1 Do you own any Cattle
+treatment,5.0,7/2 Did you get ownership of cow after joining SDVC
+treatment,5.0,7/3 How did you get the ownership of cow?
+treatment,5.0,7/4 Have you earned any income during last 6 months?
+treatment,5.0,7/4/1 If yes what was the income in last 6 months
+treatment,5.0,7/5 Have you had any other income income during last 6 months?
+treatment,5.0,7/5/1 If yes what was the income
+treatment,5.0,7/6 Who makes decisions for spend the money?
+treatment,5.0,7/7 Who makes decision for use the milk sales income?
+treatment,5.0,7/8 Have any asset been purchased with money you have earned
+treatment,5.0,Asset 1: Name of the Asset
+treatment,5.0,Asset 1: Who Made decission to buy this assets
+treatment,5.0,Asset 1: Who control this asset
+treatment,5.0,Asset 2: Name of the Asset
+treatment,5.0,Asset 2:Who made decission to buy this assets
+treatment,5.0,Asset 2: Who Control this asset
+treatment,5.0,Asset 3: Name of the Asset
+treatment,5.0,Asset 3: Who made decission to buy this asset
+treatment,5.0,Asset 3: Who control this asset
+treatment,5.0,Asset 4: Name of the asset
+treatment,5.0,Asset 4: Who made decission to buy this asset
+treatment,5.0,Asset 4: Who control this asset
+treatment,5.0,Asset 5: Name of the asset
+treatment,5.0,Asset 5: Who made decission to buy this asset
+treatment,5.0,Asset 5: Who control this asset
+treatment,5.0,7/9/1Attended group meetings within the village Need Permission?
+treatment,5.0,7/9/1 If Yes From whom?
+treatment,5.0,7/9/2 Attend meetings at a distant place Need Permission?
+treatment,5.0,7/9/2 If Yes from Whom?
+treatment,5.0,7/9/3 Travel to distant place Do you have to take permission?
+treatment,5.0,7/9/3 If Yes From Home?
+treatment,5.0,7/10 Does your husband help you in your daily Household wrok?
+treatment,5.0,Cattle Grazing
+treatment,5.0,Cattle Feeding
+treatment,5.0,Cattle Wash
+treatment,5.0,Milking
+treatment,5.0,Grass Collection
+treatment,5.0,Child Teaching
+treatment,5.0,Feed the Children
+treatment,5.0,Wash the Children
+treatment,5.0,Cooking
+treatment,5.0,Home arrangement
+treatment,5.0,House Clearing
+treatment,5.0,Others (Specify)
+treatment,5.0,7/11 Do you face any obstruction from your family for own income
+treatment,5.0,Asset purchase of your own
+treatment,5.0,Income Generating Activities at Home
+treatment,5.0,Income Generating Activities outside at Home
+treatment,5.0,Own asset sales
+treatment,5.0,Spend own asset
+treatment,5.0,Attend meeting/training at distant place
+treatment,5.0,Amount Rice Bran (kg)
+treatment,5.0,Unit Rice Bran
+treatment,5.0,Source Rice Bran
+treatment,5.0,Taka Rice Bran
+treatment,5.0,Amount Wheat Bran (kg)
+treatment,5.0,Unit Wheat Bran
+treatment,5.0,Source Wheat Bran
+treatment,5.0,Taka Wheat Bran
+treatment,5.0,Amount Pulse Husk (kg)
+treatment,5.0,Unit Pulse Husk
+treatment,5.0,Source Pulse Husk
+treatment,5.0,Taka Pulse Husk
+treatment,5.0,Amount Broken Rice (kg)
+treatment,5.0,Unit Broken Rice
+treatment,5.0,Source Broken Rice
+treatment,5.0,Taka Broken Rice
+treatment,5.0,Amount Molasess (kg)
+treatment,5.0,Unit Molasess
+treatment,5.0,Source Molasess
+treatment,5.0,Taka Molasess
+treatment,5.0,Amount Broken Maize (kg)
+treatment,5.0,Unit Broken Maize
+treatment,5.0,Source Broken Maize
+treatment,5.0,Taka Broken Maize
+treatment,5.0,Amount Coconut Oil Cake (kg)
+treatment,5.0,Unit Coconut Oil Cake
+treatment,5.0,Source Coconut Oil Cake
+treatment,5.0,Taka Coconut Oil Cake
+treatment,5.0,Amount Mustard Oil Cake (kg)
+treatment,5.0,Unit Mustard Oil Cake
+treatment,5.0,Source Mustard Oil Cake
+treatment,5.0,Taka Mustard Oil Cake
+treatment,5.0,Amount Mineral Mix (kg)
+treatment,5.0,Unit Mineral Mix
+treatment,5.0,Source Mineral Mix
+treatment,5.0,Taka Mineral Mix
+treatment,5.0,Amount DCP (kg)
+treatment,5.0,Unit DCP
+treatment,5.0,Source DCP
+treatment,5.0,Taka DCP
+treatment,5.0,Amount Straw (kg)
+treatment,5.0,Unit Straw
+treatment,5.0,Source Straw
+treatment,5.0,Taka Straw
+treatment,5.0,Amount Green Grass (kg)
+treatment,5.0,Unit Green Grass
+treatment,5.0,Source Green Grass
+treatment,5.0,Taka Green Grass
+treatment,5.0,Amount Ready Feed (kg)
+treatment,5.0,Unit Ready Feed
+treatment,5.0,Source Ready Feed
+treatment,5.0,Taka Ready Feed
+treatment,5.0,Amount Total (kg)
+treatment,5.0,Taka Total
+treatment,5.0,Affected by disease? Yes or No(2)
+treatment,5.0,Affected by disease? What Did you do  (3)
+treatment,5.0,Affected by disease? Who provide treatment (4)
+treatment,5.0,Affected by disease? Who sugested? (5)
+treatment,5.0,Affected by disease? Fee (6)
+treatment,5.0,Affected by disease? Diagnosis (7)
+treatment,5.0,Affected by disease? Medicine (8)
+treatment,5.0,Affected by disease? Total (9)
+treatment,5.0,Vaccinated? Yes or No (2)
+treatment,5.0,Vaccinated? Who provide treatment (4)
+treatment,5.0,Vaccinated? Who sugested? (5)
+treatment,5.0,Vaccinated? Fee (6)
+treatment,5.0,Vaccinated? Diagnosis (7)
+treatment,5.0,Vaccinated? Vaccine (8)
+treatment,5.0,Vaccinated? Total (9)
+treatment,5.0,Dewormed? Yes or No (2)
+treatment,5.0,Dewormed? Who provide treatment (4)
+treatment,5.0,Dewormed? Who sugested? (5)
+treatment,5.0,Dewormed? Fee (6)
+treatment,5.0,Dewormed? Diagnosis (7)
+treatment,5.0,Dewormed? Vaccine (8)
+treatment,5.0,Dewormed? Total (9)
+treatment,5.0,Provided AI Yes or No (2)
+treatment,5.0,Provided AI Who provide Services (4)
+treatment,5.0,Provided AI Total  (9)
+treatment,5.0,Provided NI Yes or No (2)
+treatment,5.0,Provided NI Who provide Services (4)
+treatment,5.0,Provided NI Total (9)
+treatment,5.0,Total Expenditure
+treatment,5.0,10/1 Did You purchase any cattle? (Last 6 months)
+treatment,5.0,10/1/1 If yes how many
+treatment,5.0,10/1/2 What type of cattle purchased?
+treatment,5.0,10/1/3 Breed type
+treatment,5.0,10/2 Did you sell any cattle? (Last 6 months)
+treatment,5.0,10/2/1 If yes how many?
+treatment,5.0,10/2/2 What type of cattle?
+treatment,5.0,10/2/3 If yes Why sold?
+treatment,5.0,10/3 Did you sell any calf? (Last 6 months)
+treatment,5.0,10/3/1 If Yes how many?
+treatment,5.0,SL 1
+treatment,5.0,Calf Identification 1
+treatment,5.0,Breed 1
+treatment,5.0,Sex 1
+treatment,5.0,Selling Price 1
+treatment,5.0,Selling Month 1
+treatment,5.0,SL 2
+treatment,5.0,Calf Identification 2
+treatment,5.0,Breed 2
+treatment,5.0,Sex 2
+treatment,5.0,Selling Price 2
+treatment,5.0,Selling Month 2
+treatment,5.0,SL 3
+treatment,5.0,Calf Identification 3
+treatment,5.0,Breed 3
+treatment,5.0,Sex 3
+treatment,5.0,Selling Price 3
+treatment,5.0,Selling Month 3
+treatment,5.0,Total Selling Price
+treatment,5.0,10/4 Did any calf born last 6 months?
+treatment,5.0,10/4/1 If yes how many cow was born?
+treatment,5.0,10/5 How long was the dry period?
+treatment,5.0,10/6 Did any cattle die during last 6 months?
+treatment,5.0,10/6/1 If yes how many?
+treatment,5.0,10/6/2 What was the cause of death? Cow
+treatment,5.0,10/6/2 What was the cause of death? Calve
+treatment,5.0,10/6/3 Type of death cattle
+treatment,5.0,"10/6/4 If Calf, Sex?"
+treatment,5.0,10/6/5 What did you do with dead cattle?
+treatment,5.0,10/7 How did you bear the dairy related expenses?
+treatment,5.0,"10/7/1 If receive any loan, how much was it (tk)?"
+treatment,5.0,10/7/2 What was the loan Source?
+treatment,5.0,10/8 Do you haveany plan to get a loan?
+treatment,5.0,"10/8/1 If yes, from where will you get it?"
+cows,5.0,DEO ID
+cows,5.0,Serial No
+cows,5.0,COW SL
+cows,5.0,Cow Identity
+cows,5.0,Bread of Cow
+cows,5.0,Type of Cow
+cows,5.0,Value of Cow in BDT
+cows,5.0,Daily Production of Cow
+cows,5.0,Last Calving Date
+cows,5.0,No of Calve
+control,5.0,DEO ID
+control,5.0,Producer ID
+control,5.0,1 Respondents Name
+control,5.0,2 Location
+control,5.0,3 Para
+control,5.0,4 Village
+control,5.0,5 Union
+control,5.0,6 Thana
+control,5.0,7 District
+control,5.0,8 Household Type
+control,5.0,My Name Is
+control,5.0,9 Interviewer Name
+control,5.0,Interviewer ID
+control,5.0,10 Supervisor Name
+control,5.0,Supervisor ID
+control,5.0,11 Date of Interview
+control,5.0,1 Sex of the Respondent
+control,5.0,2 Occupation Primary
+control,5.0,2 Occupation Secondary
+control,5.0,3 Age of Respondent
+control,5.0,4 Respondent's Education
+control,5.0,5 Marital Status of the Respondent
+control,5.0,6 No of the Family Nennbers (Total)
+control,5.0,Men Below 5 Years
+control,5.0,Men 5-18 Years
+control,5.0,Men 18-64 Years
+control,5.0,Men 64 Years Above
+control,5.0,Women Below 5 years
+control,5.0,Women 5-18 years
+control,5.0,Women 18-64 years
+control,5.0,Women 64 years above
+control,5.0,7 Name of the Household Head
+control,5.0,8 Relationship with Household Head
+control,5.0,9 Are you SDVC group Member?
+control,5.0,10 What is your group name?
+control,5.0,11 Position in group
+control,5.0,Total Comsumption (Ltr)
+control,5.0,Total Free Distribution (Ltr)
+control,5.0,Neighbours
+control,5.0,Collection Point
+control,5.0,Milk Collector
+control,5.0,Open Market
+control,5.0,Sweetmeat/Tea Stall
+control,5.0,Direct to Company
+control,5.0,Yesterday total spoilage(Ltr)
+control,5.0,Yesterday total Income from milk sale
+control,5.0,3/3 Within your household who given priority to consumed milk
+control,5.0,3/4 Why s/he was given priority to consumed milk?
+control,5.0,3/5 How Many Members consumed Milk
+control,5.0,4/1 Are you Cultivating fodder?
+control,5.0,4/1/1 If Yes Cultivated land (Dec)
+control,5.0,4/1/2 Which type of fodder you cultivating?
+control,5.0,4/2 Do you feed green grass to your Cow?
+control,5.0,4/3 Source of Grass
+control,5.0,4/4 How many vaccines should be given for cattle
+control,5.0,4/5 Which vaccines have you given to your cattle ?
+control,5.0,4/6 Have you dewormed your cattle in the last 6 months?
+control,5.0,4/7 What are the drinking water sources for your cattle?
+control,5.0,4/8 Do you wash your cattle?
+control,5.0,4/8/1  If Not why?
+control,5.0,4/8/1/2  If yes how often?
+control,5.0,4/9 Measurement taken for bio security
+control,5.0,4/10/1 Cow rearing
+control,5.0,4/10/2 Feed Practice
+control,5.0,4/10/3 Milking the cow
+control,5.0,4/10/4 Milk selling
+control,5.0,4/10/5 Vaccination
+control,5.0,4/11/1 Cattle Purchase
+control,5.0,4/11/2 Cattle Sales
+control,5.0,4/11/3 Where to sale milk
+control,5.0,4/11/4 Where to purchase food
+control,5.0,4/11/5 From where vaccination taken
+control,5.0,4/12 Do you wash your hans before milking
+control,5.0,4/12/1 If Yes How?
+control,5.0,4/13 Do you wash your milking pot?
+control,5.0,4/13/1 If yes How?
+control,5.0,4/14 Do you wash under & teat before milking
+control,5.0,4/14/1 If yes How?
+control,5.0,4/15 Do you use anything on the under & teat during milking?
+control,5.0,4/15/1 If yes what?
+control,5.0,4/16 How do you feed cows?
+control,5.0,4/17 Where do you dispose cowdung?
+control,5.0,4/18  What do you do with cowdung?
+control,5.0,4/19 Income from cowdung sold during last 6 months
+control,5.0,5/1 What types of cattle feeds are there?
+control,5.0,5/2 Which type of feed increase the milk fat%
+control,5.0,5/3 Mention the name of a few hybrid fodders
+control,5.0,5/4 Mention the name of few concentrated feeds
+control,5.0,5/5 What should be the condition of cow shed?
+control,5.0,5/6 Which type of cattle should get vaccinated?
+control,5.0,5/7 What are the symptoms of worm affected cattle?
+control,5.0,5/8 In which interval should de-worming should be done?
+control,5.0,5/9 How long after heat detectionis the best time for AI?
+control,5.0,5/10 What are the advantages of AI?
+control,5.0,5 Total Score
+control,5.0,6/1 Proper ventilation system is available in cow shed
+control,5.0,6/2 Cleanliness of the floor of cow shed
+control,5.0,6/3 There is proper slopping of the floor to the drain
+control,5.0,6/4 There is a disposal place for cow dung
+control,5.0,6/5 Cleanliness of the milking place
+control,5.0,6 Total Score
+control,5.0,7/1 Do you own any Cattle
+control,5.0,7/2 Did you get ownership of cow after joining SDVC
+control,5.0,7/3 How did you get the ownership of cow?
+control,5.0,7/4 Have you earned any income during last 6 months?
+control,5.0,7/4/1 If yes what was the income in last 6 months
+control,5.0,7/5 Have you had any other income income during last 6 months?
+control,5.0,7/5/1 If yes what was the income
+control,5.0,7/6 Who makes decisions for spend the money?
+control,5.0,7/7 Who makes decision for use the milk sales income?
+control,5.0,7/8 Have any asset been purchased with money you have earned
+control,5.0,Asset 1: Name of the Asset
+control,5.0,Asset 1: Who Made decission to buy this assets
+control,5.0,Asset 1: Who control this asset
+control,5.0,Asset 2: Name of the Asset
+control,5.0,Asset 2:Who made decission to buy this assets
+control,5.0,Asset 2: Who Control this asset
+control,5.0,Asset 3: Name of the Asset
+control,5.0,Asset 3: Who made decission to buy this asset
+control,5.0,Asset 3: Who control this asset
+control,5.0,Asset 4: Name of the asset
+control,5.0,Asset 4: Who made decission to buy this asset
+control,5.0,Asset 4: Who control this asset
+control,5.0,Asset 5: Name of the asset
+control,5.0,Asset 5: Who made decission to buy this asset
+control,5.0,Asset 5: Who control this asset
+control,5.0,7/9/1Attended group meetings within the village Need Permission?
+control,5.0,7/9/1 If Yes From whom?
+control,5.0,7/9/2 Attend meetings at a distant place Need Permission?
+control,5.0,7/9/2 If Yes from Whom?
+control,5.0,7/9/3 Travel to distant place Do you have to take permission?
+control,5.0,7/9/3 If Yes From Home?
+control,5.0,7/10 Does your husband help you in your daily Household wrok?
+control,5.0,Cattle Grazing
+control,5.0,Cattle Feeding
+control,5.0,Cattle Wash
+control,5.0,Milking
+control,5.0,Grass Collection
+control,5.0,Child Teaching
+control,5.0,Feed the Children
+control,5.0,Wash the Children
+control,5.0,Cooking
+control,5.0,Home arrangement
+control,5.0,House Clearing
+control,5.0,Others (Specify)
+control,5.0,7/11 Do you face any obstruction from your family for own income
+control,5.0,Asset purchase of your own
+control,5.0,Income Generating Activities at Home
+control,5.0,Income Generating Activities outside at Home
+control,5.0,Own asset sales
+control,5.0,Spend own asset
+control,5.0,Attend meeting/training at distant place
+control,5.0,Amount Rice Bran (kg)
+control,5.0,Unit Rice Bran
+control,5.0,Source Rice Bran
+control,5.0,Taka Rice Bran
+control,5.0,Amount Wheat Bran (kg)
+control,5.0,Unit Wheat Bran
+control,5.0,Source Wheat Bran
+control,5.0,Taka Wheat Bran
+control,5.0,Amount Pulse Husk (kg)
+control,5.0,Unit Pulse Husk
+control,5.0,Source Pulse Husk
+control,5.0,Taka Pulse Husk
+control,5.0,Amount Broken Rice (kg)
+control,5.0,Unit Broken Rice
+control,5.0,Source Broken Rice
+control,5.0,Taka Broken Rice
+control,5.0,Amount Molasess (kg)
+control,5.0,Unit Molasess
+control,5.0,Source Molasess
+control,5.0,Taka Molasess
+control,5.0,Amount Broken Maize (kg)
+control,5.0,Unit Broken Maize
+control,5.0,Source Broken Maize
+control,5.0,Taka Broken Maize
+control,5.0,Amount Coconut Oil Cake (kg)
+control,5.0,Unit Coconut Oil Cake
+control,5.0,Source Coconut Oil Cake
+control,5.0,Taka Coconut Oil Cake
+control,5.0,Amount Mustard Oil Cake (kg)
+control,5.0,Unit Mustard Oil Cake
+control,5.0,Source Mustard Oil Cake
+control,5.0,Taka Mustard Oil Cake
+control,5.0,Amount Mineral Mix (kg)
+control,5.0,Unit Mineral Mix
+control,5.0,Source Mineral Mix
+control,5.0,Taka Mineral Mix
+control,5.0,Amount DCP (kg)
+control,5.0,Unit DCP
+control,5.0,Source DCP
+control,5.0,Taka DCP
+control,5.0,Amount Straw (kg)
+control,5.0,Unit Straw
+control,5.0,Source Straw
+control,5.0,Taka Straw
+control,5.0,Amount Green Grass (kg)
+control,5.0,Unit Green Grass
+control,5.0,Source Green Grass
+control,5.0,Taka Green Grass
+control,5.0,Amount Ready Feed (kg)
+control,5.0,Unit Ready Feed
+control,5.0,Source Ready Feed
+control,5.0,Taka Ready Feed
+control,5.0,Amount Total (kg)
+control,5.0,Taka Total
+control,5.0,Affected by disease? Yes or No(2)
+control,5.0,Affected by disease? What Did you do  (3)
+control,5.0,Affected by disease? Who provide treatment (4)
+control,5.0,Affected by disease? Who sugested? (5)
+control,5.0,Affected by disease? Fee (6)
+control,5.0,Affected by disease? Diagnosis (7)
+control,5.0,Affected by disease? Medicine (8)
+control,5.0,Affected by disease? Total (9)
+control,5.0,Vaccinated? Yes or No (2)
+control,5.0,Vaccinated? Who provide treatment (4)
+control,5.0,Vaccinated? Who sugested? (5)
+control,5.0,Vaccinated? Fee (6)
+control,5.0,Vaccinated? Diagnosis (7)
+control,5.0,Vaccinated? Vaccine (8)
+control,5.0,Vaccinated? Total (9)
+control,5.0,Dewormed? Yes or No (2)
+control,5.0,Dewormed? Who provide treatment (4)
+control,5.0,Dewormed? Who sugested? (5)
+control,5.0,Dewormed? Fee (6)
+control,5.0,Dewormed? Diagnosis (7)
+control,5.0,Dewormed? Vaccine (8)
+control,5.0,Dewormed? Total (9)
+control,5.0,Provided AI Yes or No (2)
+control,5.0,Provided AI Who provide Services (4)
+control,5.0,Provided AI Total  (9)
+control,5.0,Provided NI Yes or No (2)
+control,5.0,Provided NI Who provide Services (4)
+control,5.0,Provided NI Total (9)
+control,5.0,Total Expenditure
+control,5.0,10/1 Did You purchase any cattle? (Last 6 months)
+control,5.0,10/1/1 If yes how many
+control,5.0,10/1/2 What type of cattle purchased?
+control,5.0,10/1/3 Breed type
+control,5.0,10/2 Did you sell any cattle? (Last 6 months)
+control,5.0,10/2/1 If yes how many?
+control,5.0,10/2/2 What type of cattle?
+control,5.0,10/2/3 If yes Why sold?
+control,5.0,10/3 Did you sell any calf? (Last 6 months)
+control,5.0,10/3/1 If Yes how many?
+control,5.0,SL 1
+control,5.0,Calf Identification 1
+control,5.0,Breed 1
+control,5.0,Sex 1
+control,5.0,Selling Price 1
+control,5.0,Selling Month 1
+control,5.0,SL 2
+control,5.0,Calf Identification 2
+control,5.0,Breed 2
+control,5.0,Sex 2
+control,5.0,Selling Price 2
+control,5.0,Selling Month 2
+control,5.0,SL 3
+control,5.0,Calf Identification 3
+control,5.0,Breed 3
+control,5.0,Sex 3
+control,5.0,Selling Price 3
+control,5.0,Selling Month 3
+control,5.0,Total Selling Price
+control,5.0,10/4 Did any calf born last 6 months?
+control,5.0,10/4/1 If yes how many cow was born?
+control,5.0,10/5 How long was the dry period?
+control,5.0,10/6 Did any cattle die during last 6 months?
+control,5.0,10/6/1 If yes how many?
+control,5.0,10/6/2 What was the cause of death? Cow
+control,5.0,10/6/2 What was the cause of death? Cattle
+control,5.0,10/6/3 Type of death cattle
+control,5.0,"10/6/4 If Calf, Sex?"
+control,5.0,10/6/5 What did you do with dead cattle?
+control,5.0,10/7 How did you bear the dairy related expenses?
+control,5.0,"10/7/1 If receive any loan, how much was it (tk)?"
+control,5.0,10/7/2 What was the loan Source?
+control,5.0,10/8 Do you haveany plan to get a loan?
+control,5.0,"10/8/1 If yes, from where will you get it?"
+controlcows,5.0,DEO ID
+controlcows,5.0,Serial No
+controlcows,5.0,COW SL
+controlcows,5.0,Cow Identity
+controlcows,5.0,Bread of Cow
+controlcows,5.0,Type of Cow
+controlcows,5.0,Value of Cow in BDT
+controlcows,5.0,Daily Production of Cow
+controlcows,5.0,Last Calving Date
+controlcows,5.0,No of Calving
