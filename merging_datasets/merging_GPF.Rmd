@@ -272,7 +272,8 @@ make_names_consistent <- function(df) {
         str_replace_all("geo", "") %>%
         str_trim(side = "both") %>%
         str_replace_all("[ ]{2,}", " ") %>%
-        str_replace_all(" ", "_")
+        str_replace_all(" ", "_") %>%
+        str_replace_all("whomakesdecisionsforspendingmoney", "decision_money_you_earned")
     
         colnames(df)[str_detect(names(df), "deo")] <- "deo_id"
         colnames(df)[str_detect(names(df), "respondents_name")] <- "producer_name"
@@ -285,6 +286,9 @@ make_names_consistent <- function(df) {
         colnames(df)[str_detect(names(df), "group_name")] <- "group_name"
         colnames(df)[str_detect(names(df), "hh_type")] <- "household_type"
         colnames(df)[str_detect(names(df), "respondent_s_education")] <- "educational_status_respondent"
+        colnames(df)[str_detect(names(df), "which_type_fodder")] <- "type_fodder_cultivating"
+
+        colnames(df)[str_detect(names(df), "where_to_sale_milk")] <- "where_to_sell_milk"
         colnames(df)[str_detect(names(df), "what_are_drinking_water_sources_for_cattle")] <- "what_drinking_water_sources_for_cattle"
         colnames(df)[str_detect(names(df), 
                                 "does_husband_help_you_in_day_to_day_household_activiti")] <- "does_husband_help_you_in_daily_household_work"
@@ -332,19 +336,98 @@ all(names(treatment_round3) %in% names(treatment_round2))
 #names(treatment_round2)[!names(treatment_round2) %in% names(treatment_round4)]
 ```
 
-Round 5 is more different from rounds 2, 3, and 4.
+Let's do some work on rounds 2, 3, and 4.
 
 ```{r}
+treatment_round4[,c(60:100,302:311)] <- lapply(treatment_round4[,c(60:100,302:311)], as.numeric)
+treatment_round2[,c(290:299)] <- lapply(treatment_round2[,c(290:299)], as.numeric)
+
+process_names_more <- function(df) {
+    df <- df %>%
+        mutate(cow_rearing = rowSums(df[,grep("cow_rearing", colnames(df))],na.rm = TRUE),
+               feed_practice = rowSums(df[,grep("feed_purchase", colnames(df))], na.rm = TRUE),
+               from_where_vaccination_taken = rowSums(df[,grep("from_where_vaccination", colnames(df))], na.rm = TRUE),
+               milking_cow = rowSums(df[,grep("milking_cow", colnames(df))], na.rm = TRUE),
+               milk_selling = rowSums(df[,grep("milk_selling", colnames(df))], na.rm = TRUE),
+               cattle_purchase = rowSums(df[,grep("cattle_purchase", colnames(df))], na.rm = TRUE),
+               cattle_sales = rowSums(df[,grep("cattle_sales", colnames(df))], na.rm = TRUE),
+               where_to_sell_milk = rowSums(df[,grep("where_to_sell_milk", colnames(df))], na.rm = TRUE),
+               where_to_purchase_food = rowSums(df[,grep("where_to_purchase_feed", colnames(df))], na.rm = TRUE),
+               decision_money = rowSums(df[,grep("decision_money", colnames(df))], na.rm = TRUE),
+               decision_milk_sales_income = rowSums(df[,grep("decision_milk_sales_income", colnames(df))], na.rm = TRUE)) %>%
+        select(-hello_my_name_is,
+               -cow_rearing_women_1,
+               -cow_rearing_men_2,
+               -cow_rearing_both_3,
+               -feed_purchase_women_1,
+               -feed_purchase_men_2,
+               -feed_purchase_both_3,
+               -milking_cow_women_1,
+               -milking_cow_men_2,
+               -milking_cow_both_3,
+               -milk_selling_women_1,
+               -milk_selling_men_2,
+               -milk_selling_both_3,
+               -cattle_purchase_wife_only_1,
+               -cattle_purchase_husband_only_2,
+               -cattle_purchase_jointly_3,
+               -cattle_purchase_other_male_member_4,
+               -cattle_purchase_other_female_member_5,
+               -cattle_sales_wife_only_1,
+               -cattle_sales_husband_only_2,
+               -cattle_sales_jointly_3,
+               -cattle_sales_other_male_member_4,
+               -cattle_sales_other_female_member_5,
+               -where_to_sell_milk_wife_only_1,
+               -where_to_sell_milk_husband_only_2,
+               -where_to_sell_milk_jointly_3,
+               -where_to_sell_milk_other_male_member_4,
+               -where_to_sell_milk_other_female_member_5,
+               -where_to_purchase_feed_fooder_wife_only_1,
+               -where_to_purchase_feed_fooder_husband_only_2,
+               -where_to_purchase_feed_fooder_jointly_3,
+               -where_to_purchase_feed_fooder_other_male_member_4,
+               -where_to_purchase_feed_fooder_other_female_member_5,
+               -from_where_vaccination_de_worming_wife_only_1,
+               -from_where_vaccination_de_worming_husband_only_2,
+               -from_where_vaccination_de_worming_jointly_3,
+               -from_where_vaccination_de_worming_other_male_member_4,
+               -from_where_vaccination_de_worming_other_female_member_5,
+               -decision_milk_sales_income_self_1,
+               -decision_milk_sales_income_husband_2,
+               -decision_milk_sales_income_jointly_3,
+               -decision_milk_sales_income_other_male_4,
+               -decision_milk_sales_income_other_female_5,
+               -decision_money_you_earned_self_1,
+               -decision_money_you_earned_husband_2,
+               -decision_money_you_earned_jointly_3,
+               -decision_money_you_earned_other_male_member_4,
+               -decision_money_you_earned_other_female_member_5)
+    
+    df
+}
 
 treatment_round2 <- treatment_round2 %>%
-    select(-hello_my_name_is)
+    process_names_more()
 
+    
 treatment_round3 <- treatment_round3 %>%
-    select(-hello_my_name_is)
+    process_names_more()
+
 
 treatment_round4 <- treatment_round4 %>%
-    select(-text11, hello_my_name_is)
+    process_names_more() %>%
+    select(-text11) %>%
+    mutate(vaccination = rowSums(treatment_round4[,grep("vaccination_de_worming_treatment_ai", 
+                                                        colnames(treatment_round4))], na.rm = TRUE)) %>%
+    select(-vaccination_de_worming_treatment_ai_cow_women_1,
+           -vaccination_de_worming_treatment_ai_cow_men_2,
+           -vaccination_de_worming_treatment_ai_cow_3)
+```
 
+Now let's work on round 5 a bit.
+
+```{r}
 colnames(treatment_round5)[74] <- "how_wash_hands"
 colnames(treatment_round5)[76] <- "how_wash_milking_pot"
 colnames(treatment_round5)[78] <- "how_wash_teat"
@@ -420,9 +503,56 @@ treatment_round5 <- treatment_round5 %>%
 
 
 control_round5 <- control_round5 %>%
-    select(-my_name_is)
+    select(-my_name_is) %>%
+    rename(affected_by_disease_2 = affected_by_disease_yes_or_no_2,
+           affected_by_disease_3 = affected_by_disease_what_did_you_do_3,
+           affected_by_disease_4 = affected_by_disease_who_provide_treatment_4,
+           affected_by_disease_5 = affected_by_disease_who_sugested_5,
+           affected_by_disease_6 = affected_by_disease_fee_6,
+           affected_by_disease_7 = affected_by_disease_diagnos_7,
+           affected_by_disease_8 = affected_by_disease_medicine_8,
+           vaccinated_2 = vaccinated_yes_or_no_2,
+           vaccinated_4 = vaccinated_who_provide_treatment_4,
+           vaccinated_5 = vaccinated_who_sugested_5,
+           vaccinated_6 = vaccinated_fee_6,
+           vaccinated_7 = vaccinated_diagnos_7,
+           vaccinated_8 = vaccinated_vaccine_8,
+           dewormed_2 = dewormed_yes_or_no_2,
+           dewormed_4 = dewormed_who_provide_treatment_4,
+           dewormed_5 = dewormed_who_sugested_5,
+           dewormed_6 = dewormed_fee_6,
+           dewormed_7 = dewormed_diagnos_7,
+           dewormed_8 = dewormed_vaccine_8,
+           dewormed_9 = dewormed_total_9,
+           provided_ai_2 = provided_ai_yes_or_no_2,
+           provided_ai_4 = provided_ai_who_provide_services_4,
+           provided_ai_9 = provided_ai_total_9,
+           provided_ni_2 = provided_ni_yes_or_no_2,
+           provided_ni_4 = provided_ni_who_provide_services_4,
+           provided_ni_9 = provided_ni_total_9,
+           cow_buy_yes_no = did_you_purchase_any_cattle_last_6_months,
+           cow_buy_type_cow = what_type_cattle_purchased,
+           cow_buy_breed_cow = breed_type,
+           cow_sell_yes_no = did_you_sell_any_cattle_last_6_months,
+           cow_sell_type_cow = what_type_cattle,
+           calf_sell_yes_no = did_you_sell_any_calf_last_6_months,
+           calf_sell_type_cow = calf_identification_1,
+           calf_sell_breed_cow = breed_1,
+           calf_sell_calf_sex = sex_1,
+           calf_sell_price_cow = selling_price_1,
+           calf_sell_selling_month = selling_month_1,
+           if_you_sell_cow_why_sold = if_yes_why_sold,
+           did_you_have_any_calf_born_in_last_6_months = did_any_calf_born_last_6_months,
+           how_many_calf_born = if_yes_how_many_cow_was_born,
+           cow_died_yes_1_no_2 = did_any_cattle_die_during_last_6_months,
+           cow_died_type_cow = type_death_cattle,
+           cow_died_calf_sex = if_calf_sex,
+           causes_death_cow = what_was_cause_death_cow)
+```
 
+How are things looking?
 
+```{r}
 names(treatment_round4)[!names(treatment_round4) %in% names(treatment_round5)]
 names(treatment_round5)[!names(treatment_round5) %in% names(treatment_round4)]
 
@@ -431,8 +561,6 @@ names(treatment_round5)[!names(treatment_round5) %in% names(treatment_round2)]
 
 names(control_round5)[!names(control_round5) %in% names(treatment_round5)]
 names(treatment_round5)[!names(treatment_round5) %in% names(control_round5)]
-
-
 ```
 
 
