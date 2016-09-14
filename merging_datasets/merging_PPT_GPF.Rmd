@@ -26,15 +26,15 @@ ppt <- read_csv("../data/ppt_merged.csv", col_types = cols(.default = col_charac
 dim(ppt)
 ```
 
-Let's change the `producer_id` to numeric in both data sets so we can join by them.
+Let's change the `group_code` and `round` to numeric in both data sets so we can join by them.
 
 ```{r}
 library(dplyr)
 gpf <- gpf %>%
-    mutate(producer_id = as.numeric(producer_id),
+    mutate(group_code = as.numeric(group_code),
            round = as.numeric(round))
 ppt <- ppt %>%
-    mutate(producer_id = as.numeric(producer_id),
+    mutate(group_code = as.numeric(group_code),
            round = as.numeric(round))
 ```
 
