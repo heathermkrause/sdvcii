@@ -20,9 +20,11 @@ It is now time to merge the PPT and GFP datasets. Let's do it!
 
 ```{r}
 library(readr)
-gpf <- read_csv("../data/gpf_merged.csv", col_types = cols(.default = col_character()))
+gpf <- read_csv("../data/gpf_merged.csv", 
+                col_types = cols(.default = col_character()))
 dim(gpf)
-ppt <- read_csv("../data/ppt_merged.csv", col_types = cols(.default = col_character()))
+ppt <- read_csv("../data/ppt_merged.csv", 
+                col_types = cols(.default = col_character()))
 dim(ppt)
 ```
 
@@ -37,6 +39,13 @@ ppt <- ppt %>%
     mutate(group_code = as.numeric(group_code),
            round = as.numeric(round))
 ```
+
+A WHOLE BUNCH OF GROUP CODES ARE MISSING IN GPF.
+
+```{r}
+mean(is.na(gpf$group_code))
+```
+
 
 ## Merging the Two Sets Together
 
@@ -54,6 +63,7 @@ How big is this now?
 dim(gpf_ppt_merged)
 ```
 
+THIS IS ALL FULL OF `NA` VALUES RIGHT NOW BECAUSE OF ALL THE MISSING GROUP CODE VALUES IN GPF.
 
 ## Writing the File
 
