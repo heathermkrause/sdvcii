@@ -1,0 +1,78 @@
+---
+title: "Merging the PPT + GPF + DFT Datasets"
+subtitle: "Strengthening the Dairy Value Chain"
+author: "Julia Silge"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: leonids
+---
+
+```{r, echo = FALSE, warning = FALSE}
+library(knitr)
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, dpi = 180)
+options(width=80, dplyr.width = 150)
+```
+
+It is now time to merge the DFT dataset with the already merged PPT and GPF datasets. Let's do it!
+
+## Reading in All the Data
+
+First, let's read in the merged version of the PPT + GPF data.
+
+```{r}
+library(readr)
+gpf_ppt <- read_csv("../data/gpf_ppt_merged.csv", 
+                    col_types = cols(.default = col_character()))
+dim(gpf_ppt)
+```
+
+Now let's read in the DFT data.
+
+```{r}
+library(lubridate)
+library(dplyr)
+dft <- read_csv("../data/Correct and Reformatted DFT July 2014 to May 2016 Corrected CP Names+BRAC.csv",
+                col_types = cols(.default = col_character()))
+dim(dft)
+dft <- dft %>%
+    mutate(date = dmy(Date))
+```
+
+Let's change the `producer_id` and `round` to numeric in both data sets so we can join by them.
+
+```{r}
+gpf_ppt <- gpf_ppt %>%
+    mutate(producer_id = as.numeric(producer_id_gpf),
+           round = as.numeric(round))
+dft <- dft %>%
+    mutate(producer_id = as.numeric(Project.defined.Producer.s.Code))
+```
+
+How do we calculate round?
+
+Many rows per producer -- what are we calculating?
+
+## Merging the Two Sets Together
+
+Now we can merge them together using a join.
+
+```{r, eval = FALSE}
+all_sdvc_merged <-  left_join(gpf_ppt, dft, 
+                             by = c("producer_id", "round"))
+```
+
+How big is this now?
+
+```{r, eval = FALSE}
+dim(all_sdvc_merged)
+```
+
+## Writing the File
+
+Let's save this as a csv.
+
+```{r, eval = FALSE}
+write_csv(all_sdvc_merged, "../data/all_sdvc_merged.csv")
+```
+
