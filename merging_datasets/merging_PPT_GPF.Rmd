@@ -21,27 +21,34 @@ It is now time to merge the PPT and GFP datasets. Let's do it!
 ```{r}
 library(readr)
 gpf <- read_csv("../data/gpf_merged.csv", col_types = cols(.default = col_character()))
+dim(gpf)
 ppt <- read_csv("../data/ppt_merged.csv", col_types = cols(.default = col_character()))
+dim(ppt)
 ```
 
-Let's add a column to the GPF data to mark it.
+Let's change the `producer_id` to numeric in both data sets so we can join by them.
 
 ```{r}
 library(dplyr)
 gpf <- gpf %>%
-    mutate(data_type = "gpf") %>%
-    select(data_type, everything())
+    mutate(producer_id = as.numeric(producer_id),
+           round = as.numeric(round))
+ppt <- ppt %>%
+    mutate(producer_id = as.numeric(producer_id),
+           round = as.numeric(round))
 ```
 
 ## Merging the Two Sets Together
 
-Now we can merge them together
+Now we can merge them together using a join.
 
 ```{r}
-gpf_ppt_merged <- bind_rows(ppt, gpf)
+gpf_ppt_merged <-  left_join(gpf, ppt, 
+                             by = c("group_code", "round"),
+                             suffix = c("_gpf", "_ppt"))
 ```
 
-How big is this getting to be?
+How big is this now?
 
 ```{r}
 dim(gpf_ppt_merged)
