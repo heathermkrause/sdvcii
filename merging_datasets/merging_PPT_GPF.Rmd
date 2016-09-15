@@ -116,6 +116,8 @@ gpf_ppt_merged %>%
               gender_equity_NA = mean(is.na(gender_equity)))
 ```
 
+We expect about rounds 1 and 5 to have about 1/2 `NA` values for the PPT data because they have control producers in them.
+
 PPT FOR ROUND 1 STILL MISSING, BECAUSE OF GPF ROUND 1 GROUP CODES
 
 
