@@ -28,24 +28,68 @@ ppt <- read_csv("../data/ppt_merged.csv",
 dim(ppt)
 ```
 
-Let's change the `group_code` and `round` to numeric in both data sets so we can join by them.
+First, let's get the PPT data ready for merging. We will use only the PPT3 data for merging into the GPF data set. Also, let's change the `group_code` and `round` to numeric in both data sets for easier joining.
 
 ```{r}
 library(dplyr)
-gpf <- gpf %>%
-    mutate(group_code = as.numeric(group_code),
-           round = as.numeric(round))
 ppt <- ppt %>%
+    filter(data_type == "ppt3") %>%
+    select(round, team_name, group_name, group_code, village, 
+           union, union_code, upazila, upazila_code, 
+           district, district_code, ward_number, producer_type,
+           female_producers_involved, male_producers_involved,
+           female_producers_present, male_producers_present,
+           female_producers_dropout, male_producers_dropout,
+           evaluation_date, facilitator,
+           development_plan, rules_regulation, leadership_process,
+           learning_sharing_space, services,
+           cow_shed_mgmt, feed_mgmt, health_mgmt, breed_dvmt,
+           milk_mgmt, milk_marketing, info_mgmt, gender_equity, total) %>%
     mutate(group_code = as.numeric(group_code),
            round = as.numeric(round))
+dim(ppt)
+mean(is.na(ppt$group_code))
 ```
 
-A WHOLE BUNCH OF GROUP CODES ARE MISSING IN GPF.
+Now let's prepare the GPF data for merging. For rounds 2, 3, and 4, group codes are missing so we need to construct them from the producer code/ID.
 
 ```{r}
-mean(is.na(gpf$group_code))
+library(stringr)
+
+# gpf %>% 
+#      select(group_code, producer_id) %>% 
+#      mutate(group_code_new = str_sub(producer_id, end = 6)) %>% 
+#      View()
+# 
+# gpf %>% 
+#     select(group_code, producer_id) %>% 
+#     mutate(group_code_new = if_else(is.na(group_code),
+#                                     ifelse(nchar(str_sub(producer_id, end = 6)) == 6, 
+#                                             str_sub(producer_id, end = 6),
+#                                             NA),
+#                                     group_code)) %>%
+#     mutate(group_code_new = ifelse(nchar(group_code_new) == 6, group_code_new, NA)) %>%
+#     View()
+
+gpf <- gpf %>% 
+    mutate(round = as.numeric(round)) %>%
+    mutate(group_code = if_else(round != 1,
+                                str_sub(producer_id, end = 11), 
+                                group_code)) %>%
+    mutate(group_code = ifelse(nchar(group_code) == 11,
+                               group_code,
+                               NA)) %>%
+    mutate(group_code = as.numeric(group_code))
+    
 ```
 
+That helped A LOT; now we just mostly have `NA` values in group code where we have control group producers who were not in a group.
+
+```{r}
+gpf %>% group_by(round) %>% summarize(mean_NA = mean(is.na(group_code)))
+```
+
+ROUND 1 GROUP CODES STILL A MESS
 
 ## Merging the Two Sets Together
 
@@ -63,7 +107,17 @@ How big is this now?
 dim(gpf_ppt_merged)
 ```
 
-THIS IS ALL FULL OF `NA` VALUES RIGHT NOW BECAUSE OF ALL THE MISSING GROUP CODE VALUES IN GPF.
+Let's check some `NA` values for quantities measured from GPF and PPT, to see if the pattern/amount makes sense.
+
+```{r}
+gpf_ppt_merged %>% 
+    group_by(round) %>% 
+    summarize(cow_rearing_NA = mean(is.na(cow_rearing)),
+              gender_equity_NA = mean(is.na(gender_equity)))
+```
+
+PPT FOR ROUND 1 STILL MISSING, BECAUSE OF GPF ROUND 1 GROUP CODES
+
 
 ## Writing the File
 
