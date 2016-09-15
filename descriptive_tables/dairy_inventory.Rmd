@@ -3,7 +3,7 @@ title: "SDVC Final Report Descriptive Tables"
 subtitle: "Dairy Cattle Inventory and Milk Production"
 author: "Julia Silge"
 date: "`r Sys.Date()`"
-output: word_document
+output: html_document
 ---
 
 ```{r, echo = FALSE, warning = FALSE}
@@ -23,17 +23,15 @@ gpf_ppt <- read_csv("../data/gpf_ppt_merged.csv",
 dim(gpf_ppt)
 
 gpf_ppt <- gpf_ppt %>%
-    mutate(round = as.numeric(round)) %>%
-    mutate(sex_respondent = fct_recode(sex_respondent,
-                                       Female = "1", Male = "2", Others = "3"))
-```
-
-## Herd Demographics
-
-```{r}
-
-
-    
+    mutate(round = fct_recode(round,
+                              `Jul 2014` = '1.0',
+                              `Dec 2014` = '2.0',
+                              `Jul 2015` = '3.0',
+                              `Dec 2015` = '4.0',
+                              `Jul 2016` = '5.0')) %>%
+    mutate(household_type = fct_collapse(household_type,
+                                         Treatment = c("1", "2", "3"),
+                                         Control = c("4", "5", "6")))
 ```
 
 
@@ -46,17 +44,35 @@ gpf_ppt <- gpf_ppt %>%
 
 kable(
     gpf_ppt %>% 
-        filter(!is.na(round)) %>%
-        group_by(household_type, sex_respondent, round, district_gpf) %>%
+        filter(round %in% c('Jul 2014', 'Jul 2016')) %>%
+        group_by(round, household_type, district_gpf) %>%
         summarise(avgcows = mean(number_cattle_breed_1 + number_cattle_breed_2, na.rm = TRUE),
                   mediancows = median(number_cattle_breed_1 + number_cattle_breed_2, na.rm = TRUE)) %>%
         filter(!is.na(mediancows)),
-    digits = 2,
-    col.names = c("Treatment/Control Group", "Gender", "Round of Data Collection", 
-                  "District", "Number of Cows per Household (Average)", "Number of Cows per Household (Median)")
+    digits = 0,
+    col.names = c("Treatment/Control", "Round of Data Collection", "District", 
+                  "Number of Cows per Household (Average)", "Number of Cows per Household (Median)"),
+    caption = "Treatment and Control Groups at the First and Last Data Collection Rounds"
 )
 
 ```
+
+```{r}
+kable(
+    gpf_ppt %>% 
+        filter(!is.na(round) & household_type == "Treatment") %>%
+        group_by(round, district_gpf) %>%
+        summarise(avgcows = mean(number_cattle_breed_1 + number_cattle_breed_2, na.rm = TRUE),
+                  mediancows = median(number_cattle_breed_1 + number_cattle_breed_2, na.rm = TRUE)) %>%
+        filter(!is.na(mediancows)),
+    digits = 0,
+    col.names = c("Round of Data Collection", "District", 
+                  "Number of Cows per Household (Average)", "Number of Cows per Household (Median)"),
+    caption = "Treatment Group at All Data Collection Rounds"
+)
+
+```
+
 
 
 ## Number of local breed cattle per household, per district
