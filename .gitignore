@@ -6,6 +6,10 @@ merging_datasets/rsconnect
 merging_datasets/*cache
 merging_datasets/*files
 merging_datasets/*html
+descriptive_tables/*html
+descriptive_tables/*cache
+descriptive_tables/*docx
+descriptive_tables/rsconnect
 data/*xls
 data/*xlsx
 data/gpf_round*
