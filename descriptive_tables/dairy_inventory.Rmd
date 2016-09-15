@@ -1,0 +1,88 @@
+---
+title: "SDVC Final Report Descriptive Tables"
+subtitle: "Dairy Cattle Inventory and Milk Production"
+author: "Julia Silge"
+date: "`r Sys.Date()`"
+output: word_document
+---
+
+```{r, echo = FALSE, warning = FALSE}
+library(knitr)
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, dpi = 180)
+options(width=80, dplyr.width = 150)
+```
+
+Before we make some pretty tables, let's read in the data.
+
+```{r}
+library(readr)
+library(forcats)
+library(dplyr)
+gpf_ppt <- read_csv("../data/gpf_ppt_merged.csv", 
+                    col_types = cols(.default = col_character()))
+dim(gpf_ppt)
+
+gpf_ppt <- gpf_ppt %>%
+    mutate(round = as.numeric(round)) %>%
+    mutate(sex_respondent = fct_recode(sex_respondent,
+                                       Female = "1", Male = "2", Others = "3"))
+```
+
+## Herd Demographics
+
+```{r}
+
+
+    
+```
+
+
+## Cattle inventory by household, by district
+
+```{r}
+gpf_ppt <- gpf_ppt %>%
+    mutate(number_cattle_breed_1 = as.numeric(number_cattle_breed_1),
+           number_cattle_breed_2 = as.numeric(number_cattle_breed_2))
+
+kable(
+    gpf_ppt %>% 
+        filter(!is.na(round)) %>%
+        group_by(household_type, sex_respondent, round, district_gpf) %>%
+        summarise(avgcows = mean(number_cattle_breed_1 + number_cattle_breed_2, na.rm = TRUE),
+                  mediancows = median(number_cattle_breed_1 + number_cattle_breed_2, na.rm = TRUE)) %>%
+        filter(!is.na(mediancows)),
+    digits = 2,
+    col.names = c("Treatment/Control Group", "Gender", "Round of Data Collection", 
+                  "District", "Number of Cows per Household (Average)", "Number of Cows per Household (Median)")
+)
+
+```
+
+
+## Number of local breed cattle per household, per district
+
+## Number of cross breed cattle per household, per district
+
+## Percentage of in-milking cows
+
+## Number of births per cow, per district
+
+## Value of local breed and cross breed cows in BDT, by district
+
+## Value of Herd
+
+## Productivity of Herd
+
+## Daily household production of cows in liters, by district, by breed
+
+## Total Income from Milk Sales (Tk.) per month
+
+## Total Milk Consumption in Liters
+
+## Milk Consumption Priorities
+
+## Milk Distribution Patterns – litres
+
+## Milk Distribution Patterns – percentages
+
+## Market Linkage Choices
