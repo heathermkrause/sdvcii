@@ -28,7 +28,7 @@ ppt <- read_csv("../data/ppt_merged.csv",
 dim(ppt)
 ```
 
-First, let's get the PPT data ready for merging. We will use only the PPT3 data for merging into the GPF data set. Also, let's change the `group_code` and `round` to numeric in both data sets for easier joining.
+First, let's get the PPT data ready for merging. We will use only the PPT3 data for merging into the GPF data set. Also, let's change `round` and `group_code` to numeric for easier joining.
 
 ```{r}
 library(dplyr)
@@ -45,13 +45,13 @@ ppt <- ppt %>%
            learning_sharing_space, services,
            cow_shed_mgmt, feed_mgmt, health_mgmt, breed_dvmt,
            milk_mgmt, milk_marketing, info_mgmt, gender_equity, total) %>%
-    mutate(group_code = as.numeric(group_code),
-           round = as.numeric(round))
+    mutate(round = as.numeric(round),
+           group_code = as.numeric(group_code))
 dim(ppt)
 mean(is.na(ppt$group_code))
 ```
 
-Now let's prepare the GPF data for merging. For rounds 2, 3, and 4, group codes are missing so we need to construct them from the producer code/ID.
+Now let's prepare the GPF data for merging. For rounds 2, 3, and 4, group codes are missing so we need to construct them from the producer code/ID. (Also, we'll do this for round 5 because the group codes are not consistently correct in round 5.)
 
 ```{r}
 library(stringr)
@@ -74,14 +74,44 @@ library(stringr)
 gpf <- gpf %>% 
     mutate(round = as.numeric(round)) %>%
     mutate(group_code = if_else(round != 1,
-                                str_sub(producer_id, end = 11), 
-                                group_code)) %>%
-    mutate(group_code = ifelse(nchar(group_code) == 11,
-                               group_code,
-                               NA)) %>%
-    mutate(group_code = as.numeric(group_code))
-    
+                                ifelse(nchar(str_sub(producer_id, end = 11)) == 11,
+                                       str_sub(producer_id, end = 11),
+                                       NA), 
+                                group_code))
 ```
+
+Now let's deal with round 1. The group codes and producer codes/IDs changed between round 1 and round 2. Let's use a separate document that will hopefully connect these two sets of codes.
+
+```{r}
+library(readxl)
+producer_profile <- read_excel("../data/Final Producer Profile _SDVC-II_ 05.07.2014.xlsx",
+                               sheet = 1, col_types = rep("text", 56))
+producer_profile <- producer_profile %>%
+    mutate(group_code_old = `Old LG Code`,
+           group_code_new = `Group Code`) %>%
+    select(group_code_old,
+           group_code_new)
+
+transform_group_codes <- producer_profile %>% 
+    group_by(group_code_old) %>% 
+    distinct(group_code_old, .keep_all = TRUE) %>% 
+    filter(!is.na(group_code_old))
+
+transform_group_codes
+```
+
+Now let's join and substitute these values into the GPF data.
+
+```{r}
+gpf <- gpf %>% 
+    left_join(transform_group_codes, by = c("group_code" = "group_code_old")) %>%
+    mutate(group_code = if_else(round == 1,
+                                group_code_new, 
+                                group_code)) %>%
+    select(-group_code_new) %>%
+    mutate(group_code = as.numeric(group_code))
+```
+
 
 That helped A LOT; now we just mostly have `NA` values in group code where we have control group producers who were not in a group.
 
@@ -89,7 +119,15 @@ That helped A LOT; now we just mostly have `NA` values in group code where we ha
 gpf %>% group_by(round) %>% summarize(mean_NA = mean(is.na(group_code)))
 ```
 
-ROUND 1 GROUP CODES STILL A MESS
+We expect the group codes in round 5 to be about 1/2 `NA` values because of the control producers. What is going on in round 1?
+
+```{r}
+gpf %>% filter(round == 1) %>% 
+    group_by(household_type) %>% 
+    summarize(mean_NA = mean(is.na(group_code)))
+```
+
+So the only group codes we recovered by doing the join with the new document were ~75% of the type 1 households. Hopefully that is OK?
 
 ## Merging the Two Sets Together
 
@@ -116,10 +154,7 @@ gpf_ppt_merged %>%
               gender_equity_NA = mean(is.na(gender_equity)))
 ```
 
-We expect about rounds 1 and 5 to have about 1/2 `NA` values for the PPT data because they have control producers in them.
-
-PPT FOR ROUND 1 STILL MISSING, BECAUSE OF GPF ROUND 1 GROUP CODES
-
+We expect about round 5 to have about 1/2 `NA` values for the PPT data because they have control producers in them; round 1 has about the same proportion of `NA` values as above.
 
 ## Writing the File
 
