@@ -93,12 +93,40 @@ gpf_ppt %>%
     filter(!is.na(mediancows)) %>%
     kable(digits = 0,
           col.names = c("Round of Data Collection", "District", 
-                        "Number of Cows per Household (Average)", "Number of Cows per Household (Median)"),
+                        "Number of Local Breen Cows per Household (Average)", "Number of Local Breed Cows per Household (Median)"),
           caption = "Treatment Group at All Data Collection Rounds")
 ```
 
 
 ## Number of cross breed cattle per household, per district
+
+```{r}
+gpf_ppt %>% 
+    filter(round %in% c('Jul 2014', 'Jul 2016')) %>%
+    group_by(round, district_gpf, household_type) %>%
+    summarise(avgcows = mean(number_cattle_breed_2, na.rm = TRUE),
+              mediancows = median(number_cattle_breed_2, na.rm = TRUE)) %>%
+    filter(!is.na(mediancows)) %>%
+    kable(digits = 0,
+          col.names = c("Round of Data Collection", "District", "Treatment/Control", 
+                        "Number of Cross Breed Cattle per Household (Average)", "Number of Cross Breed Cattle per Household (Median)"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+```
+
+```{r}
+gpf_ppt %>% 
+    filter(!is.na(round) & household_type == "Treatment") %>%
+    group_by(round, district_gpf) %>%
+    summarise(avgcows = mean(number_cattle_breed_2, na.rm = TRUE),
+              mediancows = median(number_cattle_breed_2, na.rm = TRUE)) %>%
+    filter(!is.na(mediancows)) %>%
+    kable(digits = 0,
+          col.names = c("Round of Data Collection", "District", 
+                        "Number of Cross Breed Cows per Household (Average)", "Number of Cross Breed Cows per Household (Median)"),
+          caption = "Treatment Group at All Data Collection Rounds")
+```
+
 
 ## Percentage of in-milking cows
 
@@ -106,7 +134,78 @@ gpf_ppt %>%
 
 ## Value of local breed and cross breed cows in BDT, by district
 
+```{r}
+gpf_ppt <- gpf_ppt %>%
+    mutate(mean_value_cattle_breed_1 = as.numeric(mean_value_cattle_breed_1),
+           mean_value_cattle_breed_2 = as.numeric(mean_value_cattle_breed_2),
+           median_value_cattle_breed_1 = as.numeric(median_value_cattle_breed_1),
+           median_value_cattle_breed_2 = as.numeric(median_value_cattle_breed_2))
+
+gpf_ppt %>% 
+    filter(round %in% c('Jul 2014', 'Jul 2016')) %>%
+    group_by(round, district_gpf, household_type) %>%
+    summarise(avg1 = mean(mean_value_cattle_breed_1, na.rm = TRUE),
+              median1 = median(median_value_cattle_breed_1, na.rm = TRUE),
+              avg2 = mean(mean_value_cattle_breed_2, na.rm = TRUE),
+              median2 = median(median_value_cattle_breed_2, na.rm = TRUE)) %>%
+    kable(digits = 0,
+          col.names = c("Round of Data Collection", "District", "Treatment/Control", 
+                        "Value of Local Breed Cattle in BDT (Average)", "Value of Local Breed Cattle in BDT (Median)",
+                        "Value of Cross Breed Cattle in BDT (Average)", "Value of Cross Breed Cattle in BDT (Median)"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+```
+
+```{r}
+gpf_ppt %>% 
+    filter(!is.na(round) & household_type == "Treatment") %>%
+    group_by(round, district_gpf) %>%
+    summarise(avg1 = mean(mean_value_cattle_breed_1, na.rm = TRUE),
+              median1 = median(median_value_cattle_breed_1, na.rm = TRUE),
+              avg2 = mean(mean_value_cattle_breed_2, na.rm = TRUE),
+              median2 = median(median_value_cattle_breed_2, na.rm = TRUE)) %>%
+    kable(digits = 0,
+          col.names = c("Round of Data Collection", "District", 
+                        "Value of Local Breed Cattle in BDT (Average)", "Value of Local Breed Cattle in BDT (Median)",
+                        "Value of Cross Breed Cattle in BDT (Average)", "Value of Cross Breed Cattle in BDT (Median)"),
+          caption = "Treatment Group at All Data Collection Rounds")
+```
+
+
+
 ## Value of Herd
+
+```{r}
+gpf_ppt %>% 
+    filter(round %in% c('Jul 2014', 'Jul 2016')) %>%
+    group_by(round, household_type) %>%
+    summarise(avg1 = mean(number_cattle_breed_1 * mean_value_cattle_breed_1 +
+                             number_cattle_breed_2 * mean_value_cattle_breed_2, na.rm = TRUE),
+              median1 = median(number_cattle_breed_1 * median_value_cattle_breed_1 +
+                             number_cattle_breed_2 * median_value_cattle_breed_2, na.rm = TRUE)) %>%
+    kable(digits = 0,
+          col.names = c("Round of Data Collection", "Treatment/Control", 
+                        "Value of Herd in BDT (Average)", "Value of Herd in BDT (Median)"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+```
+
+```{r}
+gpf_ppt %>% 
+    filter(!is.na(round) & household_type == "Treatment") %>%
+    group_by(round) %>%
+    summarise(avg1 = mean(number_cattle_breed_1 * mean_value_cattle_breed_1 +
+                             number_cattle_breed_2 * mean_value_cattle_breed_2, na.rm = TRUE),
+              median1 = median(number_cattle_breed_1 * median_value_cattle_breed_1 +
+                             number_cattle_breed_2 * median_value_cattle_breed_2, na.rm = TRUE)) %>%
+    kable(digits = 0,
+          col.names = c("Round of Data Collection", 
+                         "Value of Herd in BDT (Average)", "Value of Herd in BDT (Median)"),
+          caption = "Treatment Group at All Data Collection Rounds")
+```
+
+
+
 
 ## Productivity of Herd
 
@@ -114,12 +213,173 @@ gpf_ppt %>%
 
 ## Total Income from Milk Sales (Tk.) per month
 
+```{r}
+gpf_ppt <- gpf_ppt %>%
+    mutate(yesterday_total_income_from_milk_sale = as.numeric(yesterday_total_income_from_milk_sale))
+
+gpf_ppt %>% 
+    filter(round %in% c('Jul 2014', 'Jul 2016')) %>%
+    group_by(round, household_type) %>%
+    summarise(avg1 = 30 * mean(yesterday_total_income_from_milk_sale, na.rm = TRUE),
+              median1 = 30 * median(yesterday_total_income_from_milk_sale, na.rm = TRUE)) %>%
+    kable(digits = 0,
+          col.names = c("Round of Data Collection", "Treatment/Control", 
+                        "Total Monthly Income from Milk Sales in Taka (Average)", 
+                        "Total Monthly Income from Milk Sales in Taka (Median)"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+```
+
+```{r}
+gpf_ppt %>% 
+    filter(!is.na(round) & household_type == "Treatment") %>%
+    group_by(round) %>%
+    summarise(avg1 = 30 * mean(yesterday_total_income_from_milk_sale, na.rm = TRUE),
+              median1 = 30 * median(yesterday_total_income_from_milk_sale, na.rm = TRUE)) %>%
+    kable(digits = 0,
+          col.names = c("Round of Data Collection", 
+                        "Total Monthly Income from Milk Sales in Taka (Average)", 
+                        "Total Monthly Income from Milk Sales in Taka (Median)"),
+          caption = "Treatment Group at All Data Collection Rounds")
+```
+
+
+
+
+
 ## Total Milk Consumption in Liters
+
+```{r}
+gpf_ppt <- gpf_ppt %>%
+    mutate(total_consumption_ltr = as.numeric(total_consumption_ltr))
+
+gpf_ppt %>% 
+    filter(round %in% c('Jul 2014', 'Jul 2016')) %>%
+    group_by(round, household_type) %>%
+    summarise(avg1 = mean(total_consumption_ltr, na.rm = TRUE),
+              median1 = median(total_consumption_ltr, na.rm = TRUE)) %>%
+    kable(digits = 2,
+          col.names = c("Round of Data Collection", "Treatment/Control", 
+                        "Total Milk Consumption in Liters (Average)", "Total Milk Consumption in Liters (Median)"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+```
+
+```{r}
+gpf_ppt %>% 
+    filter(!is.na(round) & household_type == "Treatment") %>%
+    group_by(round) %>%
+    summarise(avg1 = mean(total_consumption_ltr, na.rm = TRUE),
+              median1 = median(total_consumption_ltr, na.rm = TRUE)) %>%
+    kable(digits = 0,
+          col.names = c("Round of Data Collection", 
+                        "Total Milk Consumption in Liters (Average)", "Total Milk Consumption in Liters (Median)"),
+          caption = "Treatment Group at All Data Collection Rounds")
+```
+
 
 ## Milk Consumption Priorities
 
+
+
 ## Milk Distribution Patterns – litres
 
+```{r}
+gpf_ppt <- gpf_ppt %>%
+    mutate(total_free_distribution_ltr = as.numeric(total_free_distribution_ltr),
+           neighbors = as.numeric(neighbors),
+           neighbours = as.numeric(neighbours),
+           collection_point = as.numeric(collection_point),
+           milk_collector = as.numeric(milk_collector),
+           open_market = as.numeric(open_market),
+           sweetmeat_tea_stall = as.numeric(sweetmeat_tea_stall),
+           direct_to_company = as.numeric(direct_to_company),
+           yesterday_total_spoilage_ltr = as.numeric(yesterday_total_spoilage_ltr))
+
+## maybe turn zeroes to NAs first?
+
+gpf_ppt %>% 
+    filter(round %in% c('Jul 2014', 'Jul 2016')) %>%
+    group_by(round, household_type) %>%
+    summarise(free = median(total_free_distribution_ltr, na.rm = TRUE),
+              neighbors = sum(median(neighbours, na.rm = TRUE), mean(neighbors, na.rm = TRUE), na.rm = TRUE),
+              collection_point = median(collection_point, na.rm = TRUE),
+              milk_collector = median(milk_collector, na.rm = TRUE),
+              open_market = median(open_market, na.rm = TRUE),
+              sweetmeat_tea_stall = median(sweetmeat_tea_stall, na.rm = TRUE),
+              direct_to_company = median(direct_to_company, na.rm = TRUE),
+              yesterday = median(yesterday_total_spoilage_ltr, na.rm = TRUE)) %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", "Treatment/Control", 
+                        "Milk Given Away for Free (Liters)", "Milk Sold to Neighbors (Liters)",
+                        "Milk Sold at Collection Point (Liters)", "Milk Sold to Milk Collector (Liters)",
+                        "Milk Sold at Open Market (Liters)", "Milk Sold at Tea Stall (Liters)",
+                        "Milk Sold Directly to Company (Liters)", "Milk Spoiled (Liters)"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+```
+
+```{r}
+gpf_ppt %>% 
+    filter(!is.na(round) & household_type == "Treatment") %>%
+    group_by(round) %>%
+    summarise(free = median(total_free_distribution_ltr, na.rm = TRUE),
+              neighbors = sum(median(neighbours, na.rm = TRUE), mean(neighbors, na.rm = TRUE), na.rm = TRUE),
+              collection_point = median(collection_point, na.rm = TRUE),
+              milk_collector = median(milk_collector, na.rm = TRUE),
+              open_market = median(open_market, na.rm = TRUE),
+              sweetmeat_tea_stall = median(sweetmeat_tea_stall, na.rm = TRUE),
+              direct_to_company = median(direct_to_company, na.rm = TRUE),
+              yesterday = median(yesterday_total_spoilage_ltr, na.rm = TRUE)) %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", 
+                        "Milk Given Away for Free (Liters)", "Milk Sold to Neighbors (Liters)",
+                        "Milk Sold at Collection Point (Liters)", "Milk Sold to Milk Collector (Liters)",
+                        "Milk Sold at Open Market (Liters)", "Milk Sold at Tea Stall (Liters)",
+                        "Milk Sold Directly to Company (Liters)", "Milk Spoiled (Liters)"),
+          caption = "Treatment Group at All Data Collection Rounds")
+```
+
+
 ## Milk Distribution Patterns – percentages
+
+```{r}
+gpf_ppt <- gpf_ppt %>%
+    rowwise() %>%
+    mutate(total_distribution = sum(total_free_distribution_ltr,
+                                    neighbors, 
+                                    neighbours,
+                                    collection_point,
+                                    milk_collector,
+                                    open_market,
+                                    sweetmeat_tea_stall,
+                                    direct_to_company,
+                                    yesterday_total_spoilage_ltr,
+                                    na.rm = TRUE)) %>%
+    ungroup()
+
+gpf_ppt %>% 
+    filter(round %in% c('Jul 2014', 'Jul 2016')) %>%
+    group_by(round, household_type) %>%
+    summarise(free = median(total_free_distribution_ltr/total_distribution, na.rm = TRUE),
+              neighbors = sum(median(neighbours/total_distribution, na.rm = TRUE), 
+                              mean(neighbors/total_distribution, na.rm = TRUE), na.rm = TRUE),
+              collection_point = median(collection_point/total_distribution, na.rm = TRUE),
+              milk_collector = median(milk_collector/total_distribution, na.rm = TRUE),
+              open_market = median(open_market/total_distribution, na.rm = TRUE),
+              sweetmeat_tea_stall = median(sweetmeat_tea_stall/total_distribution, na.rm = TRUE),
+              direct_to_company = median(direct_to_company/total_distribution, na.rm = TRUE),
+              yesterday = median(yesterday_total_spoilage_ltr/total_distribution, na.rm = TRUE)) %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", "Treatment/Control", 
+                        "Milk Given Away for Free (Liters)", "Milk Sold to Neighbors (Liters)",
+                        "Milk Sold at Collection Point (Liters)", "Milk Sold to Milk Collector (Liters)",
+                        "Milk Sold at Open Market (Liters)", "Milk Sold at Tea Stall (Liters)",
+                        "Milk Sold Directly to Company (Liters)", "Milk Spoiled (Liters)"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+```
+
+
 
 ## Market Linkage Choices
