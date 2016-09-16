@@ -88,11 +88,13 @@ producer_profile <- read_excel("../data/Final Producer Profile _SDVC-II_ 05.07.2
                                sheet = 1, col_types = rep("text", 56))
 producer_profile <- producer_profile %>%
     mutate(group_code_old = `Old LG Code`,
-           group_code_new = `Group Code`) %>%
-    select(group_code_old,
-           group_code_new)
+           group_code_new = `Group Code`,
+           producer_id = `Producer's Code`,
+           producer_serial = `Producer's serial # at group`)
 
 transform_group_codes <- producer_profile %>% 
+    select(group_code_old,
+           group_code_new) %>%
     group_by(group_code_old) %>% 
     distinct(group_code_old, .keep_all = TRUE) %>% 
     filter(!is.na(group_code_old))
@@ -128,6 +130,41 @@ gpf %>% filter(round == 1) %>%
 ```
 
 So the only group codes we recovered by doing the join with the new document were ~75% of the type 1 households. Hopefully that is OK?
+
+Now let's deal with the producer IDs, which also changed between round 1 and round 2.
+
+```{r}
+transform_producer_ids <- producer_profile %>%
+    select(group_code_old, producer_serial, producer_id) %>%
+    mutate(producer_id_old = str_c(group_code_old, producer_serial),
+           producer_id_new = producer_id) %>%
+    select(producer_id_old, producer_id_new) %>%
+    distinct(producer_id_old, .keep_all = TRUE) %>% 
+    filter(!is.na(producer_id_old))
+
+transform_producer_ids    
+```
+
+Now let's join and substitute these values into the GPF data.
+
+```{r}
+gpf <- gpf %>% 
+    left_join(transform_producer_ids, by = c("producer_id" = "producer_id_old")) %>%
+    mutate(producer_id = if_else(round == 1,
+                                 producer_id_new, 
+                                 producer_id)) %>%
+    select(-producer_id_new)
+```
+
+That worked! How many producers in round 1 did not get matched up?
+
+```{r}
+gpf %>% filter(round == 1) %>% 
+    group_by(household_type) %>% 
+    summarize(matched = mean(is.na(nchar(producer_id))))
+```
+
+So about 65% of the type 1 producers from round 1 were matched to new producer IDs.
 
 ## Merging the Two Sets Together
 
