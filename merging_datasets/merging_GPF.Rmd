@@ -182,26 +182,29 @@ treatment_round2_cows <- read_excel("../data/gpf_round2/Module 3 Cattle Informat
 treatment_round1 <- read_excel("../data/SDVC II Baseline.xlsx",
                                sheet = 1,
                                col_types = rep("text", 469))
+
+treatment_round1_cows <- read_excel("../data/GPF 1 Cows Long Correct.xlsx",
+                                    sheet = 1)
 ```
 
 Let's do some date handling while we're here.
 
 ```{r}
-library(lubridate)
-library(stringr)
-grep("calvingdate", names(treatment_round1), value = TRUE)
-
-treatment_round1 <- treatment_round1 %>% 
-    mutate(Cow1Lastcalvingdate = dmy(Cow1Lastcalvingdate)) %>%
-    mutate(Cow2Lastcalvingdate = dmy(Cow2Lastcalvingdate)) %>%
-    mutate(Cow3Lastcalvingdate = dmy(Cow3Lastcalvingdate)) %>%
-    mutate(Cow4Lastcalvingdate = dmy(Cow4Lastcalvingdate)) %>%
-    mutate(Cow5Lastcalvingdate = dmy(Cow5Lastcalvingdate)) %>%
-    mutate(Cow6Lastcalvingdate = dmy(Cow6Lastcalvingdate)) %>%
-    mutate(Cow7Lastcalvingdate = dmy(Cow7Lastcalvingdate)) %>%
-    mutate(Cow8Lastcalvingdate = dmy(Cow8Lastcalvingdate)) %>%
-    mutate(Cow9Lastcalvingdate = dmy(Cow9Lastcalvingdate)) %>%
-    mutate(Cow10Lastcalvingdate = dmy(Cow10Lastcalvingdate))
+# library(lubridate)
+# library(stringr)
+# grep("calvingdate", names(treatment_round1), value = TRUE)
+# 
+# treatment_round1 <- treatment_round1 %>% 
+#     mutate(Cow1Lastcalvingdate = dmy(Cow1Lastcalvingdate)) %>%
+#     mutate(Cow2Lastcalvingdate = dmy(Cow2Lastcalvingdate)) %>%
+#     mutate(Cow3Lastcalvingdate = dmy(Cow3Lastcalvingdate)) %>%
+#     mutate(Cow4Lastcalvingdate = dmy(Cow4Lastcalvingdate)) %>%
+#     mutate(Cow5Lastcalvingdate = dmy(Cow5Lastcalvingdate)) %>%
+#     mutate(Cow6Lastcalvingdate = dmy(Cow6Lastcalvingdate)) %>%
+#     mutate(Cow7Lastcalvingdate = dmy(Cow7Lastcalvingdate)) %>%
+#     mutate(Cow8Lastcalvingdate = dmy(Cow8Lastcalvingdate)) %>%
+#     mutate(Cow9Lastcalvingdate = dmy(Cow9Lastcalvingdate)) %>%
+#     mutate(Cow10Lastcalvingdate = dmy(Cow10Lastcalvingdate))
 
 ```
 
@@ -274,6 +277,7 @@ make_names_consistent <- function(df) {
         colnames(df)[str_detect(names(df), "district_name")] <- "district"
         colnames(df)[str_detect(names(df), "group_name")] <- "group_name"
         colnames(df)[str_detect(names(df), "hh_type")] <- "household_type"
+        colnames(df)[str_detect(names(df), "neighbours")] <- "neighbors"
         colnames(df)[str_detect(names(df), "respondent_s_education")] <- "educational_status_respondent"
         colnames(df)[str_detect(names(df), "which_type_fodder")] <- "type_fodder_cultivating"
 
@@ -643,12 +647,15 @@ length(names(treatment_round5)[!names(treatment_round5) %in% names(control_round
 
 ## Getting Round 1 Ready
 
-Round 1 is structured very, very differently than the rest of it, so we'll have to do this differently.
+Round 1 is structured quite differently than the rest of it, so we'll have to do this differently.
 
 ```{r}
-treatment_round1_cows <- treatment_round1[,29:98]
+# OLD VERSION OF COWS
+#treatment_round1_cows <- treatment_round1[,29:98]
+
 treatment_round1 <- treatment_round1[,-c(29:98)]
 treatment_round1 <- treatment_round1[,1:387]
+
 #names(treatment_round1)
 ```
 
@@ -924,7 +931,7 @@ treatment_round1 <- treatment_round1 %>%
            level_satisfaction_fls_activities = levelofsatisfactionofflsactivities) %>%
     mutate(how_often_have_you_gone_to_ku_during_last_3_month = 0.5 * as.numeric(howoftendidyougototheinputkushopinthepast6months),
            income_from_cowdung_sold_during_last_6_months = 2 * as.numeric(incomefromcowdungsoldduringlast3months),
-           income_from_own_cattle_taka = 2 * as.numeric(haveanyincomefromthosecattleduringlast3months),
+           have_you_earned_any_income_during_last_6_months = 2 * as.numeric(haveanyincomefromthosecattleduringlast3months),
            income_from_any_other_income_source_taka = 2 * as.numeric(doyouhaveanyotherincomeduringlast3months) )
 ```
 
@@ -1054,186 +1061,106 @@ length(names(treatment_round1)[!names(treatment_round1) %in% names(treatment_rou
 
 ## Calculating Cattle Information
 
-For each producer, we need to know
-
-- total number of cows per breed per producer
-- average and median value of cows per breed per producer
-
-Let's work on this, by writing a function to do the operations to find these quantities.
+We are going to make the dataset have one row per cow. Let's work on this, using joins and such. First let's make the names of the cow variables consisten.
 
 ```{r}
-library(tidyr)
+make_cow_names_consistent <- function(df) {
+    names(df) <- names(df) %>%
+        tolower() %>%
+        str_replace_all("[ ]{2,}", " ") %>%
+        str_replace_all(" ", "_")
 
-calculate_cows <- function(df) {
-    cow_df <- df %>% 
-        group_by(deo_id, breed_of_cow) %>% 
-        summarise(number = n(),
-                  mean_bdt = mean(`Value of Cow in BDT`, na.rm = TRUE),
-                  median_bdt = median(`Value of Cow in BDT`, na.rm = TRUE)) %>%
-        rename(number_breed = breed_of_cow) %>%
-        mutate(mean_value = number_breed,
-               median_value = number_breed) %>%
-        spread(number_breed, number, sep = "_") %>%
-        spread(mean_value, mean_bdt, sep = "_") %>%
-        spread(median_value, median_bdt, sep = "_") %>%
-        ungroup
-    
-    ret <- cow_df %>%
-        group_by(deo_id) %>%
-        summarise(number_cattle_breed_1 = max(number_breed_1, na.rm = TRUE),
-                  number_cattle_breed_2 = max(number_breed_2, na.rm = TRUE),
-                  mean_value_cattle_breed_1 = max(mean_value_1, na.rm = TRUE),
-                  mean_value_cattle_breed_2 = max(mean_value_2, na.rm = TRUE),
-                  median_value_cattle_breed_1 = max(median_value_1, na.rm = TRUE),
-                  median_value_cattle_breed_2 = max(median_value_2, na.rm = TRUE))
+        colnames(df)[str_detect(names(df), "deo")] <- "deo_id"
+        colnames(df)[str_detect(names(df), "bread_of_cow")] <- "cow_breed"
+        colnames(df)[str_detect(names(df), "type_of_cow")] <- "cow_type"
+        colnames(df)[str_detect(names(df), "value_of_cow_in_bdt")] <- "cow_value_bdt"
+        colnames(df)[str_detect(names(df), "daily_production_of_cow")] <- "cow_daily_production"
+        colnames(df)[str_detect(names(df), "no_of_calve")] <- "no_of_calving"
+        colnames(df)[str_detect(names(df), "sl_no")] <- "serial_no"
+
+    df    
 }
 ```
 
 Now we can apply this to the data frames.
 
 ```{r}
-calculate_cows_round5 <- control_round5_cows %>%
-    rename(deo_id = `DEO ID`,
-           breed_of_cow = `Bread of Cow`) %>%
-    calculate_cows
-control_round5 <- control_round5 %>% 
-    left_join(calculate_cows_round5, by = "deo_id")
 
-calculate_cows_round5 <- treatment_round5_cows %>%
-    rename(deo_id = `DEO ID`,
-           breed_of_cow = `Bread of Cow`) %>%
-    calculate_cows
-treatment_round5 <- treatment_round5 %>% 
-    left_join(calculate_cows_round5, by = "deo_id")
-
-calculate_cows_round4 <- treatment_round4_cows %>%
-    rename(deo_id = `DEO SL`,
-           breed_of_cow = `Bread of Cow`) %>%
-    calculate_cows
-treatment_round4 <- treatment_round4 %>% 
-    left_join(calculate_cows_round4, by = "deo_id")
-
-calculate_cows_round3 <- treatment_round3_cows %>%
-    rename(deo_id = `DEO SL`,
-           breed_of_cow = `Bread of Cow`) %>%
-    calculate_cows
-treatment_round3 <- treatment_round3 %>% 
-    left_join(calculate_cows_round3, by = "deo_id")
-
-calculate_cows_round2 <- treatment_round2_cows %>%
-    rename(deo_id = `DEO SL`,
-           breed_of_cow = `Bread of Cow`) %>%
-    calculate_cows
-treatment_round2 <- treatment_round2 %>% 
-    left_join(calculate_cows_round2, by = "deo_id")
+treatment_round2_cows <- treatment_round2_cows %>%
+    make_cow_names_consistent()
+treatment_round3_cows <- treatment_round3_cows %>%
+    make_cow_names_consistent()
+treatment_round4_cows <- treatment_round4_cows %>%
+    make_cow_names_consistent()
+treatment_round5_cows <- treatment_round5_cows %>%
+    make_cow_names_consistent()
+control_round5_cows <- control_round5_cows %>%
+    make_cow_names_consistent()
 
 ```
 
-Now we need to do round 1, but it is structured differently from the others.
+Now we need to do round 1, but it is a bit different from the others.
 
 ```{r}
-treatment_round1_cows[c(2:4,9:11,16:18,23:25,30:32,37:39,44:46,51:53,58:60,65:67)] <- lapply(treatment_round1_cows[c(2:4,9:11,16:18,23:25,30:32,37:39,44:46,51:53,58:60,65:67)], as.numeric)
 
-calculate_cows_round1 <- treatment_round1_cows %>%
-    rowwise() %>%
-    mutate(number_cattle_breed_1 = sum(
-        if_else(Cow1BreedofCow == 1, 1, 0),
-        if_else(Cow2BreedofCow == 1, 1, 0),
-        if_else(Cow3BreedofCow == 1, 1, 0),
-        if_else(Cow4BreedofCow == 1, 1, 0),
-        if_else(Cow5BreedofCow == 1, 1, 0),
-        if_else(Cow6BreedofCow == 1, 1, 0), 
-        if_else(Cow7BreedofCow == 1, 1, 0),
-        if_else(Cow8BreedofCow == 1, 1, 0),
-        if_else(Cow9BreedofCow == 1, 1, 0),
-        if_else(Cow10BreedofCow == 1, 1, 0),
-        na.rm = TRUE
-    )) %>%
-    mutate(number_cattle_breed_2 = sum(
-        if_else(Cow1BreedofCow == 2, 1, 0),
-        if_else(Cow2BreedofCow == 2, 1, 0),
-        if_else(Cow3BreedofCow == 2, 1, 0),
-        if_else(Cow4BreedofCow == 2, 1, 0),
-        if_else(Cow5BreedofCow == 2, 1, 0),
-        if_else(Cow6BreedofCow == 2, 1, 0), 
-        if_else(Cow7BreedofCow == 2, 1, 0),
-        if_else(Cow8BreedofCow == 2, 1, 0),
-        if_else(Cow9BreedofCow == 2, 1, 0),
-        if_else(Cow10BreedofCow == 2, 1, 0),
-        na.rm = TRUE
-    )) %>%
-    mutate(mean_value_cattle_breed_1 = mean(c(
-        ifelse(Cow1BreedofCow == 1, Cow1ValueofCow, NA),
-        ifelse(Cow2BreedofCow == 1, Cow2ValueofCow, NA),
-        ifelse(Cow3BreedofCow == 1, Cow3ValueofCow, NA),
-        ifelse(Cow4BreedofCow == 1, Cow4ValueofCow, NA),
-        ifelse(Cow5BreedofCow == 1, Cow5ValueofCow, NA),
-        ifelse(Cow6BreedofCow == 1, Cow6ValueofCow, NA), 
-        ifelse(Cow7BreedofCow == 1, Cow7ValueofCow, NA),
-        ifelse(Cow8BreedofCow == 1, Cow8ValueofCow, NA),
-        ifelse(Cow9BreedofCow == 1, Cow9ValueofCow, NA),
-        ifelse(Cow10BreedofCow == 1, Cow10ValueofCow, NA)),
-        na.rm = TRUE
-    )) %>%    
-    mutate(mean_value_cattle_breed_2 = mean(c(
-        ifelse(Cow1BreedofCow == 2, Cow1ValueofCow, NA),
-        ifelse(Cow2BreedofCow == 2, Cow2ValueofCow, NA),
-        ifelse(Cow3BreedofCow == 2, Cow3ValueofCow, NA),
-        ifelse(Cow4BreedofCow == 2, Cow4ValueofCow, NA),
-        ifelse(Cow5BreedofCow == 2, Cow5ValueofCow, NA),
-        ifelse(Cow6BreedofCow == 2, Cow6ValueofCow, NA), 
-        ifelse(Cow7BreedofCow == 2, Cow7ValueofCow, NA),
-        ifelse(Cow8BreedofCow == 2, Cow8ValueofCow, NA),
-        ifelse(Cow9BreedofCow == 2, Cow9ValueofCow, NA),
-        ifelse(Cow10BreedofCow == 2, Cow10ValueofCow, NA)),
-        na.rm = TRUE
-    )) %>%    
-    mutate(median_value_cattle_breed_1 = median(c(
-        ifelse(Cow1BreedofCow == 1, Cow1ValueofCow, NA),
-        ifelse(Cow2BreedofCow == 1, Cow2ValueofCow, NA),
-        ifelse(Cow3BreedofCow == 1, Cow3ValueofCow, NA),
-        ifelse(Cow4BreedofCow == 1, Cow4ValueofCow, NA),
-        ifelse(Cow5BreedofCow == 1, Cow5ValueofCow, NA),
-        ifelse(Cow6BreedofCow == 1, Cow6ValueofCow, NA), 
-        ifelse(Cow7BreedofCow == 1, Cow7ValueofCow, NA),
-        ifelse(Cow8BreedofCow == 1, Cow8ValueofCow, NA),
-        ifelse(Cow9BreedofCow == 1, Cow9ValueofCow, NA),
-        ifelse(Cow10BreedofCow == 1, Cow10ValueofCow, NA)),
-        na.rm = TRUE
-    )) %>%    
-    mutate(median_value_cattle_breed_2 = median(c(
-        ifelse(Cow1BreedofCow == 2, Cow1ValueofCow, NA),
-        ifelse(Cow2BreedofCow == 2, Cow2ValueofCow, NA),
-        ifelse(Cow3BreedofCow == 2, Cow3ValueofCow, NA),
-        ifelse(Cow4BreedofCow == 2, Cow4ValueofCow, NA),
-        ifelse(Cow5BreedofCow == 2, Cow5ValueofCow, NA),
-        ifelse(Cow6BreedofCow == 2, Cow6ValueofCow, NA), 
-        ifelse(Cow7BreedofCow == 2, Cow7ValueofCow, NA),
-        ifelse(Cow8BreedofCow == 2, Cow8ValueofCow, NA),
-        ifelse(Cow9BreedofCow == 2, Cow9ValueofCow, NA),
-        ifelse(Cow10BreedofCow == 2, Cow10ValueofCow, NA)),
-        na.rm = TRUE
-    )) %>% 
-    select(number_cattle_breed_1,
-           number_cattle_breed_2,
-           mean_value_cattle_breed_1,
-           mean_value_cattle_breed_2,
-           median_value_cattle_breed_1,
-           median_value_cattle_breed_2)
+treatment_round1_cows <- treatment_round1_cows %>%
+    transmute(producer_name = `@03aNameoftheRespondent`,
+           sex_respondent = `@03bSexFemale1Male2Other3`,
+           household_type = `@11HHtype`,
+           producer_id = MemberCode,
+           cow_sl = Index1,
+           cow_identity = CowID,
+           cow_breed = CowBreed,
+           cow_type = CowType,
+           cow_value_bdt = CowValue,
+           cow_daily_production = CowProduction,
+           last_calving_date = CowCalfDate,
+           no_of_calving = CowCalfCount)
+ 
 ```
 
-There are some zeros that should be `NA` here, and some `NaN` that we'd rather have as `NA`.
+
+Now let's join each `cow` data frame to its producer data frame. Rounds 2 through 5 can be matched up via `deo_id`; we have to do round 1 by a combination of name, sex, and household type.
 
 ```{r}
-calculate_cows_round1$number_cattle_breed_1[calculate_cows_round1$number_cattle_breed_1 == 0] <- NA
-calculate_cows_round1$number_cattle_breed_2[calculate_cows_round1$number_cattle_breed_2 == 0] <- NA
-calculate_cows_round1[is.na(calculate_cows_round1)] <- NA
+cow_columns <- c("serial_no", "cow_sl", "cow_identity", "cow_breed", 
+                 "cow_type", "cow_value_bdt", "cow_daily_production",
+                 "last_calving_date", "no_of_calving")
+
+treatment_round2 <- left_join(treatment_round2_cows, 
+                              treatment_round2, by = "deo_id") %>%
+    select(-one_of(cow_columns), everything())
+treatment_round3 <- left_join(treatment_round3_cows, 
+                              treatment_round3, by = "deo_id") %>%
+    select(-one_of(cow_columns), everything())
+treatment_round4 <- left_join(treatment_round4_cows, 
+                              treatment_round4, by = "deo_id") %>%
+    select(-one_of(cow_columns), everything())
+treatment_round5 <- left_join(treatment_round5_cows, 
+                              treatment_round5, by = "deo_id") %>%
+    select(-one_of(cow_columns), everything())
+
 ```
 
-There! Now we can bind this to the main round 1 data frame.
+Now let's try round 1, which is trickier because there is no key linking the cows and producers.
 
 ```{r}
-treatment_round1 <- bind_cols(treatment_round1, calculate_cows_round1)
+cow_columns <- c("cow_sl", "cow_identity", "cow_breed", 
+                 "cow_type", "cow_value_bdt", "cow_daily_production",
+                 "last_calving_date", "no_of_calving")
+
+treatment_round1 <- treatment_round1 %>%
+    mutate(sex_respondent = as.numeric(sex_respondent),
+           household_type = as.numeric(household_type),
+           producer_id = as.numeric(producer_id))
+
+
+
+## IS THIS GOING TO WORK?!?!?!
+left_join(treatment_round1_cows, 
+          treatment_round1, by = c("producer_name", "sex_respondent", 
+                                   "household_type", "producer_id")) %>%
+    select(-one_of(cow_columns), everything())
 ```
 
 
