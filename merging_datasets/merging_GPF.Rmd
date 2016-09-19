@@ -1162,7 +1162,13 @@ treatment_cows <- left_join(treatment_round1_cows %>%
                            filter(!is.na(producer_id)) %>%
                            distinct(producer_id, .keep_all = TRUE), 
                        by = "producer_id") %>%
-    select(-one_of(cow_columns), everything())
+    select(-one_of(cow_columns), everything()) %>%
+    mutate(producer_name = producer_name.y,
+           sex_respondent = sex_respondent.y,
+           household_type = household_type.y) %>%
+    select(-producer_name.x, -producer_name.y,
+           -sex_respondent.x, -sex_respondent.y,
+           -household_type.x, -household_type.y)
 
 control_cows <- left_join(treatment_round1_cows %>% 
                               filter(is.na(producer_id)),
@@ -1170,7 +1176,8 @@ control_cows <- left_join(treatment_round1_cows %>%
                               filter(is.na(producer_id)) %>%
                               distinct(producer_name, sex_respondent, household_type, .keep_all = TRUE),
                           by = c("producer_name", "sex_respondent", "household_type")) %>%
-        select(-one_of(cow_columns), everything())
+        select(-one_of(cow_columns), everything()) %>%
+    select(-producer_id.x, -producer_id.y)
 
 ```
 
