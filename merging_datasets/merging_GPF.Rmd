@@ -232,6 +232,8 @@ original_names <- bind_rows(
 Now let's make these names consistent so we can merge/join this data together.
 
 ```{r}
+library(stringr)
+
 make_names_consistent <- function(df) {
     names(df) <- names(df) %>%
         tolower() %>%
@@ -1172,7 +1174,7 @@ control_cows <- left_join(treatment_round1_cows %>%
 
 ```
 
-This is not perfectly correctly because a) there were duplicates in the producer ID in the treatment producers and b) the joining for the control producers had to be done on a combination of name, sex, and household type. About what level of mismatch is possibly being introduced?
+This is not perfectly correct because a) there were duplicates in the producer ID in the treatment producers and b) the joining for the control producers had to be done on a combination of name, sex, and household type. About what level of mismatch is possibly being introduced?
 
 ```{r}
 treatment_round1 %>% 
