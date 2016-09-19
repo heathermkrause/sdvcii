@@ -1154,15 +1154,45 @@ treatment_round1 <- treatment_round1 %>%
            household_type = as.numeric(household_type),
            producer_id = as.numeric(producer_id))
 
-
-
-## IS THIS GOING TO WORK?!?!?!
-left_join(treatment_round1_cows, 
-          treatment_round1, by = c("producer_name", "sex_respondent", 
-                                   "household_type", "producer_id")) %>%
+treatment_cows <- left_join(treatment_round1_cows %>%
+                           filter(!is.na(producer_id)), 
+                       treatment_round1 %>%
+                           filter(!is.na(producer_id)) %>%
+                           distinct(producer_id, .keep_all = TRUE), 
+                       by = "producer_id") %>%
     select(-one_of(cow_columns), everything())
+
+control_cows <- left_join(treatment_round1_cows %>% 
+                              filter(is.na(producer_id)),
+                          treatment_round1 %>% 
+                              filter(is.na(producer_id)) %>%
+                              distinct(producer_name, sex_respondent, household_type, .keep_all = TRUE),
+                          by = c("producer_name", "sex_respondent", "household_type")) %>%
+        select(-one_of(cow_columns), everything())
+
 ```
 
+This is not perfectly correctly because a) there were duplicates in the producer ID in the treatment producers and b) the joining for the control producers had to be done on a combination of name, sex, and household type. About what level of mismatch is possibly being introduced?
+
+```{r}
+treatment_round1 %>% 
+    filter(!is.na(producer_id)) %>% 
+    select(producer_id) %>% 
+    summarize(frac_distinct = n_distinct(producer_id)/n())
+
+treatment_round1 %>% 
+    filter(is.na(producer_id)) %>% 
+    select(producer_name, sex_respondent, household_type) %>% 
+    summarize(frac_distinct = n_distinct(producer_name, sex_respondent, household_type)/n())
+```
+
+So 99% of the cows in the treatment groups were matched based on producer ID and 88% of the cows in the control groups were matched based on a combination of name, sex, and household type.
+
+Anyway, ONWARD.
+
+```{r}
+treatment_round1 <- bind_rows(treatment_cows, control_cows)    
+```
 
 
 ## Merging All Rounds
