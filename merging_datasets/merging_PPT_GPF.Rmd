@@ -121,7 +121,7 @@ That helped A LOT; now we just mostly have `NA` values in group code where we ha
 gpf %>% group_by(round) %>% summarize(mean_NA = mean(is.na(group_code)))
 ```
 
-We expect the group codes in round 5 to be about 1/2 `NA` values because of the control producers. What is going on in round 1?
+We expect the group codes in round 5 to be have substantial `NA` values because of the control producers. What is going on in round 1?
 
 ```{r}
 gpf %>% filter(round == 1) %>% 
@@ -164,7 +164,7 @@ gpf %>% filter(round == 1) %>%
     summarize(matched = mean(is.na(nchar(producer_id))))
 ```
 
-So about 65% of the type 1 producers from round 1 were matched to new producer IDs.
+So about 70% of the type 1 producers from round 1 were matched to new producer IDs.
 
 ## Merging the Two Sets Together
 
@@ -191,7 +191,7 @@ gpf_ppt_merged %>%
               gender_equity_NA = mean(is.na(gender_equity)))
 ```
 
-We expect about round 5 to have about 1/2 `NA` values for the PPT data because they have control producers in them; round 1 has about the same proportion of `NA` values as above.
+We expect about round 5 to have about a good proportion of `NA` values for the PPT data because they have control producers in them; round 1 has about the same proportion of `NA` values as above.
 
 ## Writing the File
 
