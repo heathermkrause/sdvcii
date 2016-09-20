@@ -32,12 +32,14 @@ gpf_ppt <- gpf_ppt %>%
     mutate(household_type = fct_collapse(household_type,
                                          Treatment = c("1", "2", "3"),
                                          Control = c("4", "5", "6")))
+
+gpf_ppt[,c(273)] <- lapply(gpf_ppt[,c(273)], as.numeric)
+gpf_ppt$district_gpf[gpf_ppt$district_gpf == "pabna"] <- "Pabna"
 ```
 
+## 1. Cattle inventory by household, by district
 
-## Cattle inventory by household, by district
-
-```{r}
+```{r, eval=FALSE}
 gpf_ppt <- gpf_ppt %>%
     mutate(number_cattle_breed_1 = as.numeric(number_cattle_breed_1),
            number_cattle_breed_2 = as.numeric(number_cattle_breed_2))
@@ -55,28 +57,45 @@ gpf_ppt %>%
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 gpf_ppt %>% 
     filter(!is.na(round) & household_type == "Treatment") %>%
     group_by(round, district_gpf) %>%
     summarise(avgcows = mean(number_cattle_breed_1 + number_cattle_breed_2, na.rm = TRUE),
               mediancows = median(number_cattle_breed_1 + number_cattle_breed_2, na.rm = TRUE)) %>%
     filter(!is.na(mediancows)) %>%
+    mutate(round = fct_relevel(round,
+                              'Jul 2014',
+                              'Dec 2014',
+                              'Jul 2015',
+                              'Dec 2015',
+                              'Jul 2016')) %>%
     kable(digits = 0,
           col.names = c("Round of Data Collection", "District", 
                         "Number of Cattle per Household (Average)", "Number of Cattle per Household (Median)"),
           caption = "Treatment Group at All Data Collection Rounds")
 ```
 
-## Number of local breed cattle per household, per district
+## 2. Number of local breed cattle per household, per district
 
 ```{r}
-gpf_ppt %>% 
-    filter(round %in% c('Jul 2014', 'Jul 2016')) %>%
+bind_rows(gpf_ppt %>% 
+              filter(round == 'Jul 2014') %>% 
+              filter(cow_breed == 1) %>% 
+              group_by(district_gpf, household_type, entry_id) %>% 
+              summarize(cows = n()) %>% 
+              mutate(deo_id = entry_id,
+                     round = 'Jul 2014'),
+          gpf_ppt %>% 
+              filter(round == 'Jul 2016') %>% 
+              filter(cow_breed == 1) %>% 
+              group_by(district_gpf, household_type, deo_id) %>% 
+              summarize(cows = n()) %>% 
+              mutate(round = 'Jul 2016')) %>%
     group_by(round, district_gpf, household_type) %>%
-    summarise(avgcows = mean(number_cattle_breed_1, na.rm = TRUE),
-              mediancows = median(number_cattle_breed_1, na.rm = TRUE)) %>%
-    filter(!is.na(mediancows)) %>%
+    summarize(mean = mean(cows, na.rm = TRUE),
+              median = median(cows, na.rm = TRUE)) %>%
+    filter(!is.na(median)) %>%
     kable(digits = 0,
           col.names = c("Round of Data Collection", "District", "Treatment/Control", 
                         "Number of Local Breed Cattle per Household (Average)", "Number of Local Breed Cattle per Household (Median)"),
@@ -85,22 +104,40 @@ gpf_ppt %>%
 ```
 
 ```{r}
-gpf_ppt %>% 
-    filter(!is.na(round) & household_type == "Treatment") %>%
+
+bind_rows(gpf_ppt %>% 
+              filter(round == 'Jul 2014' & household_type == "Treatment") %>% 
+              filter(cow_breed == 1) %>% 
+              group_by(district_gpf, entry_id) %>% 
+              summarize(cows = n()) %>% 
+              mutate(deo_id = entry_id,
+                     round = 'Jul 2014'),
+          gpf_ppt %>% 
+              filter(round %in% c('Dec 2014', 'Jul 2015','Dec 2015', 'Jul 2016') & household_type == "Treatment") %>% 
+              filter(cow_breed == 1) %>% 
+              group_by(round, district_gpf, deo_id) %>% 
+              summarize(cows = n())) %>%
+    ungroup %>%
+    mutate(round = fct_relevel(round,
+                              'Jul 2014',
+                              'Dec 2014',
+                              'Jul 2015',
+                              'Dec 2015',
+                              'Jul 2016')) %>%
     group_by(round, district_gpf) %>%
-    summarise(avgcows = mean(number_cattle_breed_1, na.rm = TRUE),
-              mediancows = median(number_cattle_breed_1, na.rm = TRUE)) %>%
-    filter(!is.na(mediancows)) %>%
+    summarize(mean = mean(cows, na.rm = TRUE),
+              median = median(cows, na.rm = TRUE)) %>%
+    filter(!is.na(median)) %>%
     kable(digits = 0,
           col.names = c("Round of Data Collection", "District", 
-                        "Number of Local Breen Cows per Household (Average)", "Number of Local Breed Cows per Household (Median)"),
+                        "Number of Local Breed Cows per Household (Average)", "Number of Local Breed Cows per Household (Median)"),
           caption = "Treatment Group at All Data Collection Rounds")
 ```
 
 
-## Number of cross breed cattle per household, per district
+## 3. Number of cross breed cattle per household, per district
 
-```{r}
+```{r, eval= FALSE}
 gpf_ppt %>% 
     filter(round %in% c('Jul 2014', 'Jul 2016')) %>%
     group_by(round, district_gpf, household_type) %>%
@@ -114,7 +151,7 @@ gpf_ppt %>%
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 gpf_ppt %>% 
     filter(!is.na(round) & household_type == "Treatment") %>%
     group_by(round, district_gpf) %>%
@@ -134,7 +171,7 @@ gpf_ppt %>%
 
 ## Value of local breed and cross breed cows in BDT, by district
 
-```{r}
+```{r, eval=FALSE}
 gpf_ppt <- gpf_ppt %>%
     mutate(mean_value_cattle_breed_1 = as.numeric(mean_value_cattle_breed_1),
            mean_value_cattle_breed_2 = as.numeric(mean_value_cattle_breed_2),
@@ -156,7 +193,7 @@ gpf_ppt %>%
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 gpf_ppt %>% 
     filter(!is.na(round) & household_type == "Treatment") %>%
     group_by(round, district_gpf) %>%
@@ -175,7 +212,7 @@ gpf_ppt %>%
 
 ## Value of Herd
 
-```{r}
+```{r, eval=FALSE}
 gpf_ppt %>% 
     filter(round %in% c('Jul 2014', 'Jul 2016')) %>%
     group_by(round, household_type) %>%
@@ -190,7 +227,7 @@ gpf_ppt %>%
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 gpf_ppt %>% 
     filter(!is.na(round) & household_type == "Treatment") %>%
     group_by(round) %>%
@@ -213,7 +250,7 @@ gpf_ppt %>%
 
 ## Total Income from Milk Sales (Tk.) per month
 
-```{r}
+```{r, eval=FALSE}
 gpf_ppt <- gpf_ppt %>%
     mutate(yesterday_total_income_from_milk_sale = as.numeric(yesterday_total_income_from_milk_sale))
 
@@ -230,7 +267,7 @@ gpf_ppt %>%
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 gpf_ppt %>% 
     filter(!is.na(round) & household_type == "Treatment") %>%
     group_by(round) %>%
@@ -249,7 +286,7 @@ gpf_ppt %>%
 
 ## Total Milk Consumption in Liters
 
-```{r}
+```{r, eval=FALSE}
 gpf_ppt <- gpf_ppt %>%
     mutate(total_consumption_ltr = as.numeric(total_consumption_ltr))
 
@@ -265,7 +302,7 @@ gpf_ppt %>%
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 gpf_ppt %>% 
     filter(!is.na(round) & household_type == "Treatment") %>%
     group_by(round) %>%
@@ -284,7 +321,7 @@ gpf_ppt %>%
 
 ## Milk Distribution Patterns – litres
 
-```{r}
+```{r, eval=FALSE}
 gpf_ppt <- gpf_ppt %>%
     mutate(total_free_distribution_ltr = as.numeric(total_free_distribution_ltr),
            neighbors = as.numeric(neighbors),
@@ -319,7 +356,7 @@ gpf_ppt %>%
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 gpf_ppt %>% 
     filter(!is.na(round) & household_type == "Treatment") %>%
     group_by(round) %>%
@@ -343,7 +380,7 @@ gpf_ppt %>%
 
 ## Milk Distribution Patterns – percentages
 
-```{r}
+```{r, eval=FALSE}
 gpf_ppt <- gpf_ppt %>%
     rowwise() %>%
     mutate(total_distribution = sum(total_free_distribution_ltr,
