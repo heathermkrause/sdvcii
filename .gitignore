@@ -8,6 +8,7 @@ merging_datasets/*files
 merging_datasets/*html
 descriptive_tables/*html
 descriptive_tables/*cache
+descriptive_tables/*files
 descriptive_tables/*docx
 descriptive_tables/rsconnect
 data/*xls
