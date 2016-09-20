@@ -1141,6 +1141,9 @@ treatment_round4 <- left_join(treatment_round4_cows,
 treatment_round5 <- left_join(treatment_round5_cows, 
                               treatment_round5, by = "deo_id") %>%
     select(-one_of(cow_columns), everything())
+control_round5 <- left_join(control_round5_cows, 
+                              control_round5, by = "deo_id") %>%
+    select(-one_of(cow_columns), everything())
 
 ```
 
