@@ -1,0 +1,43 @@
+---
+title: "Using the Codebook for the GPF Dataset"
+subtitle: "Strengthening the Dairy Value Chain"
+author: "Julia Silge"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: leonids
+---
+
+```{r, echo = FALSE, warning = FALSE}
+library(knitr)
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, dpi = 180)
+options(width=80, dplyr.width = 150)
+```
+
+Let's replace the numeric indicators used for many survey questions with more meaningful text.
+
+## Reading in the GPF Data
+
+```{r}
+library(readr)
+gpf <- read_csv("../data/gpf_merged.csv", 
+                col_types = cols(.default = col_character()))
+dim(gpf)
+```
+
+## Reading in the Codebook
+
+```{r}
+codebook <- read_excel("../data/4. SDVCII Endline Questionnaire With Code_August 2016.xlsx", 
+                       skip = 2)
+names(codebook) <- c("module", "column", "question", "description", "code")
+```
+
+
+## Making Names Consistent with GPF Data
+
+```{r}
+library(dplyr)
+
+```
+
