@@ -33,7 +33,7 @@ gpf_ppt <- gpf_ppt %>%
                                          Treatment = c("1", "2", "3"),
                                          Control = c("4", "5", "6")))
 
-gpf_ppt[,c(273:275)] <- lapply(gpf_ppt[,c(273:275)], as.numeric)
+gpf_ppt[,c(273:276)] <- lapply(gpf_ppt[,c(273:276)], as.numeric)
 gpf_ppt$district_gpf[gpf_ppt$district_gpf == "pabna"] <- "Pabna"
 ```
 
@@ -261,13 +261,13 @@ full_join(
 bind_rows(gpf_ppt %>% 
               filter(round == 'Jul 2014') %>% 
               group_by(household_type, entry_id) %>% 
-              summarize(cows = sum(cow_value_bdt)) %>% 
+              summarize(cows = sum(cow_value_bdt, na.rm = TRUE)) %>% 
               mutate(deo_id = entry_id,
                      round = 'Jul 2014'),
           gpf_ppt %>% 
               filter(round == 'Jul 2016') %>% 
               group_by(household_type, deo_id) %>% 
-              summarize(cows = sum(cow_value_bdt)) %>% 
+              summarize(cows = sum(cow_value_bdt, na.rm = TRUE)) %>% 
               mutate(round = 'Jul 2016')) %>%
     group_by(round, household_type) %>%
     summarize(median = median(cows, na.rm = TRUE)) %>%
@@ -282,13 +282,13 @@ bind_rows(gpf_ppt %>%
 bind_rows(gpf_ppt %>% 
               filter(round == 'Jul 2014' & household_type == "Treatment") %>% 
               group_by(entry_id) %>% 
-              summarize(cows = sum(cow_value_bdt)) %>% 
+              summarize(cows = sum(cow_value_bdt, na.rm = TRUE)) %>% 
               mutate(deo_id = entry_id,
                      round = 'Jul 2014'),
           gpf_ppt %>% 
               filter(round %in% c('Dec 2014', 'Jul 2015','Dec 2015', 'Jul 2016') & household_type == "Treatment") %>% 
               group_by(round, deo_id) %>% 
-              summarize(cows = sum(cow_value_bdt))) %>%
+              summarize(cows = sum(cow_value_bdt, na.rm = TRUE))) %>%
     ungroup %>%
     mutate(round = fct_relevel(round,
                               'Jul 2014',
@@ -305,9 +305,79 @@ bind_rows(gpf_ppt %>%
 ```
 
 
+## 9. Productivity of Herd
+
+```{r, fig.width=8, fig.height=6}
+gpf_ppt$cow_daily_production[gpf_ppt$cow_daily_production == 0] <- NA
+
+productivity1 <- 
+    bind_rows(gpf_ppt %>% 
+              filter(round == 'Jul 2014') %>% 
+              group_by(household_type, entry_id) %>% 
+              summarize(cows = sum(cow_daily_production)) %>% 
+              mutate(deo_id = entry_id,
+                     round = 'Jul 2014'),
+          gpf_ppt %>% 
+              filter(round == 'Jul 2016') %>% 
+              group_by(household_type, deo_id) %>% 
+              summarize(cows = sum(cow_daily_production)) %>% 
+              mutate(round = 'Jul 2016')) %>%
+    group_by(round, household_type) %>%
+    summarize(median = median(cows, na.rm = TRUE))
+
+productivity1 %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", "Treatment/Control", 
+                        "Median Productivity of Herd in Liters"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
 
 
-## Productivity of Herd
+library(ggplot2)
+ggplot(productivity1, aes(round, median, fill = household_type)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    theme_light() +
+    labs(x = NULL, y = "Median Productivity of Herd in Liters")
+```
+
+```{r,  fig.width=8, fig.height=6}
+productivity2 <- 
+    bind_rows(gpf_ppt %>% 
+              filter(round == 'Jul 2014' & household_type == "Treatment") %>% 
+              group_by(entry_id) %>% 
+              summarize(cows = sum(cow_daily_production)) %>% 
+              mutate(deo_id = entry_id,
+                     round = 'Jul 2014'),
+          gpf_ppt %>% 
+              filter(round %in% c('Dec 2014', 'Jul 2015','Dec 2015', 'Jul 2016') & household_type == "Treatment") %>% 
+              group_by(round, deo_id) %>% 
+              summarize(cows = sum(cow_daily_production))) %>%
+    ungroup %>%
+    mutate(round = fct_relevel(round,
+                              'Jul 2014',
+                              'Dec 2014',
+                              'Jul 2015',
+                              'Dec 2015',
+                              'Jul 2016')) %>%
+    group_by(round) %>%
+    summarize(median = median(cows, na.rm = TRUE))
+
+productivity2 %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", 
+                        "Median Productivity of Herd in Liters"),
+          caption = "Treatment Group at All Data Collection Rounds")
+
+ggplot(productivity2, aes(round, median)) +
+    geom_bar(stat = "identity") +
+    theme_light() +
+    labs(x = NULL, y = "Median Productivity of Herd in Liters")
+
+```
+
+
+
+
+
 
 ## Daily household production of cows in liters, by district, by breed
 
