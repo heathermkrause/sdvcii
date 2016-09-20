@@ -210,7 +210,7 @@ bind_rows(gpf_ppt %>%
 
 DELETING
 
-## Number of births per cow, per district
+## 5. Average and Median Number of births per cow, per district
 
 ## 6. Value of local breed and cross breed cows in BDT, by district
 
@@ -253,6 +253,9 @@ full_join(
           caption = "Treatment Group at All Data Collection Rounds")
 ```
 
+## 7. Productivity per in milk cow
+
+## 8. Daily household production of cows in liters, by district, by breed
 
 
 ## 9. Value of Herd
@@ -305,7 +308,7 @@ bind_rows(gpf_ppt %>%
 ```
 
 
-## 9. Productivity of Herd
+## 10. Productivity of Herd
 
 ```{r, fig.width=8, fig.height=6}
 gpf_ppt$cow_daily_production[gpf_ppt$cow_daily_production == 0] <- NA
@@ -376,11 +379,6 @@ ggplot(productivity2, aes(round, median)) +
 
 
 
-
-
-
-## Daily household production of cows in liters, by district, by breed
-
 ## 11. Total Income from Milk Sales (Tk.) per day
 
 ```{r, eval=FALSE}
@@ -417,7 +415,7 @@ gpf_ppt %>%
 
 
 
-## Total Milk Consumption in Liters
+## 12. Total Milk Consumption in Liters
 
 ```{r, eval=FALSE}
 gpf_ppt <- gpf_ppt %>%
@@ -448,11 +446,11 @@ gpf_ppt %>%
 ```
 
 
-## Milk Consumption Priorities
+## 13. Milk Consumption Priorities (proportions/percentages)
 
 
 
-## Milk Distribution Patterns – litres
+## 14. Milk Distribution Patterns – litres
 
 ```{r, eval=FALSE}
 gpf_ppt <- gpf_ppt %>%
@@ -511,7 +509,7 @@ gpf_ppt %>%
 ```
 
 
-## Milk Distribution Patterns – percentages
+## 15. Milk Distribution Patterns – percentages
 
 ```{r, eval=FALSE}
 gpf_ppt <- gpf_ppt %>%
@@ -552,4 +550,4 @@ gpf_ppt %>%
 
 
 
-## Market Linkage Choices
+## 16. Market Linkage Choices (proportions)
