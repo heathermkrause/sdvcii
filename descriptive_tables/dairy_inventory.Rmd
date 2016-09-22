@@ -675,6 +675,179 @@ ggplot(df, aes(round_month, median1)) +
 ## 13. Milk Consumption Priorities (proportions/percentages)
 
 
+```{r}
+producers <- producers %>%
+    mutate(within_household_who_given_priority_to_consumed_milk = fct_collapse(within_household_who_given_priority_to_consumed_milk,
+                                         `Male child` = c("1", "1.", "Boy child",
+                                                          "Boy Child",
+                                                          "boy", "Boy", 
+                                                          "Boy chaild", 
+                                                          "Children Boy",
+                                                          "Little Boy",
+                                                          "Grand son",
+                                                          "Grandson",
+                                                          "Male chiildren",
+                                                          "Male children",
+                                                          "Male Children",
+                                                          "Male baby",
+                                                          "Boys"),
+                                         `Female child` = c("2", "2.", 
+                                                            "Female baby", 
+                                                            "Girl",
+                                                            "Girl child",
+                                                            "Girls",
+                                                            "Granddaughter",
+                                                            "Little Girl",
+                                                            "Small girl",
+                                                            "Small Girl",
+                                                            "Daughter of son"),
+                                         `Son` = c("3", "3.",
+                                                   "Baby (Son)",
+                                                   "Small son",
+                                                   "Small Son",
+                                                   "son",
+                                                   "Son",
+                                                   "Son Child",
+                                                   "Youngest son",
+                                                   "Younger Son",
+                                                   "Psycali distoried son"),
+                                         `Daughter` = c("4", "4.",
+                                                        "Yougest daughters",
+                                                        "Doughter",
+                                                        "Small daughter",
+                                                        "Small Daughter",
+                                                        "Daughter children",
+                                                        "Daughter Children"),
+                                         `Other children` = c("Child",
+                                                              "1,2",
+                                                              "3,4",
+                                                              "Boy, Girl",
+                                                              "Children",
+                                                              "Childs",
+                                                              "Son & Daughter",
+                                                              "Son & Girl",
+                                                              "Small child",
+                                                              "Son&Daughter",
+                                                              "1,3", "2,3",
+                                                              "Boy & Girl",
+                                                              "Boy,Girl",
+                                                              "Small Child",
+                                                              "Small",
+                                                              "Boy & girl",
+                                                              "Boy Girl",
+                                                              "Son and daughter",
+                                                              "Son and Daughter",
+                                                              "Son & girl",
+                                                              "Son, Daughter",
+                                                              "1,2,3,4",
+                                                              "1,2,4",
+                                                              "1,3,4",
+                                                              "Boy child, girl child",
+                                                              "Boy girl",
+                                                              "child"),
+                                         `Husband` = c("5", "5.",
+                                                       "Husband",
+                                                       "house hold head",
+                                                       "House hold head"),
+                                         `Wife` = c("6", "6.",
+                                                    "Wife",
+                                                    "wife",
+                                                    "Son's wife"),
+                                         `Old man` = c("7", "7.",
+                                                       "Old man",
+                                                       "Father in law",
+                                                       "Father in Low",
+                                                       "Father in low",
+                                                       "Father"),
+                                         `Old woman` = c("8", "8.",
+                                                         "Mother",
+                                                         "Mother in low",
+                                                         "Grand Mother"),
+                                         `All members` = c("9", "9.",
+                                                           "Alawys is equal",
+                                                           "All",
+                                                           "All family",
+                                                           "All family members",
+                                                           "All is equal",
+                                                           "All member",
+                                                           "All member of family",
+                                                           "All People",
+                                                           "All people is equal",
+                                                           "All people of family",
+                                                           "Drink all people",
+                                                           "Equal",
+                                                           "Equeal eat",
+                                                           "Everybody",
+                                                           "There eat equal",
+                                                           "To all",
+                                                           "All time eat",
+                                                           "Both equal",
+                                                           "Family main",
+                                                           "Familly main.",
+                                                           "Drink by all"))) %>%
+    mutate(within_household_who_given_priority_to_consumed_milk = fct_lump(within_household_who_given_priority_to_consumed_milk, n = 10))
+
+```
+
+```{r, fig.height=8, fig.width=6}
+totals <- producers %>% 
+    group_by(round_month, household_type, within_household_who_given_priority_to_consumed_milk) %>% 
+    summarise(n = n()) %>% 
+    filter(!is.na(within_household_who_given_priority_to_consumed_milk)) %>%
+    group_by(round_month, household_type) %>% 
+    summarise(total = sum(n, na.rm = TRUE))
+
+
+df <- producers %>% 
+    filter(round_month %in% c('Jul 2014', 'Jul 2016')) %>%
+    group_by(round_month, household_type, within_household_who_given_priority_to_consumed_milk) %>% 
+    summarise(n = n()) %>%
+    filter(!is.na(within_household_who_given_priority_to_consumed_milk)) %>%
+    left_join(totals, by = c("round_month", "household_type")) %>%
+    mutate(prop = n / total*100) %>%
+    select(-n, -total)
+
+df %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", "Treatment/Control", 
+                        "Who Is Given Priority to Consume Milk?", "Percent"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+library(ggstance)
+ggplot(df, aes(prop/100, within_household_who_given_priority_to_consumed_milk, fill = household_type)) +
+    geom_barh(stat = "identity", position = "dodge") +
+    facet_wrap(~ round_month, ncol = 1) +
+    labs(x = NULL, y = "Who Is Given Priority to Consume Milk?") +
+    scale_x_continuous(labels = scales::percent_format()) +
+    theme(legend.title=element_blank())
+
+```
+
+```{r, fig.width=10, fig.height=10}
+df <- producers %>% 
+    filter(household_type == "Treatment") %>% 
+    group_by(round_month, within_household_who_given_priority_to_consumed_milk) %>% 
+    summarise(n = n()) %>%
+    mutate(household_type = "Treatment") %>%
+    filter(!is.na(within_household_who_given_priority_to_consumed_milk)) %>%
+    left_join(totals, by = c("round_month", "household_type")) %>%
+    mutate(prop = n / total*100) %>%
+    select(-n, -total, -household_type)
+ 
+df %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", 
+                        "Who Is Given Priority to Consume Milk?", "Percent"),
+          caption = "Treatment Group at All Data Collection Rounds")
+
+ggplot(df, aes(prop/100, within_household_who_given_priority_to_consumed_milk, fill = round_month)) +
+    geom_barh(stat = "identity", position = "dodge") +
+    labs(x = NULL, y = "Who Is Given Priority to Consume Milk?") +
+    scale_x_continuous(labels = scales::percent_format()) +
+    theme(legend.title=element_blank())
+```
+
+
 
 ## 14. Milk Distribution Patterns – litres
 
