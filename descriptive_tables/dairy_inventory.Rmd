@@ -36,7 +36,7 @@ gpf_ppt <- gpf_ppt %>%
                                          Treatment = c("1", "2", "3"),
                                          Control = c("4", "5", "6")))
 
-gpf_ppt[,c(1,36,273:276)] <- lapply(gpf_ppt[,c(1,36,273:276)], as.numeric)
+gpf_ppt[,c(1,27,36,273:276)] <- lapply(gpf_ppt[,c(1,27,36,273:276)], as.numeric)
 gpf_ppt$district_gpf[gpf_ppt$district_gpf == "pabna"] <- "Pabna"
 gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Jaipur Hat"] <- "Joypurhat"
 gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Natore"] <- "Nator"
@@ -366,7 +366,7 @@ df <- gpf_ppt %>%
         summarise(median1 = median(cow_daily_production, na.rm = TRUE)) 
 
 df %>%
-    kable(digits = 0,
+    kable(digits = 1,
           col.names = c("Round of Data Collection", "District", 
                         "Median Productivity per In-Milk Cow in Liters"),
           caption = "Treatment Group at All Data Collection Rounds")
@@ -397,7 +397,7 @@ df <- bind_rows(gpf_ppt %>%
     summarize(median1 = median(cows, na.rm = TRUE)) 
 
 df %>%
-    kable(digits = 0,
+    kable(digits = 1,
           col.names = c("Round of Data Collection", "District", "Treatment/Control", 
                         "Median Daily Household Milk Production in Liters"),
           caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
@@ -435,7 +435,7 @@ df <- bind_rows(gpf_ppt %>%
     summarize(median1 = median(cows, na.rm = TRUE)) 
 
 df %>%
-    kable(digits = 0,
+    kable(digits = 1,
           col.names = c("Round of Data Collection", "District",
                         "Median Daily Household Milk Production in Liters"),
           caption = "Treatment Group at All Data Collection Rounds")
@@ -633,32 +633,42 @@ ggplot(df, aes(round_month, median1)) +
 
 ## 12. Total Milk Consumption in Liters
 
-```{r, eval=FALSE}
-gpf_ppt <- gpf_ppt %>%
-    mutate(total_consumption_ltr = as.numeric(total_consumption_ltr))
+```{r, fig.width=8, fig.height=6}
+producers$total_consumption_ltr[producers$total_consumption_ltr == 0] <- NA
 
-gpf_ppt %>% 
+df <- producers %>% 
     filter(round_month %in% c('Jul 2014', 'Jul 2016')) %>%
     group_by(round_month, household_type) %>%
-    summarise(avg1 = mean(total_consumption_ltr, na.rm = TRUE),
-              median1 = median(total_consumption_ltr, na.rm = TRUE)) %>%
-    kable(digits = 2,
+    summarise(median1 = median(total_consumption_ltr, na.rm = TRUE)) 
+
+df %>%
+    kable(digits = 1,
           col.names = c("Round of Data Collection", "Treatment/Control", 
-                        "Total Milk Consumption in Liters (Average)", "Total Milk Consumption in Liters (Median)"),
+                        "Median Total Milk Consumption in Liters"),
           caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+ggplot(df, aes(round_month, median1, fill = household_type)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    labs(x = NULL, y = "Median Total Milk Consumption in Liters") +
+    theme(legend.title=element_blank())
 
 ```
 
-```{r, eval=FALSE}
-gpf_ppt %>% 
-    filter(!is.na(round_month) & household_type == "Treatment") %>%
-    group_by(round_month) %>%
-    summarise(avg1 = mean(total_consumption_ltr, na.rm = TRUE),
-              median1 = median(total_consumption_ltr, na.rm = TRUE)) %>%
-    kable(digits = 0,
+```{r, fig.width=8, fig.height=6}
+df <- producers %>% 
+    filter(household_type == "Treatment") %>% 
+    group_by(round_month) %>% 
+    summarize(median1 = median(total_consumption_ltr, na.rm = TRUE))
+ 
+df %>%
+    kable(digits = 1,
           col.names = c("Round of Data Collection", 
-                        "Total Milk Consumption in Liters (Average)", "Total Milk Consumption in Liters (Median)"),
+                        "Median Total Milk Consumption in Liters"),
           caption = "Treatment Group at All Data Collection Rounds")
+
+ggplot(df, aes(round_month, median1)) +
+    geom_bar(stat = "identity") +
+    labs(x = NULL, y = "Median Total Milk Consumption in Liters")
 ```
 
 
