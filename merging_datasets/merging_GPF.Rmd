@@ -916,7 +916,7 @@ treatment_round1 <- treatment_round1 %>%
            range_fee_received = rangeoffeereceived,
            does_vet_doctor_provides_prescription = doesheprovideprescription,
            service_vet_satisfied = areyousatisfiedwiththeserviceofvetdoctor,
-           where_do_you_sell_milk_in_general = wheredoyousellmilk1,
+           where_do_you_sell_milk_most_often = wheredoyousellmilk1,
            why_do_you_chose_to_sell_milk_here = whydoyouchoosetosellmilkhere,
            are_you_satisfied_with_overall_services_dft = levelofsatisfactionwithdftpointormilkcollector,
            are_you_satisfied_with_methods_measurement_milk = areyousatisfiedwiththemethodsofmeasurement,
