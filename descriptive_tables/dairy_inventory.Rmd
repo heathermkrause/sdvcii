@@ -20,6 +20,8 @@ ISSUES:
 
 * Missing collection point data (liters) for round 1 control? Other bits of information that end up `NA` here and there?
 * Lot of households that have zero production (zero daily production or `NA` recorded for all of their cows). Should I remove the zeroes/`NA` values before taking the median?
+* Births per year table -- what is going on? 2 births per year? what should we do?
+* There is no market linkage data for round 5, that I can find.
 
 
 Before we make some pretty tables, let's read in the data.
@@ -1118,7 +1120,22 @@ ggplot(melt(df), aes(round_month, value/100, fill = variable)) +
 
 ## 16. Market Linkage Choices (proportions)
 
+```{r}
+producers %>% 
+    group_by(round_month, household_type) %>% 
+    summarise(meanNA = mean(is.na(where_do_you_sell_milk_in_general)))
+
+
+producers %>% 
+    group_by(round_month, household_type) %>% 
+    summarise(meanNA = mean(is.na(where_do_you_sell_milk_most_often)))
+```
+
+
+
 ```{r, fig.width=8, fig.height=6}
+producers$where_do_you_sell_milk_most_often[producers$where_do_you_sell_milk_most_often == 0] <- NA
+
 producers <- producers %>%
     mutate(where_do_you_sell_milk_most_often = fct_recode(where_do_you_sell_milk_most_often,
                               `DFT` = '1',
