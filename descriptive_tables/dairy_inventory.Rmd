@@ -16,7 +16,8 @@ theme_set(theme_light())
 
 ISSUES:
 
-* Missing collection point data (liters) for round 1 control?
+* Missing collection point data (liters) for round 1 control? Other bits of information that end up `NA` here and there?
+* Lot of households that have zero production (zero daily production or `NA` recorded for all of their cows). Should I remove the zeroes/`NA` values before taking the median?
 
 
 Before we make some pretty tables, let's read in the data.
@@ -872,10 +873,10 @@ df <- producers %>%
     group_by(round_month, household_type) %>%
     summarise(`Given for Free` = median(total_free_distribution_ltr, na.rm = TRUE),
               `Sold to Neighbors` = median(neighbors, na.rm = TRUE),
-              `Sold at Collection Point` = median(collection_point, na.rm = TRUE),
+              `Sold at DFT` = median(collection_point, na.rm = TRUE),
               `Sold to Collector` = median(milk_collector, na.rm = TRUE),
               `Sold at Open Market` = median(open_market, na.rm = TRUE),
-              `Sold at Tea Stall` = median(sweetmeat_tea_stall, na.rm = TRUE),
+              `Sold at Sweetmeat Shop` = median(sweetmeat_tea_stall, na.rm = TRUE),
               `Sold Direct to Company` = median(direct_to_company, na.rm = TRUE),
               Spoiled = median(yesterday_total_spoilage_ltr, na.rm = TRUE)) 
 
@@ -883,8 +884,8 @@ df %>%
     kable(digits = 1,
           col.names = c("Round of Data Collection", "Treatment/Control", 
                         "Milk Given Away for Free (Liters)", "Milk Sold to Neighbors (Liters)",
-                        "Milk Sold at Collection Point (Liters)", "Milk Sold to Milk Collector (Liters)",
-                        "Milk Sold at Open Market (Liters)", "Milk Sold at Tea Stall (Liters)",
+                        "Milk Sold at DFT (Liters)", "Milk Sold to Milk Collector (Liters)",
+                        "Milk Sold at Open Market (Liters)", "Milk Sold at Sweetmeat Shop (Liters)",
                         "Milk Sold Directly to Company (Liters)", "Milk Spoiled (Liters)"),
           caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
 
@@ -904,10 +905,10 @@ df <- producers %>%
     group_by(round_month) %>%
     summarise(`Given for Free` = median(total_free_distribution_ltr, na.rm = TRUE),
               `Sold to Neighbors` = median(neighbors, na.rm = TRUE),
-              `Sold at Collection Point` = median(collection_point, na.rm = TRUE),
+              `Sold at DFT` = median(collection_point, na.rm = TRUE),
               `Sold to Collector` = median(milk_collector, na.rm = TRUE),
               `Sold at Open Market` = median(open_market, na.rm = TRUE),
-              `Sold at Tea Stall` = median(sweetmeat_tea_stall, na.rm = TRUE),
+              `Sold at Sweetmeat Shop` = median(sweetmeat_tea_stall, na.rm = TRUE),
               `Sold Direct to Company` = median(direct_to_company, na.rm = TRUE),
               Spoiled = median(yesterday_total_spoilage_ltr, na.rm = TRUE)) 
 
@@ -915,8 +916,8 @@ df %>%
     kable(digits = 1,
           col.names = c("Round of Data Collection", 
                         "Milk Given Away for Free (Liters)", "Milk Sold to Neighbors (Liters)",
-                        "Milk Sold at Collection Point (Liters)", "Milk Sold to Milk Collector (Liters)",
-                        "Milk Sold at Open Market (Liters)", "Milk Sold at Tea Stall (Liters)",
+                        "Milk Sold at DFT (Liters)", "Milk Sold to Milk Collector (Liters)",
+                        "Milk Sold at Open Market (Liters)", "Milk Sold at Sweetmeat Shop (Liters)",
                         "Milk Sold Directly to Company (Liters)", "Milk Spoiled (Liters)"),
           caption = "Treatment Group at All Data Collection Rounds")
 
@@ -936,19 +937,19 @@ totals <- producers %>%
     group_by(round_month, household_type) %>%
     summarise(`Given for Free` = median(total_free_distribution_ltr, na.rm = TRUE),
               `Sold to Neighbors` = median(neighbors, na.rm = TRUE),
-              `Sold at Collection Point` = median(collection_point, na.rm = TRUE),
+              `Sold at DFT` = median(collection_point, na.rm = TRUE),
               `Sold to Collector` = median(milk_collector, na.rm = TRUE),
               `Sold at Open Market` = median(open_market, na.rm = TRUE),
-              `Sold at Tea Stall` = median(sweetmeat_tea_stall, na.rm = TRUE),
+              `Sold at Sweetmeat Shop` = median(sweetmeat_tea_stall, na.rm = TRUE),
               `Sold Direct to Company` = median(direct_to_company, na.rm = TRUE),
               Spoiled = median(yesterday_total_spoilage_ltr, na.rm = TRUE)) %>%
     group_by(round_month, household_type) %>%
     summarize(sum = sum(`Given for Free`,
                         `Sold to Neighbors`,
-                        `Sold at Collection Point`,
+                        `Sold at DFT`,
                         `Sold to Collector`,
                         `Sold at Open Market`,
-                        `Sold at Tea Stall`,
+                        `Sold at Sweetmeat Shop`,
                         `Sold Direct to Company`,
                         Spoiled, na.rm = TRUE)) %>%
     select(round_month, household_type, sum)
@@ -959,10 +960,10 @@ df <- producers %>%
     group_by(round_month, household_type) %>%
     summarise(`Given for Free` = median(total_free_distribution_ltr, na.rm = TRUE),
               `Sold to Neighbors` = median(neighbors, na.rm = TRUE),
-              `Sold at Collection Point` = median(collection_point, na.rm = TRUE),
+              `Sold at DFT` = median(collection_point, na.rm = TRUE),
               `Sold to Collector` = median(milk_collector, na.rm = TRUE),
               `Sold at Open Market` = median(open_market, na.rm = TRUE),
-              `Sold at Tea Stall` = median(sweetmeat_tea_stall, na.rm = TRUE),
+              `Sold at Sweetmeat Shop` = median(sweetmeat_tea_stall, na.rm = TRUE),
               `Sold Direct to Company` = median(direct_to_company, na.rm = TRUE),
               Spoiled = median(yesterday_total_spoilage_ltr, na.rm = TRUE)) %>%
     melt() %>%
@@ -975,8 +976,8 @@ df %>%
     kable(digits = 1,
           col.names = c("Round of Data Collection", "Treatment/Control", 
                         "Milk Given Away for Free (%)", "Milk Sold to Neighbors (%)",
-                        "Milk Sold at Collection Point (%)", "Milk Sold to Milk Collector (%)",
-                        "Milk Sold at Open Market (%)", "Milk Sold at Tea Stall (%)",
+                        "Milk Sold at DFT (%)", "Milk Sold to Milk Collector (%)",
+                        "Milk Sold at Open Market (%)", "Milk Sold at Sweetmeat Shop (%)",
                         "Milk Sold Directly to Company (%)", "Milk Spoiled (%)"),
           caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
 
@@ -996,19 +997,19 @@ totals <- producers %>%
     group_by(round_month) %>%
     summarise(`Given for Free` = median(total_free_distribution_ltr, na.rm = TRUE),
               `Sold to Neighbors` = median(neighbors, na.rm = TRUE),
-              `Sold at Collection Point` = median(collection_point, na.rm = TRUE),
+              `Sold at DFT` = median(collection_point, na.rm = TRUE),
               `Sold to Collector` = median(milk_collector, na.rm = TRUE),
               `Sold at Open Market` = median(open_market, na.rm = TRUE),
-              `Sold at Tea Stall` = median(sweetmeat_tea_stall, na.rm = TRUE),
+              `Sold at Sweetmeat Shop` = median(sweetmeat_tea_stall, na.rm = TRUE),
               `Sold Direct to Company` = median(direct_to_company, na.rm = TRUE),
               Spoiled = median(yesterday_total_spoilage_ltr, na.rm = TRUE)) %>%
     group_by(round_month) %>%
     summarize(sum = sum(`Given for Free`,
                         `Sold to Neighbors`,
-                        `Sold at Collection Point`,
+                        `Sold at DFT`,
                         `Sold to Collector`,
                         `Sold at Open Market`,
-                        `Sold at Tea Stall`,
+                        `Sold at Sweetmeat Shop`,
                         `Sold Direct to Company`,
                         Spoiled, na.rm = TRUE)) %>%
     select(round_month, sum)
@@ -1018,10 +1019,10 @@ df <- producers %>%
     group_by(round_month) %>%
     summarise(`Given for Free` = median(total_free_distribution_ltr, na.rm = TRUE),
               `Sold to Neighbors` = median(neighbors, na.rm = TRUE),
-              `Sold at Collection Point` = median(collection_point, na.rm = TRUE),
+              `Sold at DFT` = median(collection_point, na.rm = TRUE),
               `Sold to Collector` = median(milk_collector, na.rm = TRUE),
               `Sold at Open Market` = median(open_market, na.rm = TRUE),
-              `Sold at Tea Stall` = median(sweetmeat_tea_stall, na.rm = TRUE),
+              `Sold at Sweetmeat Shop` = median(sweetmeat_tea_stall, na.rm = TRUE),
               `Sold Direct to Company` = median(direct_to_company, na.rm = TRUE),
               Spoiled = median(yesterday_total_spoilage_ltr, na.rm = TRUE)) %>%
     melt() %>%
@@ -1034,8 +1035,8 @@ df %>%
     kable(digits = 1,
           col.names = c("Round of Data Collection", 
                         "Milk Given Away for Free (%)", "Milk Sold to Neighbors (%)",
-                        "Milk Sold at Collection Point(%)", "Milk Sold to Milk Collector (%)",
-                        "Milk Sold at Open Market (%)", "Milk Sold at Tea Stall (%)",
+                        "Milk Sold at DFT (%)", "Milk Sold to Milk Collector (%)",
+                        "Milk Sold at Open Market (%)", "Milk Sold at Sweetmeat Shop (%)",
                         "Milk Sold Directly to Company (%)", "Milk Spoiled (%)"),
           caption = "Treatment Group at All Data Collection Rounds")
 
@@ -1047,3 +1048,49 @@ ggplot(melt(df), aes(round_month, value/100, fill = variable)) +
 ```
 
 ## 16. Market Linkage Choices (proportions)
+
+```{r, fig.width=8, fig.height=6}
+producers <- producers %>%
+    mutate(where_do_you_sell_milk_most_often = fct_recode(where_do_you_sell_milk_most_often,
+                              `DFT` = '1',
+                              `Open Market` = '2',
+                              `Milk Collector` = '3',
+                              `Milk Vita` = '4',
+                              `PRAN` = '5',
+                              `Neighbor` = '6',
+                              `Akij` = '7',
+                              `DANON` = '8',
+                              `Sweetmeat Shop` = '9',
+                              `Other` = '99'))
+totals <- producers %>% 
+    group_by(round_month, household_type, where_do_you_sell_milk_most_often) %>% 
+    summarise(n = n()) %>% 
+    filter(!is.na(where_do_you_sell_milk_most_often)) %>%
+    group_by(round_month, household_type) %>% 
+    summarise(total = sum(n, na.rm = TRUE))
+
+
+df <- producers %>% 
+    filter(household_type == "Treatment") %>% 
+    group_by(round_month, where_do_you_sell_milk_most_often) %>% 
+    summarise(n = n()) %>%
+    mutate(household_type = "Treatment") %>%
+    filter(!is.na(where_do_you_sell_milk_most_often)) %>%
+    left_join(totals, by = c("round_month", "household_type")) %>%
+    mutate(prop = n / total*100) %>%
+    select(-n, -total, -household_type)
+ 
+df %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", 
+                        "Where Is Milk Sold Most Often?", "Percent"),
+          caption = "Treatment Group at All Available Data Collection Rounds")
+
+ggplot(df, aes(round_month, prop/100, fill = where_do_you_sell_milk_most_often)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    labs(x = NULL, y = "Where Is Milk Sold Most Often?") +
+    scale_y_continuous(labels = scales::percent_format()) +
+    theme(legend.title=element_blank())
+
+```
+
