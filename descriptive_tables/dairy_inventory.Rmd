@@ -3,7 +3,9 @@ title: "SDVC Final Report Descriptive Tables"
 subtitle: "Dairy Cattle Inventory and Milk Production"
 author: "Julia Silge"
 date: "`r Sys.Date()`"
-output: html_document
+output: 
+    html_document:
+        toc: yes
 ---
 
 ```{r, echo = FALSE, warning = FALSE}
@@ -42,7 +44,7 @@ gpf_ppt <- gpf_ppt %>%
                                          Treatment = c("1", "2", "3"),
                                          Control = c("4", "5", "6")))
 
-gpf_ppt[,c(1,27:35,36,273:276)] <- lapply(gpf_ppt[,c(1,27:35,36,273:276)], as.numeric)
+gpf_ppt[,c(1,27:35,36,273:276,326)] <- lapply(gpf_ppt[,c(1,27:35,36,273:276,326)], as.numeric)
 gpf_ppt$district_gpf[gpf_ppt$district_gpf == "pabna"] <- "Pabna"
 gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Jaipur Hat"] <- "Joypurhat"
 gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Natore"] <- "Nator"
@@ -52,6 +54,20 @@ gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Sirajgang"] <- "Sirajgonj"
 gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Sirajganj"] <- "Sirajgonj"
 
 ```
+
+## Make a Producers Data Frame
+
+```{r}
+producers <- bind_rows(gpf_ppt %>% 
+                           filter(round_month == 'Jul 2014') %>% 
+                           distinct(entry_id, .keep_all = TRUE),
+                       gpf_ppt %>%
+                           filter(round_month != 'Jul 2014') %>%
+                           distinct(household_type, deo_id, round, .keep_all = TRUE))
+                    
+dim(producers)    
+```
+
 
 ## 1. Cattle inventory by household, by district
 
@@ -270,9 +286,75 @@ DELETING
 
 ## 5. Average and Median Number of births per cow, per district
 
-What does this one mean?
+```{r, fig.width=7, fig.height=7}
+df <- bind_rows(gpf_ppt %>% 
+              filter(round_month == 'Jul 2014') %>% 
+              filter(cow_type %in% c(1:3, 7)) %>% 
+              group_by(district_gpf, household_type, entry_id) %>% 
+              summarize(cows = n(),
+                        births = 2 * max(how_many_calf_born)) %>% 
+              mutate(deo_id = entry_id,
+                     round_month = 'Jul 2014'),
+          gpf_ppt %>% 
+              filter(round_month == 'Jul 2016') %>% 
+              filter(cow_type %in% c(1:3, 7)) %>% 
+              group_by(district_gpf, household_type, deo_id) %>% 
+              summarize(cows = n(),
+                        births = 2 * max(how_many_calf_born)) %>% 
+              mutate(round_month = 'Jul 2016')) %>%
+    group_by(round_month, district_gpf, household_type) %>%
+    summarize(rate = median(births/cows, na.rm = TRUE))
 
-```{r}
+df %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", "District", "Treatment/Control", 
+                        "Median Number of Births per Female Adult Cow"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+ggplot(df, aes(round_month, rate, fill = household_type)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    facet_wrap(~district_gpf) +
+    labs(x = NULL, y = "Median Number of Births per Female Adult Cow") +
+    theme(legend.title=element_blank())
+
+```
+
+```{r, fig.width=7, fig.height=8}
+df <- bind_rows(gpf_ppt %>% 
+              filter(round_month == 'Jul 2014' & household_type == "Treatment") %>% 
+              filter(cow_type %in% c(1:3, 7)) %>% 
+              group_by(district_gpf, entry_id) %>% 
+              summarize(cows = n(),
+                        births = 2 * max(how_many_calf_born)) %>% 
+              mutate(deo_id = entry_id,
+                     round_month = 'Jul 2014'),
+          gpf_ppt %>% 
+              filter(round_month %in% c('Dec 2014', 'Jul 2015','Dec 2015', 'Jul 2016') & household_type == "Treatment") %>% 
+              filter(cow_type %in% c(1:3, 7)) %>% 
+              group_by(round_month, district_gpf, deo_id) %>% 
+              summarize(cows = n(),
+                        births = 2 * max(how_many_calf_born))) %>%
+    ungroup %>%
+    mutate(round_month = fct_relevel(round_month,
+                              'Jul 2014',
+                              'Dec 2014',
+                              'Jul 2015',
+                              'Dec 2015',
+                              'Jul 2016')) %>%
+    group_by(round_month, district_gpf) %>%
+    summarize(rate = median(births/cows, na.rm = TRUE))
+
+df %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", "District", 
+                        "Median Number of Births per Female Adult Cow"),
+          caption = "Treatment Group at All Data Collection Rounds")
+
+ggplot(df, aes(round_month, rate)) +
+    geom_bar(stat = "identity") +
+    facet_wrap(~ district_gpf) +
+    labs(x = NULL, y = "Median Number of Births per Female Adult Cow") +
+    theme(axis.text.x= element_text(angle=45, hjust = 1))
 
 ```
 
@@ -582,19 +664,6 @@ ggplot(df, aes(round_month, median)) +
 
 ```
 
-
-## Make a Producers Data Frame
-
-```{r}
-producers <- bind_rows(gpf_ppt %>% 
-                           filter(round_month == 'Jul 2014') %>% 
-                           distinct(entry_id, .keep_all = TRUE),
-                       gpf_ppt %>%
-                           filter(round_month != 'Jul 2014') %>%
-                           distinct(household_type, deo_id, round, .keep_all = TRUE))
-                    
-dim(producers)    
-```
 
 
 
