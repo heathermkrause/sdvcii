@@ -14,6 +14,11 @@ library(ggplot2)
 theme_set(theme_light())
 ```
 
+ISSUES:
+
+* Missing collection point data (liters) for round 1 control?
+
+
 Before we make some pretty tables, let's read in the data.
 
 ```{r}
@@ -36,7 +41,7 @@ gpf_ppt <- gpf_ppt %>%
                                          Treatment = c("1", "2", "3"),
                                          Control = c("4", "5", "6")))
 
-gpf_ppt[,c(1,27,36,273:276)] <- lapply(gpf_ppt[,c(1,27,36,273:276)], as.numeric)
+gpf_ppt[,c(1,27:35,36,273:276)] <- lapply(gpf_ppt[,c(1,27:35,36,273:276)], as.numeric)
 gpf_ppt$district_gpf[gpf_ppt$district_gpf == "pabna"] <- "Pabna"
 gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Jaipur Hat"] <- "Joypurhat"
 gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Natore"] <- "Nator"
@@ -851,31 +856,30 @@ ggplot(df, aes(prop/100, within_household_who_given_priority_to_consumed_milk, f
 
 ## 14. Milk Distribution Patterns – litres
 
-```{r, eval=FALSE}
-gpf_ppt <- gpf_ppt %>%
-    mutate(total_free_distribution_ltr = as.numeric(total_free_distribution_ltr),
-           neighbors = as.numeric(neighbors),
-           neighbours = as.numeric(neighbours),
-           collection_point = as.numeric(collection_point),
-           milk_collector = as.numeric(milk_collector),
-           open_market = as.numeric(open_market),
-           sweetmeat_tea_stall = as.numeric(sweetmeat_tea_stall),
-           direct_to_company = as.numeric(direct_to_company),
-           yesterday_total_spoilage_ltr = as.numeric(yesterday_total_spoilage_ltr))
+```{r, fig.width=8, fig.height=6}
+producers$total_free_distribution_ltr[producers$total_free_distribution_ltr == 0] <- NA
+producers$neighbors[producers$neighbors == 0] <- NA
+producers$collection_point[producers$collection_point == 0] <- NA
+producers$milk_collector[producers$milk_collector == 0] <- NA
+producers$open_market[producers$open_market == 0] <- NA
+producers$sweetmeat_tea_stall[producers$sweetmeat_tea_stall == 0] <- NA
+producers$direct_to_company[producers$direct_to_company == 0] <- NA
+producers$yesterday_total_spoilage_ltr[producers$yesterday_total_spoilage_ltr == 0] <- NA
 
-## maybe turn zeroes to NAs first?
 
-gpf_ppt %>% 
+df <- producers %>% 
     filter(round_month %in% c('Jul 2014', 'Jul 2016')) %>%
     group_by(round_month, household_type) %>%
-    summarise(free = median(total_free_distribution_ltr, na.rm = TRUE),
-              neighbors = sum(median(neighbours, na.rm = TRUE), mean(neighbors, na.rm = TRUE), na.rm = TRUE),
-              collection_point = median(collection_point, na.rm = TRUE),
-              milk_collector = median(milk_collector, na.rm = TRUE),
-              open_market = median(open_market, na.rm = TRUE),
-              sweetmeat_tea_stall = median(sweetmeat_tea_stall, na.rm = TRUE),
-              direct_to_company = median(direct_to_company, na.rm = TRUE),
-              yesterday = median(yesterday_total_spoilage_ltr, na.rm = TRUE)) %>%
+    summarise(`Given for Free` = median(total_free_distribution_ltr, na.rm = TRUE),
+              `Sold to Neighbors` = median(neighbors, na.rm = TRUE),
+              `Sold at Collection Point` = median(collection_point, na.rm = TRUE),
+              `Sold to Collector` = median(milk_collector, na.rm = TRUE),
+              `Sold at Open Market` = median(open_market, na.rm = TRUE),
+              `Sold at Tea Stall` = median(sweetmeat_tea_stall, na.rm = TRUE),
+              `Sold Direct to Company` = median(direct_to_company, na.rm = TRUE),
+              Spoiled = median(yesterday_total_spoilage_ltr, na.rm = TRUE)) 
+
+df %>%
     kable(digits = 1,
           col.names = c("Round of Data Collection", "Treatment/Control", 
                         "Milk Given Away for Free (Liters)", "Milk Sold to Neighbors (Liters)",
@@ -884,20 +888,30 @@ gpf_ppt %>%
                         "Milk Sold Directly to Company (Liters)", "Milk Spoiled (Liters)"),
           caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
 
+
+ggplot(melt(df), aes(value, variable, fill = household_type)) +
+    geom_barh(stat = "identity", position = "dodge") +
+    facet_wrap(~round_month) +
+    labs(x = "Liters of Milk", y = "Where is Milk Distributed?") +
+    theme(legend.title=element_blank())
+
+
 ```
 
-```{r, eval=FALSE}
-gpf_ppt %>% 
+```{r, fig.width=9, fig.height=6}
+df <- producers %>% 
     filter(!is.na(round_month) & household_type == "Treatment") %>%
     group_by(round_month) %>%
-    summarise(free = median(total_free_distribution_ltr, na.rm = TRUE),
-              neighbors = sum(median(neighbours, na.rm = TRUE), mean(neighbors, na.rm = TRUE), na.rm = TRUE),
-              collection_point = median(collection_point, na.rm = TRUE),
-              milk_collector = median(milk_collector, na.rm = TRUE),
-              open_market = median(open_market, na.rm = TRUE),
-              sweetmeat_tea_stall = median(sweetmeat_tea_stall, na.rm = TRUE),
-              direct_to_company = median(direct_to_company, na.rm = TRUE),
-              yesterday = median(yesterday_total_spoilage_ltr, na.rm = TRUE)) %>%
+    summarise(`Given for Free` = median(total_free_distribution_ltr, na.rm = TRUE),
+              `Sold to Neighbors` = median(neighbors, na.rm = TRUE),
+              `Sold at Collection Point` = median(collection_point, na.rm = TRUE),
+              `Sold to Collector` = median(milk_collector, na.rm = TRUE),
+              `Sold at Open Market` = median(open_market, na.rm = TRUE),
+              `Sold at Tea Stall` = median(sweetmeat_tea_stall, na.rm = TRUE),
+              `Sold Direct to Company` = median(direct_to_company, na.rm = TRUE),
+              Spoiled = median(yesterday_total_spoilage_ltr, na.rm = TRUE)) 
+
+df %>%
     kable(digits = 1,
           col.names = c("Round of Data Collection", 
                         "Milk Given Away for Free (Liters)", "Milk Sold to Neighbors (Liters)",
@@ -905,48 +919,131 @@ gpf_ppt %>%
                         "Milk Sold at Open Market (Liters)", "Milk Sold at Tea Stall (Liters)",
                         "Milk Sold Directly to Company (Liters)", "Milk Spoiled (Liters)"),
           caption = "Treatment Group at All Data Collection Rounds")
+
+ggplot(melt(df), aes(round_month, value, fill = variable)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    labs(x = NULL, y = "Milk in Liters") +
+    theme(legend.title=element_blank())
 ```
 
 
 ## 15. Milk Distribution Patterns – percentages
 
-```{r, eval=FALSE}
-gpf_ppt <- gpf_ppt %>%
-    rowwise() %>%
-    mutate(total_distribution = sum(total_free_distribution_ltr,
-                                    neighbors, 
-                                    neighbours,
-                                    collection_point,
-                                    milk_collector,
-                                    open_market,
-                                    sweetmeat_tea_stall,
-                                    direct_to_company,
-                                    yesterday_total_spoilage_ltr,
-                                    na.rm = TRUE)) %>%
-    ungroup()
-
-gpf_ppt %>% 
+```{r, fig.width=8, fig.height=6}
+library(tidyr)
+totals <- producers %>% 
     filter(round_month %in% c('Jul 2014', 'Jul 2016')) %>%
     group_by(round_month, household_type) %>%
-    summarise(free = median(total_free_distribution_ltr/total_distribution, na.rm = TRUE),
-              neighbors = sum(median(neighbours/total_distribution, na.rm = TRUE), 
-                              mean(neighbors/total_distribution, na.rm = TRUE), na.rm = TRUE),
-              collection_point = median(collection_point/total_distribution, na.rm = TRUE),
-              milk_collector = median(milk_collector/total_distribution, na.rm = TRUE),
-              open_market = median(open_market/total_distribution, na.rm = TRUE),
-              sweetmeat_tea_stall = median(sweetmeat_tea_stall/total_distribution, na.rm = TRUE),
-              direct_to_company = median(direct_to_company/total_distribution, na.rm = TRUE),
-              yesterday = median(yesterday_total_spoilage_ltr/total_distribution, na.rm = TRUE)) %>%
+    summarise(`Given for Free` = median(total_free_distribution_ltr, na.rm = TRUE),
+              `Sold to Neighbors` = median(neighbors, na.rm = TRUE),
+              `Sold at Collection Point` = median(collection_point, na.rm = TRUE),
+              `Sold to Collector` = median(milk_collector, na.rm = TRUE),
+              `Sold at Open Market` = median(open_market, na.rm = TRUE),
+              `Sold at Tea Stall` = median(sweetmeat_tea_stall, na.rm = TRUE),
+              `Sold Direct to Company` = median(direct_to_company, na.rm = TRUE),
+              Spoiled = median(yesterday_total_spoilage_ltr, na.rm = TRUE)) %>%
+    group_by(round_month, household_type) %>%
+    summarize(sum = sum(`Given for Free`,
+                        `Sold to Neighbors`,
+                        `Sold at Collection Point`,
+                        `Sold to Collector`,
+                        `Sold at Open Market`,
+                        `Sold at Tea Stall`,
+                        `Sold Direct to Company`,
+                        Spoiled, na.rm = TRUE)) %>%
+    select(round_month, household_type, sum)
+
+
+df <- producers %>% 
+    filter(round_month %in% c('Jul 2014', 'Jul 2016')) %>%
+    group_by(round_month, household_type) %>%
+    summarise(`Given for Free` = median(total_free_distribution_ltr, na.rm = TRUE),
+              `Sold to Neighbors` = median(neighbors, na.rm = TRUE),
+              `Sold at Collection Point` = median(collection_point, na.rm = TRUE),
+              `Sold to Collector` = median(milk_collector, na.rm = TRUE),
+              `Sold at Open Market` = median(open_market, na.rm = TRUE),
+              `Sold at Tea Stall` = median(sweetmeat_tea_stall, na.rm = TRUE),
+              `Sold Direct to Company` = median(direct_to_company, na.rm = TRUE),
+              Spoiled = median(yesterday_total_spoilage_ltr, na.rm = TRUE)) %>%
+    melt() %>%
+    left_join(totals) %>%
+    mutate(proportion = 100*value/sum) %>%
+    select(round_month, household_type, variable, proportion) %>%
+    spread(key = variable, value = proportion)
+
+df %>%
     kable(digits = 1,
           col.names = c("Round of Data Collection", "Treatment/Control", 
-                        "Milk Given Away for Free (Liters)", "Milk Sold to Neighbors (Liters)",
-                        "Milk Sold at Collection Point (Liters)", "Milk Sold to Milk Collector (Liters)",
-                        "Milk Sold at Open Market (Liters)", "Milk Sold at Tea Stall (Liters)",
-                        "Milk Sold Directly to Company (Liters)", "Milk Spoiled (Liters)"),
+                        "Milk Given Away for Free (%)", "Milk Sold to Neighbors (%)",
+                        "Milk Sold at Collection Point (%)", "Milk Sold to Milk Collector (%)",
+                        "Milk Sold at Open Market (%)", "Milk Sold at Tea Stall (%)",
+                        "Milk Sold Directly to Company (%)", "Milk Spoiled (%)"),
           caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+
+ggplot(melt(df), aes(value/100, variable, fill = household_type)) +
+    geom_barh(stat = "identity", position = "dodge") +
+    facet_wrap(~round_month) +
+    labs(x = NULL, y = "Where is Milk Distributed?") +
+    scale_x_continuous(labels = scales::percent_format()) +
+    theme(legend.title=element_blank())
 
 ```
 
+```{r, fig.width=9, fig.height=6}
+totals <- producers %>% 
+    filter(!is.na(round_month) & household_type == "Treatment") %>%
+    group_by(round_month) %>%
+    summarise(`Given for Free` = median(total_free_distribution_ltr, na.rm = TRUE),
+              `Sold to Neighbors` = median(neighbors, na.rm = TRUE),
+              `Sold at Collection Point` = median(collection_point, na.rm = TRUE),
+              `Sold to Collector` = median(milk_collector, na.rm = TRUE),
+              `Sold at Open Market` = median(open_market, na.rm = TRUE),
+              `Sold at Tea Stall` = median(sweetmeat_tea_stall, na.rm = TRUE),
+              `Sold Direct to Company` = median(direct_to_company, na.rm = TRUE),
+              Spoiled = median(yesterday_total_spoilage_ltr, na.rm = TRUE)) %>%
+    group_by(round_month) %>%
+    summarize(sum = sum(`Given for Free`,
+                        `Sold to Neighbors`,
+                        `Sold at Collection Point`,
+                        `Sold to Collector`,
+                        `Sold at Open Market`,
+                        `Sold at Tea Stall`,
+                        `Sold Direct to Company`,
+                        Spoiled, na.rm = TRUE)) %>%
+    select(round_month, sum)
 
+df <- producers %>% 
+    filter(!is.na(round_month) & household_type == "Treatment") %>%
+    group_by(round_month) %>%
+    summarise(`Given for Free` = median(total_free_distribution_ltr, na.rm = TRUE),
+              `Sold to Neighbors` = median(neighbors, na.rm = TRUE),
+              `Sold at Collection Point` = median(collection_point, na.rm = TRUE),
+              `Sold to Collector` = median(milk_collector, na.rm = TRUE),
+              `Sold at Open Market` = median(open_market, na.rm = TRUE),
+              `Sold at Tea Stall` = median(sweetmeat_tea_stall, na.rm = TRUE),
+              `Sold Direct to Company` = median(direct_to_company, na.rm = TRUE),
+              Spoiled = median(yesterday_total_spoilage_ltr, na.rm = TRUE)) %>%
+    melt() %>%
+    left_join(totals) %>%
+    mutate(proportion = 100*value/sum) %>%
+    select(round_month, variable, proportion) %>%
+    spread(key = variable, value = proportion)
+
+df %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", 
+                        "Milk Given Away for Free (%)", "Milk Sold to Neighbors (%)",
+                        "Milk Sold at Collection Point(%)", "Milk Sold to Milk Collector (%)",
+                        "Milk Sold at Open Market (%)", "Milk Sold at Tea Stall (%)",
+                        "Milk Sold Directly to Company (%)", "Milk Spoiled (%)"),
+          caption = "Treatment Group at All Data Collection Rounds")
+
+ggplot(melt(df), aes(round_month, value/100, fill = variable)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    labs(x = NULL, y = "Amount of Milk") +
+    scale_y_continuous(labels = scales::percent_format()) +
+    theme(legend.title=element_blank())
+```
 
 ## 16. Market Linkage Choices (proportions)
