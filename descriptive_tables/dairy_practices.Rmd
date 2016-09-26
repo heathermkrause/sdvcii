@@ -326,9 +326,359 @@ ggplot(df, aes(round_month, prop/100, fill = have_you_dewormed_cattle_in_last_6_
 
 ## 4. Washing
 
+```{r, fig.height=4, fig.width=8}
+producers$do_you_wash_cattle[producers$do_you_wash_cattle == 0] <- NA
+producers <- producers %>%
+    mutate(do_you_wash_cattle = fct_recode(do_you_wash_cattle,
+                                           `Yes` = '1',
+                                           `No` = '2'))
+
+totals <- producers %>% 
+    group_by(round_month, household_type, do_you_wash_cattle) %>% 
+    summarise(n = n()) %>% 
+    filter(!is.na(do_you_wash_cattle)) %>%
+    group_by(round_month, household_type) %>% 
+    summarise(total = sum(n, na.rm = TRUE))
+
+
+df <- producers %>% 
+    group_by(round_month, household_type, do_you_wash_cattle) %>% 
+    summarise(n = n()) %>%
+    filter(!is.na(do_you_wash_cattle)) %>%
+    left_join(totals, by = c("round_month", "household_type")) %>%
+    mutate(prop = n / total*100) %>%
+    select(-n, -total)
+ 
+df %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", "Treatment/Control",
+                        "Do You Wash Your Cattle?", "Percent"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+ggplot(df, aes(round_month, prop/100, fill = do_you_wash_cattle)) +
+    geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+    facet_wrap(~household_type) +
+    labs(x = NULL, y = "Do You Wash Your Cattle?") +
+    scale_y_continuous(labels = scales::percent_format()) +
+    theme(legend.title=element_blank())
+
+```
+
+
 ## 5. Bio-Security
 
+```{r, fig.width=8, fig.height=4}
+producers$measurement_taken_for_bio_security[producers$measurement_taken_for_bio_security == 0] <- NA
+producers <- producers %>%
+    mutate(measurement_taken_for_bio_security = fct_recode(measurement_taken_for_bio_security,
+                              `Mosquito net` = '1',
+                              `Mosquito coil` = '2',
+                              Smoke = '3',
+                              None = '4',
+                              `Finish insect killer powder/liquid` = '5',
+                              Fan = '6',
+                              Other = '9')) %>%
+    mutate(measurement_taken_for_bio_security = fct_collapse(measurement_taken_for_bio_security,
+                                                             Multiple = c("1,2",
+                                                                          "1,2,3",
+                                                                          "1,2,5",
+                                                                          "1,2,6",
+                                                                          "1,3",
+                                                                          "1,5",
+                                                                          "1,6",
+                                                                          "2,1",
+                                                                          "2,3",
+                                                                          "2,3,4",
+                                                                          "2,4",
+                                                                          "2,5",
+                                                                          "2,6",
+                                                                          "2.3",
+                                                                          "23",
+                                                                          "3,2",
+                                                                          "3,5",
+                                                                          "5,1",
+                                                                          "5,2"))) %>%
+    mutate(measurement_taken_for_bio_security = fct_relevel(measurement_taken_for_bio_security,
+                                      "Mosquito net",
+                                      "Mosquito coil",
+                                      "Finish insect killer powder/liquid",
+                                      "Smoke",
+                                      "Fan",
+                                      "Other",
+                                      "Multiple",
+                                      "None"))
+
+totals <- producers %>% 
+    group_by(round_month, household_type, measurement_taken_for_bio_security) %>% 
+    summarise(n = n()) %>% 
+    filter(!is.na(measurement_taken_for_bio_security)) %>%
+    group_by(round_month, household_type) %>% 
+    summarise(total = sum(n, na.rm = TRUE))
+
+
+df <- producers %>% 
+    group_by(round_month, household_type, measurement_taken_for_bio_security) %>% 
+    summarise(n = n()) %>%
+    filter(!is.na(measurement_taken_for_bio_security)) %>%
+    left_join(totals, by = c("round_month", "household_type")) %>%
+    mutate(prop = n / total*100) %>%
+    select(-n, -total) %>%
+    complete(measurement_taken_for_bio_security)
+ 
+df %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", "Treatment/Control",
+                        "Measures Taken for Biosecurity", "Percent"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+ggplot(df, aes(round_month, prop/100, fill = measurement_taken_for_bio_security)) +
+    geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+    facet_wrap(~household_type) +
+    labs(x = NULL, y = "Measures Taken for Biosecurity") +
+    scale_y_continuous(labels = scales::percent_format()) +
+    theme(legend.title=element_blank())
+
+```
+
+
 ## 6. Vaccination
+
+```{r, fig.height=4, fig.width=8}
+producers <- producers %>%
+    mutate(how_many_vaccines_should_be_given_for_cattle = fct_recode(how_many_vaccines_should_be_given_for_cattle,
+                              `Don't know` = '0'))
+totals <- producers %>% 
+    group_by(round_month, household_type, how_many_vaccines_should_be_given_for_cattle) %>% 
+    summarise(n = n()) %>% 
+    filter(!is.na(how_many_vaccines_should_be_given_for_cattle)) %>%
+    group_by(round_month, household_type) %>% 
+    summarise(total = sum(n, na.rm = TRUE))
+
+
+df <- producers %>% 
+    group_by(round_month, household_type, how_many_vaccines_should_be_given_for_cattle) %>% 
+    summarise(n = n()) %>%
+    filter(!is.na(how_many_vaccines_should_be_given_for_cattle)) %>%
+    left_join(totals, by = c("round_month", "household_type")) %>%
+    mutate(prop = n / total*100) %>%
+    select(-n, -total) %>%
+    complete(how_many_vaccines_should_be_given_for_cattle)
+ 
+df %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", "Treatment/Control",
+                        "How Many Vaccines Should Be Given to Cattle?", "Percent"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+ggplot(df, aes(round_month, prop/100, fill = how_many_vaccines_should_be_given_for_cattle)) +
+    geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+    facet_wrap(~household_type) +
+    labs(x = NULL, y = "How Many Vaccines Should Be Given to Cattle?") +
+    scale_y_continuous(labels = scales::percent_format()) +
+    theme(legend.title=element_blank())
+
+```
+
+```{r, fig.height=4, fig.width=8}
+producers <- producers %>%
+    mutate(which_vaccines_have_you_given_to_cattle = fct_recode(which_vaccines_have_you_given_to_cattle,
+                              FMD = '1',
+                              HS = '2',
+                              `Black Quarter` = '3',
+                              Anthrax = '4',
+                              Pneumonia = '5',
+                              `Worm disease` = '6',
+                              None = '7',
+                              `Not sure` = '8')) %>%
+    mutate(which_vaccines_have_you_given_to_cattle = fct_collapse(which_vaccines_have_you_given_to_cattle,
+                                                                  Multiple = c("1,2",
+                                                                               "1,2,3",
+                                                                               "1,2,3,4",
+                                                                               "1,2,4",
+                                                                               "1,2,6",
+                                                                               "1,3",
+                                                                               "1,3,4",
+                                                                               "1,4",
+                                                                               "1,5",
+                                                                               "1,6",
+                                                                               "2,4",
+                                                                               "3,4",
+                                                                               "4,1",
+                                                                               "4,3",
+                                                                               "61",
+                                                                               "72",
+                                                                               "Anthrax, Hs, Jora",
+                                                                               "Antx, Bq, HS",
+                                                                               "Antx, BQ, HS, FMD",
+                                                                               "Antx, Fever",
+                                                                               "Antx, FMD",
+                                                                               "ANTX, FMD",
+                                                                               "Antx, FS",
+                                                                               "Antx, HS",
+                                                                               "ANTX, HS, FMD",
+                                                                               "Antx, HS, FMD, BQ",
+                                                                               "Antx, Pneumonia",
+                                                                               "Antx,BQ HS, FMD",
+                                                                               "Antx,HS",
+                                                                               "Badla, Hs",
+                                                                               "BQ, Antx",
+                                                                               "BQ, FMD",
+                                                                               "BQ, FMD, Antx",
+                                                                               "BQ, HS",
+                                                                               "BQ,HS,FMD",
+                                                                               "FMD, BQ",
+                                                                               "FMD, HS",
+                                                                               "FMD,BQ",
+                                                                               "Food & Mouth Disease, Anthrax",
+                                                                               "Golafula, badla",
+                                                                               "Golafula,khura",
+                                                                               "Golafula,tarka,khura",
+                                                                               "Hemorrhagic Septicemia, Anthrax",
+                                                                               "Hemorrhagic Septicemia, Food & Mouth Disease, Black Quarter",
+                                                                              "HS, Antx",
+                                                                              "HS, ANTX",
+                                                                              "HS, Antx, BQ",
+                                                                              "Hs, Badla",
+                                                                              "HS, BQ, Antx",
+                                                                              "HS, BQ, FMD",
+                                                                              "khura, badla",
+                                                                              "Khura, golafula.",
+                                                                              "Khura, Pochamina",
+                                                                              "Khura, tarka,",
+                                                                              "Khura, torka",
+                                                                              "Khura,Anthrox",
+                                                                              "khura,tarka",
+                                                                              "Khura,Torka",
+                                                                              "Khura, badla.",
+                                                                              "Khura, Janan",
+                                                                              "Khura, Tarka",
+                                                                              "khura, tarka.",
+                                                                              "Khura, Torka",
+                                                                              "Khura, torka.",
+                                                                              "Khura,badla,Torka",
+                                                                              "Khura,tarka,badla,golafula",
+                                                                              "Pox, HS",
+                                                                              "Tarka, khura",
+                                                                              "Tarka,khura",
+                                                                              "Torka, Badla",
+                                                                              "Torka, Hs",
+                                                                              "Torka,Golafula",
+                                                                              "Torka,Jora",
+                                                                              "Torka,Khura",
+                                                                              "Worm, Vitamin",
+                                                                              "Hs, Golafula, Torka, Badla",
+                                                                              "Hs, Torka",
+                                                                              "HS,BQ",
+                                                                              "HS,BQ,Antx,FMD",
+                                                                              "Khura, torka,",
+                                                                              "Fever, FMD"))) %>%
+    mutate(which_vaccines_have_you_given_to_cattle = fct_collapse(which_vaccines_have_you_given_to_cattle,
+                                                                  FMD = c("FMD",
+                                                                          '1.',
+                                                                          "Food & Mouth Disease",
+                                                                          "Foot & Mouth disease"))) %>%
+    mutate(which_vaccines_have_you_given_to_cattle = fct_collapse(which_vaccines_have_you_given_to_cattle,
+                                                                  HS = c("HS",
+                                                                         '2.',
+                                                                         "For Hs",
+                                                                         "Hs",
+                                                                         "vaccin of Hs",
+                                                                         "Vaccin of Hs deases",
+                                                                         "Vaccine for Hs",
+                                                                         "Disease of Hs",
+                                                                         "Vaccine of Hs"))) %>%
+    mutate(which_vaccines_have_you_given_to_cattle = fct_collapse(which_vaccines_have_you_given_to_cattle,
+                                                                  Anthrax = c("Anthrax",
+                                                                              '4.',
+                                                                              "Antex",
+                                                                              "Antharax",
+                                                                              "Antx",
+                                                                              "ANTX"))) %>%
+    mutate(which_vaccines_have_you_given_to_cattle = fct_collapse(which_vaccines_have_you_given_to_cattle,
+                                                                  `Not sure` = c("Not sure",
+                                                                                 "No idea about disease",
+                                                                                 "Do not know",
+                                                                                 "No idea about this subject",
+                                                                                 "Given but can't remember" ,
+                                                                                 "Can not child",
+                                                                                 "Given,can not speak",
+                                                                                 "Given but don't know",
+                                                                                 "Given,do not know",
+                                                                                 "Given,Do not know",
+                                                                                 "Given,Do not Know",
+                                                                                 "Give, but he is not say.",
+                                                                                 "Don't know",
+                                                                                 "Can't speak about the viccan that given",
+                                                                                 "Can't tell about the vaccine that given"))) %>%
+    mutate(which_vaccines_have_you_given_to_cattle = fct_collapse(which_vaccines_have_you_given_to_cattle,
+                                                                  None = c("0", "None",
+                                                                           "Did not given",
+                                                                           "Didn't give",
+                                                                           "Do not Give",
+                                                                           "Do Not Give",
+                                                                           "Do not give.",
+                                                                           "Don't give",
+                                                                           "Don't given",
+                                                                           "Don’t give",
+                                                                           "Don’t give.",
+                                                                           "no", "No", "NO",
+                                                                           "No give", 
+                                                                           "No need any vaccine",
+                                                                           "No provide vaccine",
+                                                                           "No provide Vaccine",
+                                                                           "No Provide vaccine",
+                                                                           "No vaccinaton",
+                                                                           "No vaccine",
+                                                                           "Don't provide vaccine",
+                                                                           "No.", 
+                                                                           "not given", "Not given",
+                                                                           "not given any vaccine",
+                                                                           "not given vaccine",
+                                                                           "Provide no vaccine",
+                                                                           "Provide no Vaccine"))) %>%
+    mutate(which_vaccines_have_you_given_to_cattle = fct_lump(which_vaccines_have_you_given_to_cattle,
+                                                              n = 6)) %>%
+    mutate(which_vaccines_have_you_given_to_cattle = fct_relevel(which_vaccines_have_you_given_to_cattle,
+                                      "FMD",
+                                      "HS",
+                                      "Anthrax",
+                                      "Other",
+                                      "Multiple",
+                                      "Not sure",
+                                      "None"))
+
+
+totals <- producers %>% 
+    group_by(round_month, household_type, which_vaccines_have_you_given_to_cattle) %>% 
+    summarise(n = n()) %>% 
+    filter(!is.na(which_vaccines_have_you_given_to_cattle)) %>%
+    group_by(round_month, household_type) %>% 
+    summarise(total = sum(n, na.rm = TRUE))
+
+
+df <- producers %>% 
+    group_by(round_month, household_type, which_vaccines_have_you_given_to_cattle) %>% 
+    summarise(n = n()) %>%
+    filter(!is.na(which_vaccines_have_you_given_to_cattle)) %>%
+    left_join(totals, by = c("round_month", "household_type")) %>%
+    mutate(prop = n / total*100) %>%
+    select(-n, -total) %>%
+    complete(which_vaccines_have_you_given_to_cattle)
+ 
+df %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", "Treatment/Control",
+                        "Which Vaccines Have You Given (Last 6 Months)?", "Percent"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+ggplot(df, aes(round_month, prop/100, fill = which_vaccines_have_you_given_to_cattle)) +
+    geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+    facet_wrap(~household_type) +
+    labs(x = NULL, y = "Which Vaccines Have You Given (Last 6 Months)?") +
+    scale_y_continuous(labels = scales::percent_format()) +
+    theme(legend.title=element_blank())
+
+```
 
 ## 7. Artificial Insemination (usage, costs, and source)
 
