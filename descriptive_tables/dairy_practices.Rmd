@@ -1,0 +1,203 @@
+---
+title: "SDVC Final Report Descriptive Tables"
+subtitle: "Dairy Practices : Knowledge and Practice of Cow Rearing"
+author: "Julia Silge"
+date: "`r Sys.Date()`"
+output: 
+    html_document:
+        toc: yes
+---
+
+```{r, echo = FALSE, warning = FALSE}
+library(knitr)
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, dpi = 180)
+options(width=80, dplyr.width = 150)
+library(ggplot2)
+theme_set(theme_light())
+```
+
+Before we make some pretty tables, let's read in the data.
+
+```{r}
+library(readr)
+library(forcats)
+library(dplyr)
+library(reshape2)
+gpf_ppt <- read_csv("../data/gpf_ppt_merged.csv", 
+                    col_types = cols(.default = col_character()))
+dim(gpf_ppt)
+
+gpf_ppt <- gpf_ppt %>%
+    filter(round %in% c('1.0', '5.0')) %>%
+    mutate(round_month = fct_recode(round,
+                              `Jul 2014` = '1.0',
+                              `Jul 2016` = '5.0')) %>%
+    mutate(household_type = fct_collapse(household_type,
+                                         Treatment = c("1", "2", "3"),
+                                         Control = c("4", "5", "6")))
+
+gpf_ppt[,c(1,27:35,36,273:276,326)] <- lapply(gpf_ppt[,c(1,27:35,36,273:276,326)], as.numeric)
+```
+
+## Make a Producers Data Frame
+
+```{r}
+producers <- bind_rows(gpf_ppt %>% 
+                           filter(round_month == 'Jul 2014') %>% 
+                           distinct(entry_id, .keep_all = TRUE),
+                       gpf_ppt %>%
+                           filter(round_month == 'Jul 2016') %>%
+                           distinct(household_type, deo_id, round, .keep_all = TRUE))
+                    
+dim(producers)    
+```
+
+## 1. Fodder – who is involved, types cultivated
+
+```{r, fig.width=8, fig.height=4}
+library(tidyr)
+producers <- producers %>%
+    mutate(are_you_cultivating_fodder = fct_recode(are_you_cultivating_fodder,
+                              `Yes` = '1',
+                              `No` = '2',
+                              `Do not know how to cultivate` = '3',
+                              `Have no land/scope` = '0')) %>%
+    mutate(are_you_cultivating_fodder = fct_relevel(are_you_cultivating_fodder, 
+                                                    "Yes", "No", "Do not know how to cultivate"))
+
+totals <- producers %>% 
+    group_by(round_month, household_type, are_you_cultivating_fodder) %>% 
+    summarise(n = n()) %>% 
+    filter(!is.na(are_you_cultivating_fodder) & are_you_cultivating_fodder != '9') %>%
+    group_by(round_month, household_type) %>% 
+    summarise(total = sum(n, na.rm = TRUE))
+
+
+df <- producers %>% 
+    group_by(round_month, household_type, are_you_cultivating_fodder) %>% 
+    summarise(n = n()) %>%
+    filter(!is.na(are_you_cultivating_fodder) & are_you_cultivating_fodder != '9') %>%
+    left_join(totals, by = c("round_month", "household_type")) %>%
+    mutate(prop = n / total*100) %>%
+    select(-n, -total) %>%
+    complete(are_you_cultivating_fodder) %>%
+    filter(are_you_cultivating_fodder != "9")
+ 
+df %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", "Treatment/Control",
+                        "Are You Cultivating Fodder?", "Percent"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+ggplot(df, aes(round_month, prop/100, fill = are_you_cultivating_fodder)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    facet_wrap(~household_type) +
+    labs(x = NULL, y = "Are You Cultivating Fodder?") +
+    scale_y_continuous(labels = scales::percent_format()) +
+    theme(legend.title=element_blank())
+
+```
+
+```{r, fig.width=8, fig.height=4}
+producers$type_fodder_cultivating[producers$type_fodder_cultivating == 0] <- NA
+producers <- producers %>%
+    mutate(type_fodder_cultivating = fct_recode(type_fodder_cultivating,
+                              Napier = '1',
+                              Sorghum = '2',
+                              Maize = '3',
+                              German = '5',
+                              Jamboo = '6',
+                              `Kheshari/MatiKalai` = '7',
+                              Other = '9')) %>%
+    mutate(type_fodder_cultivating = fct_collapse(type_fodder_cultivating,
+                                                  Multiple = c("1,2",
+                                                               "1,3",
+                                                               "1,3,4",
+                                                               "1,3,7",
+                                                               "1,5",
+                                                               "1,5,6",
+                                                               "1,6",
+                                                               "1,6,7",
+                                                               "1,7",
+                                                               "1.7",
+                                                               "14",
+                                                               "1m6",
+                                                               "1,99",
+                                                               "2,3",
+                                                               "2,7",
+                                                               "3,1",
+                                                               "3,6",
+                                                               "6,7",
+                                                               "6,1"))) %>%
+    mutate(type_fodder_cultivating = fct_relevel(type_fodder_cultivating,
+                                                 "German",
+                                                 "Jamboo", 
+                                                 "Kheshari/MatiKalai", 
+                                                 "Maize", 
+                                                 "Napier",
+                                                 "Sorghum",
+                                                 "Other",
+                                                 "Multiple"))
+
+totals <- producers %>% 
+    group_by(round_month, household_type, type_fodder_cultivating) %>% 
+    summarise(n = n()) %>% 
+    filter(!is.na(type_fodder_cultivating)) %>%
+    group_by(round_month, household_type) %>% 
+    summarise(total = sum(n, na.rm = TRUE))
+
+
+df <- producers %>% 
+    group_by(round_month, household_type, type_fodder_cultivating) %>% 
+    summarise(n = n()) %>%
+    filter(!is.na(type_fodder_cultivating)) %>%
+    left_join(totals, by = c("round_month", "household_type")) %>%
+    mutate(prop = n / total*100) %>%
+    select(-n, -total) %>%
+    complete(type_fodder_cultivating)
+ 
+df %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", "Treatment/Control",
+                        "What Type of Fodder Are You Cultivating?", "Percent"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+ggplot(df, aes(round_month, prop/100, fill = type_fodder_cultivating)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    facet_wrap(~household_type) +
+    labs(x = NULL, y = "What Type of Fodder Are You Cultivating?") +
+    scale_y_continuous(labels = scales::percent_format()) +
+    theme(legend.title=element_blank())
+
+```
+
+## 2. Green Grass
+
+## 3. Deworming
+
+## 4. Washing
+
+## 5. Bio-Security
+
+## 6. Vaccination
+
+## 7. Artificial Insemination (usage, costs, and source)
+
+## 8. Diet of the herd (breakdown of what the cows eat and farmer expenditure on cattle diet)
+
+## 9. Relationship between expenditure on cow diet and cow production levels
+
+## 10. Cow purchase history – proportion of farmers, median count by breed value
+
+## 11. Cow selling history – proportion of farmers, median count by breed value
+
+## 12. Calf history
+
+## 13. Knowledge Scores
+
+## 14. Practice Score
+
+## 15. Source of financing of dairy activities
+
+## 16. Size of loans
+
