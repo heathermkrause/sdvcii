@@ -793,17 +793,25 @@ ggplot(df, aes(round_month, median1, fill = household_type)) +
     theme(legend.title=element_blank())
 ```
 
-
-
 ## 8. Diet of the herd (breakdown of what the cows eat and farmer expenditure on cattle diet)
+
+How many cows eat each of the 13 things?
 
 ## 9. Relationship between expenditure on cow diet and cow production levels
 
+Dot for each herd: expenditure on diet vs. herd production (4 plots)
+
 ## 10. Cow purchase history – proportion of farmers, median count by breed value
+
+SKIP FOR NOW
 
 ## 11. Cow selling history – proportion of farmers, median count by breed value
 
+SKIP FOR NOW
+
 ## 12. Calf history
+
+SKIP FOR NOW
 
 ## 13. Knowledge Scores
 
@@ -811,5 +819,80 @@ ggplot(df, aes(round_month, median1, fill = household_type)) +
 
 ## 15. Source of financing of dairy activities
 
+```{r, fig.width=8, fig.height=4}
+producers <- producers %>%
+    mutate(how_did_you_bear_dairy_related_expenses = fct_recode(how_did_you_bear_dairy_related_expenses,
+                              Savings = '1',
+                              Loan = '2',
+                              `Government grant` = '3',
+                              `NGO grant` = '4',
+                              Donation = '5',
+                              Other = '9')) %>%
+    mutate(how_did_you_bear_dairy_related_expenses = fct_collapse(how_did_you_bear_dairy_related_expenses,
+                                                             Multiple = c("1,2",
+                                                                          "1,4"))) %>%
+    mutate(how_did_you_bear_dairy_related_expenses = fct_relevel(how_did_you_bear_dairy_related_expenses,
+                                      "Savings",
+                                      "Loan",
+                                      "Government grant",
+                                      "NGO grant",
+                                      "Donation",
+                                      "Multiple",
+                                      "Other"))
+
+totals <- producers %>% 
+    group_by(round_month, household_type, how_did_you_bear_dairy_related_expenses) %>% 
+    summarise(n = n()) %>% 
+    filter(!is.na(how_did_you_bear_dairy_related_expenses)) %>%
+    group_by(round_month, household_type) %>% 
+    summarise(total = sum(n, na.rm = TRUE))
+
+
+df <- producers %>% 
+    group_by(round_month, household_type, how_did_you_bear_dairy_related_expenses) %>% 
+    summarise(n = n()) %>%
+    filter(!is.na(how_did_you_bear_dairy_related_expenses)) %>%
+    left_join(totals, by = c("round_month", "household_type")) %>%
+    mutate(prop = n / total*100) %>%
+    select(-n, -total) %>%
+    complete(how_did_you_bear_dairy_related_expenses)
+ 
+df %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", "Treatment/Control",
+                        "Measures Taken for Biosecurity", "Percent"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+ggplot(df, aes(round_month, prop/100, fill = how_did_you_bear_dairy_related_expenses)) +
+    geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+    facet_wrap(~household_type) +
+    labs(x = NULL, y = "Measures Taken for Biosecurity") +
+    scale_y_continuous(labels = scales::percent_format()) +
+    theme(legend.title=element_blank())
+
+```
+
 ## 16. Size of loans
+
+```{r, fig.height=4, fig.width=7}
+producers$if_receive_any_loan_how_much_was_it_tk[producers$if_receive_any_loan_how_much_was_it_tk == '0'] <- NA
+
+producers <- producers %>%
+    mutate(if_receive_any_loan_how_much_was_it_tk = as.numeric(if_receive_any_loan_how_much_was_it_tk))
+
+df <- producers %>% 
+    group_by(round_month, household_type) %>% 
+    summarise(median1 = median(if_receive_any_loan_how_much_was_it_tk, na.rm = TRUE))
+ 
+df %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", "Treatment/Control",
+                        "Median Size of Loan in Taka"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+ggplot(df, aes(round_month, median1, fill = household_type)) +
+    geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+    labs(x = NULL, y = "Median Size of Loan in Taka") +
+    theme(legend.title=element_blank())
+```
 
