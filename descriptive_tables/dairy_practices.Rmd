@@ -682,6 +682,119 @@ ggplot(df, aes(round_month, prop/100, fill = which_vaccines_have_you_given_to_ca
 
 ## 7. Artificial Insemination (usage, costs, and source)
 
+provided_ai_4 = provided_ai_who_provide_services_4
+provided_ai_4 = whoprovidedai1
+
+```{r, fig.height=4, fig.width=8}
+producers$provided_ai_2[producers$provided_ai_2 == '22'] <- '2'
+producers <- producers %>%
+    mutate(provided_ai_2 = fct_recode(provided_ai_2,
+                                           `Yes` = '1',
+                                           `No` = '2'))
+
+totals <- producers %>% 
+    group_by(round_month, household_type, provided_ai_2) %>% 
+    summarise(n = n()) %>% 
+    filter(!is.na(provided_ai_2)) %>%
+    group_by(round_month, household_type) %>% 
+    summarise(total = sum(n, na.rm = TRUE))
+
+
+df <- producers %>% 
+    group_by(round_month, household_type, provided_ai_2) %>% 
+    summarise(n = n()) %>%
+    filter(!is.na(provided_ai_2)) %>%
+    left_join(totals, by = c("round_month", "household_type")) %>%
+    mutate(prop = n / total*100) %>%
+    select(-n, -total)
+ 
+df %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", "Treatment/Control",
+                        "Usage of Artificial Insemination", "Percent"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+ggplot(df, aes(round_month, prop/100, fill = provided_ai_2)) +
+    geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+    facet_wrap(~household_type) +
+    labs(x = NULL, y = "Usage of Artificial Insemination") +
+    scale_y_continuous(labels = scales::percent_format()) +
+    theme(legend.title=element_blank())
+
+```
+
+```{r, fig.height=4, fig.width=8}
+producers$provided_ai_4[producers$provided_ai_4 == '6'] <- NA
+producers$provided_ai_4[producers$provided_ai_4 == '8'] <- NA
+producers$provided_ai_4[producers$provided_ai_4 == '9'] <- NA
+producers$provided_ai_4[producers$provided_ai_4 == '0'] <- NA
+producers <- producers %>%
+    mutate(provided_ai_4 = fct_recode(provided_ai_4,
+                                      `Own bull` = '1',
+                                      `Other farmer's bull` = '2',
+                                      `Goverment AI` = '3',
+                                      `NGO AI` = '4',
+                                      `Private AI` = '5'))
+
+totals <- producers %>% 
+    group_by(round_month, household_type, provided_ai_4) %>% 
+    summarise(n = n()) %>% 
+    filter(!is.na(provided_ai_4)) %>%
+    group_by(round_month, household_type) %>% 
+    summarise(total = sum(n, na.rm = TRUE))
+
+
+df <- producers %>% 
+    group_by(round_month, household_type, provided_ai_4) %>% 
+    summarise(n = n()) %>%
+    filter(!is.na(provided_ai_4)) %>%
+    left_join(totals, by = c("round_month", "household_type")) %>%
+    mutate(prop = n / total*100) %>%
+    select(-n, -total) %>%
+    complete(provided_ai_4)
+ 
+df %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", "Treatment/Control",
+                        "Who Provided Artificial Insemination Service?", "Percent"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+ggplot(df, aes(round_month, prop/100, fill = provided_ai_4)) +
+    geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+    facet_wrap(~household_type) +
+    labs(x = NULL, y = "Who Provided Artificial Insemination Service?") +
+    scale_y_continuous(labels = scales::percent_format()) +
+    theme(legend.title=element_blank())
+
+
+levels(factor(producers$provided_ai_9))
+```
+
+
+```{r, fig.height=4, fig.width=7}
+producers$provided_ai_9[producers$provided_ai_9 == '0'] <- NA
+
+producers <- producers %>%
+    mutate(provided_ai_9 = as.numeric(provided_ai_9))
+
+df <- producers %>% 
+    group_by(round_month, household_type) %>% 
+    summarise(median1 = median(provided_ai_9, na.rm = TRUE))
+ 
+df %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", "Treatment/Control",
+                        "Total Expenditure on Artificial Insemination (Median)"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+ggplot(df, aes(round_month, median1, fill = household_type)) +
+    geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+    labs(x = NULL, y = "Total Expenditure on Artificial Insemination (Median)") +
+    theme(legend.title=element_blank())
+```
+
+
+
 ## 8. Diet of the herd (breakdown of what the cows eat and farmer expenditure on cattle diet)
 
 ## 9. Relationship between expenditure on cow diet and cow production levels
