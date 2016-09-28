@@ -797,9 +797,86 @@ ggplot(df, aes(round_month, median1, fill = household_type)) +
 
 How many cows eat each of the 13 things?
 
+```{r, fig.width=8, fig.height=4}
+df <- gpf_ppt %>% 
+    group_by(round_month, household_type) %>% 
+    summarize(`Rice Bran` = 100*mean(!is.na(amount_rice_bran) & amount_rice_bran != '0'),
+              `Wheat Bran` = 100*mean(!is.na(amount_wheat_bran) & amount_wheat_bran != '0'),
+              `Pulse Husk` = 100*mean(!is.na(amount_pulse_husk) & amount_pulse_husk != '0'),
+              `Broken Rice` = 100*mean(!is.na(amount_broken_rice) & amount_broken_rice != '0'),
+              `Molasses` = 100*mean(!is.na(amount_molasess) & amount_molasess != '0'),
+              `Broken Maize` = 100*mean(!is.na(amount_broken_maize) & amount_broken_maize != '0'),
+              `Coconut Oil Cake` = 100*mean(!is.na(amount_coconut_oil_cake) & amount_coconut_oil_cake != '0'),
+              `Mustard Oil Cake` = 100*mean(!is.na(amount_mustard_oil_cake) & amount_mustard_oil_cake != '0'),
+              `Mineral Mix` = 100*mean(!is.na(amount_mineral_mix) & amount_mineral_mix != '0'),
+              `DCP` = 100*mean(!is.na(amount_dcp) & amount_dcp != '0'),
+              `Straw` = 100*mean(!is.na(amount_straw) & amount_straw != '0'),
+              `Green Grass` = 100*mean(!is.na(amount_green_grass) & amount_green_grass != '0'),
+              `Ready Feed` = 100*mean(!is.na(amount_ready_feed) & amount_ready_feed != '0'))
+
+df %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", "Treatment/Control",
+                        "Percent of Cows Who Eat Rice Bran",
+                        "Percent of Cows Who Eat Wheat Bran",
+                        "Percent of Cows Who Eat Pulse Husk",
+                        "Percent of Cows Who Eat Broken Rice",
+                        "Percent of Cows Who Eat Molasses",
+                        "Percent of Cows Who Eat Broken Maize",
+                        "Percent of Cows Who Eat Coconut Oil Cake",
+                        "Percent of Cows Who Eat Mustard Oil Cake",
+                        "Percent of Cows Who Eat Mineral Mix",
+                        "Percent of Cows Who Eat DCP",
+                        "Percent of Cows Who Eat Straw",
+                        "Percent of Cows Who Eat Green Grass",
+                        "Percent of Cows Who Eat Ready Feed"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+ggplot(melt(df), aes(round_month, value/100, fill = variable)) +
+    geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+    facet_wrap(~ household_type) +
+    labs(x = NULL, y = "Percent of Cows Whose Diet Contains Each Item") +
+    scale_y_continuous(labels = scales::percent_format()) +
+    theme(legend.title=element_blank())
+```
+
+
 ## 9. Relationship between expenditure on cow diet and cow production levels
 
 Dot for each herd: expenditure on diet vs. herd production (4 plots)
+
+```{r, fig.height=8, fig.width=8}
+gpf_ppt <- gpf_ppt %>%
+    mutate(taka_total = as.numeric(taka_total))
+
+df <- bind_rows(gpf_ppt %>% 
+              filter(round_month == 'Jul 2014') %>% 
+              group_by(household_type, entry_id) %>% 
+              summarize(production = sum(cow_daily_production, na.rm = TRUE),
+                        expenditure = max(taka_total)) %>% 
+              mutate(deo_id = entry_id,
+                     round_month = 'Jul 2014'),
+          gpf_ppt %>% 
+              filter(round_month == 'Jul 2016') %>% 
+              group_by(household_type, deo_id) %>% 
+              summarize(production = sum(cow_daily_production, na.rm = TRUE),
+                        expenditure = max(taka_total)) %>% 
+              mutate(round_month = 'Jul 2016'))
+
+df$production[df$production == 0] <- NA
+df$expenditure[df$expenditure == 0] <- NA
+
+ggplot(df, aes(expenditure, production)) +
+    stat_smooth(method = "lm", se = FALSE, color = "gray70", linetype = 2) +
+    geom_point(alpha = 0.3, color = "cyan3", size = 2) +
+    facet_grid(household_type ~ round_month) +
+    xlim(NA, 2e4) +
+    ylim(NA, 70) +
+    labs(x = "Total Expenditure on Diet in Taka", 
+         y = "Daily Herd Production in Liters")
+```
+
+
 
 ## 10. Cow purchase history – proportion of farmers, median count by breed value
 
@@ -815,7 +892,7 @@ SKIP FOR NOW
 
 ## 13. Knowledge Scores
 
-```{r, fig.height=4, fig.width=7}
+```{r, fig.height=4, fig.width=6}
 producers$total_score_knowledge[producers$total_score_knowledge == '0'] <- NA
 
 producers <- producers %>%
@@ -840,7 +917,7 @@ ggplot(df, aes(round_month, median1, fill = household_type)) +
 
 ## 14. Practice Score
 
-```{r, fig.height=4, fig.width=7}
+```{r, fig.height=4, fig.width=6}
 producers$total_score_practice[producers$total_score_practice == '0'] <- NA
 
 producers <- producers %>%
@@ -920,7 +997,7 @@ ggplot(df, aes(round_month, prop/100, fill = how_did_you_bear_dairy_related_expe
 
 ## 16. Size of loans
 
-```{r, fig.height=4, fig.width=7}
+```{r, fig.height=4, fig.width=6}
 producers$if_receive_any_loan_how_much_was_it_tk[producers$if_receive_any_loan_how_much_was_it_tk == '0'] <- NA
 
 producers <- producers %>%
