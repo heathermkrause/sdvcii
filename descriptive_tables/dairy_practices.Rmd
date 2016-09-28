@@ -815,7 +815,53 @@ SKIP FOR NOW
 
 ## 13. Knowledge Scores
 
+```{r, fig.height=4, fig.width=7}
+producers$total_score_knowledge[producers$total_score_knowledge == '0'] <- NA
+
+producers <- producers %>%
+    mutate(total_score_knowledge = as.numeric(total_score_knowledge))
+
+df <- producers %>% 
+    group_by(round_month, household_type) %>% 
+    summarise(median1 = median(total_score_knowledge, na.rm = TRUE))
+ 
+df %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", "Treatment/Control",
+                        "Median Total Knowledge Score"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+ggplot(df, aes(round_month, median1, fill = household_type)) +
+    geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+    labs(x = NULL, y = "Median Total Knowledge Score") +
+    theme(legend.title=element_blank())
+```
+
+
 ## 14. Practice Score
+
+```{r, fig.height=4, fig.width=7}
+producers$total_score_practice[producers$total_score_practice == '0'] <- NA
+
+producers <- producers %>%
+    mutate(total_score_practice = as.numeric(total_score_practice))
+
+df <- producers %>% 
+    group_by(round_month, household_type) %>% 
+    summarise(median1 = median(total_score_practice, na.rm = TRUE))
+ 
+df %>%
+    kable(digits = 1,
+          col.names = c("Round of Data Collection", "Treatment/Control",
+                        "Median Total Practice Score"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+ggplot(df, aes(round_month, median1, fill = household_type)) +
+    geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+    labs(x = NULL, y = "Median Total Practice Score") +
+    theme(legend.title=element_blank())
+```
+
 
 ## 15. Source of financing of dairy activities
 
