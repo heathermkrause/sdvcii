@@ -1,0 +1,45 @@
+---
+title: "First Attempts at LME Modeling"
+subtitle: "Strengthening the Dairy Value Chain"
+author: "Julia Silge"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: leonids
+---
+
+```{r, echo = FALSE, warning = FALSE}
+library(knitr)
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, dpi = 180)
+options(width=80, dplyr.width = 150)
+```
+
+It is now time to do some linear mixed effects modeling. Let's do it!
+
+## Loading the Data
+
+First, let's load the data and make a producers data frame, and do some cleaning that we found we needed to do during the table-making process.
+
+```{r}
+gpf_ppt <- read_csv("../data/gpf_ppt_merged.csv", 
+                    col_types = cols(.default = col_character()))
+
+gpf_ppt$district_gpf[gpf_ppt$district_gpf == "pabna"] <- "Pabna"
+gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Jaipur Hat"] <- "Joypurhat"
+gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Natore"] <- "Nator"
+gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Shirajgong"] <- "Sirajgonj"
+gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Shirajgonj"] <- "Sirajgonj"
+gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Sirajgang"] <- "Sirajgonj"
+gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Sirajganj"] <- "Sirajgonj"
+
+producers <- bind_rows(gpf_ppt %>% 
+                           filter(round_month == '1.0') %>% 
+                           distinct(entry_id, .keep_all = TRUE),
+                       gpf_ppt %>%
+                           filter(round_month != '5.0') %>%
+                           distinct(household_type, deo_id, round, .keep_all = TRUE))
+                    
+dim(producers)    
+
+```
+
