@@ -18,9 +18,11 @@ It is now time to do some linear mixed effects modeling. Let's do it!
 
 ## Loading the Data
 
-First, let's load the data and make a producers data frame, and do some cleaning that we found we needed to do during the table-making process.
+First, let's load the data , do some cleaning that we found we needed to do during the table-making process, and make a producers data frame.
 
 ```{r}
+library(readr)
+library(dplyr)
 gpf_ppt <- read_csv("../data/gpf_ppt_merged.csv", 
                     col_types = cols(.default = col_character()))
 
@@ -33,13 +35,36 @@ gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Sirajgang"] <- "Sirajgonj"
 gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Sirajganj"] <- "Sirajgonj"
 
 producers <- bind_rows(gpf_ppt %>% 
-                           filter(round_month == '1.0') %>% 
+                           filter(round == '1.0') %>% 
                            distinct(entry_id, .keep_all = TRUE),
                        gpf_ppt %>%
-                           filter(round_month != '5.0') %>%
+                           filter(round != '5.0') %>%
                            distinct(household_type, deo_id, round, .keep_all = TRUE))
                     
+producers[,c(36)] <- lapply(producers[,c(36)], as.numeric)
+
+producers[,c(1,13,24,281)] <- lapply(producers[,c(1,13,24,281)], as.factor)
+
 dim(producers)    
 
 ```
+
+## Building a Model
+
+Random effects will have different intercepts
+
+Fixed effect vs. random effect
+
+```{r}
+library(lme4)
+library(broom)
+
+fit1 <- lmer(yesterday_total_income_from_milk_sale ~ round * household_type +
+                 district_gpf +
+                 (1 | group_code),
+             data = producers)
+
+summary(fit1)
+```
+
 
