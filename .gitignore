@@ -11,6 +11,10 @@ descriptive_tables/*cache
 descriptive_tables/*files
 descriptive_tables/*docx
 descriptive_tables/rsconnect
+modeling/*html
+modeling/*cache
+modeling/rsconnect
+modeling/*files
 data/*xls
 data/*xlsx
 data/gpf_round*
