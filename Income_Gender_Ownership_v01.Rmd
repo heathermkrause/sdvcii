@@ -1,0 +1,1712 @@
+---
+title: "SDVC Final Report Descriptive Tables"
+author: "John Kemp"
+date: '`r Sys.Date()`'
+output: word_document
+subtitle: Income, Gender and Ownership
+---
+
+```{r, echo = FALSE, warning = FALSE}
+# ********* packages and themes ***************
+library(knitr)
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, dpi = 180)
+options(width=80, dplyr.width = 150)
+library(ggplot2)
+theme_set(theme_light())
+```
+
+```{r, echo = F, warning = F}
+# *********** Set up Dataset *************
+library(readr)
+library(forcats)
+library(dplyr)
+library(reshape2)
+
+gpf <- read.csv("C:/Kemp Solutions/Customers/datassist/project01/sdvcii-master/data/gpf_merged.csv")
+gpf$round <- as.factor(gpf$round)
+gpf$household_type <- as.factor(gpf$household_type)
+gpf <- gpf %>%
+    mutate(round_month = fct_recode(round,
+                              "Jul 2014" = "1",
+                              "Dec 2014" = "2",
+                              "Jul 2015" = "3",
+                              "Dec 2015" = "4",
+                              "Jul 2016" = "5")) %>%
+    mutate(household_type = fct_collapse(household_type,
+                                         Treatment = c("1", "2", "3"),
+                                         Control = c("4", "5", "6"))
+           )
+
+
+gpf[,c(36,102,270)] <- lapply(gpf[,c(36,102,270)], as.numeric)
+gpf$district[gpf$district == "pabna"] <- "Pabna"
+gpf$district[gpf$district == "Jaipur Hat"] <- "Joypurhat"
+gpf$district[gpf$district == "Natore"] <- "Nator"
+gpf$district[gpf$district == "Shirajgong"] <- "Sirajgonj"
+gpf$district[gpf$district == "Shirajgonj"] <- "Sirajgonj"
+gpf$district[gpf$district == "Sirajgang"] <- "Sirajgonj"
+gpf$district[gpf$district == "Sirajganj"] <- "Sirajgonj"
+
+```
+
+***
+### 6a.	Decision maker on how to spend money earned - (Treatment & Control) rounds 1 and 5
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+# change the column to a factor and recode the responses in a new field
+gpf$decision_money <- as.factor(gpf$decision_money)
+ds <-   gpf %>% 
+        filter(!is.na(decision_money) & round %in% c(1,5)) %>%
+        mutate(recode_response = fct_recode(decision_money,
+                  "Self" = "1",
+                  "Husband" = "2",
+                  "Jointly" = "3",
+                  "Other Male Member" = "4",
+                  "Other Female Member" = "5",
+                  "Other" = "7")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+# create a separate table to store totals  
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+# merge the two together to allow for a percentage of total
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,3,7)]
+row.names(ds3) <- NULL
+
+# write the table
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection", 
+                  "Decision maker on how to spend money earned", "Treatment/Control Group", "Percent")
+)
+
+# create a plot
+ggplot(ds3, aes(x = recode_response, y = pct, fill = household_type)) +
+geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+facet_wrap(~district, nrow = 2) +
+labs(x = NULL, y = "Percent Money Decision Maker") +
+theme(legend.title=element_blank()) +
+coord_flip()
+
+
+```
+
+***
+### 6b.	Decision maker on how to spend money earned - Treatment Only
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+ds <-   gpf %>% 
+        filter(!is.na(decision_money) & household_type == "Treatment") %>%
+        mutate(recode_response = fct_recode(decision_money,
+                  "Self" = "1",
+                  "Husband" = "2",
+                  "Jointly" = "3",
+                  "Other Male Member" = "4",
+                  "Other Female Member" = "5",
+                  "Other" = "7")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+  
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response),c(1,2,4,7)]
+row.names(ds3) <- NULL
+
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection", 
+                  "Decision maker on how to spend money earned", "Percent")
+)
+
+ggplot(ds3, aes(x = round_month, y = pct, fill = recode_response)) +
+    geom_bar(alpha = 0.8, stat = "identity") +
+    facet_wrap(~ district, nrow = 2) +
+    labs(x = NULL, y = "Percent Money Decision Maker") +
+    theme(axis.text.x= element_text(angle=45, hjust = 1))+
+    theme(legend.title=element_blank())
+
+
+```
+
+***
+### 7a.	Decision maker on how to use milk sales income - (Treatment & Control) rounds 1 and 5
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$decision_milk_sales_income <- as.factor(gpf$decision_milk_sales_income)
+ds <-   gpf %>% 
+        filter(!is.na(decision_milk_sales_income) & round %in% c(1,5)) %>%
+        mutate(recode_response = fct_recode(decision_milk_sales_income,
+                  "Self" = "1",
+                  "Husband" = "2",
+                  "Jointly" = "3",
+                  "Other Male Member" = "4",
+                  "Other Female Member" = "5",
+                  "Other" = "7")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+  
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,3,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection", 
+                  "Decision maker on how to use milk sales income", "Treatment/Control Group", "Percent")
+)
+
+ggplot(ds3, aes(x = recode_response, y = pct, fill = household_type)) +
+geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+facet_wrap(~district, nrow = 2) +
+labs(x = NULL, y = "Percent Money Decision Maker - Milk") +
+theme(legend.title=element_blank()) +
+coord_flip()
+
+
+```
+
+***
+### 7b.	Decision maker on how to use milk sales income - Treatment Only
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$decision_milk_sales_income <- as.factor(gpf$decision_milk_sales_income)
+ds <-   gpf %>% 
+        filter(!is.na(decision_milk_sales_income) & household_type == "Treatment") %>%
+        mutate(recode_response = fct_recode(decision_milk_sales_income,
+                  "Self" = "1",
+                  "Husband" = "2",
+                  "Jointly" = "3",
+                  "Other Male Member" = "4",
+                  "Other Female Member" = "5",
+                  "Other" = "7")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+  
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection", 
+                  "Decision maker on how to use milk sales income", "Percent")
+)
+
+ggplot(ds3, aes(x = round_month, y = pct, fill = recode_response)) +
+    geom_bar(alpha = 0.8, stat = "identity") +
+    facet_wrap(~ district, nrow = 2) +
+    labs(x = NULL, y = "Percent Money Decision Maker - Milk") +
+    theme(axis.text.x= element_text(angle=45, hjust = 1))+
+    theme(legend.title=element_blank())
+
+```
+
+***
+### 8a. Asset purchases - (Treatment & Control) rounds 1 and 5
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$asset_purchase_own <- as.factor(gpf$asset_purchase_own)
+ds <-   gpf %>% 
+        filter(!is.na(asset_purchase_own) & asset_purchase_own %in% c(1:6) & round %in% c(1,5)) %>%
+        mutate(recode_response = fct_recode(asset_purchase_own,
+                  "Husband" = "1",
+                  "Father-in-law" = "2",
+                  "Mother-in-law " = "3",
+                  "Son" = "4",
+                  "Other Male Member" = "5",
+                  "Other Female Member" = "6")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+  
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,3,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection", 
+                  "Asset purchases", "Treatment/Control Group", "Percent")
+)
+
+
+ggplot(ds3, aes(x = recode_response, y = pct, fill = household_type)) +
+geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+facet_wrap(~district, nrow = 2) +
+labs(x = NULL, y = "Percent Asset Purchases") +
+theme(legend.title=element_blank()) +
+coord_flip()
+
+```
+
+***
+### 8b. Asset purchases - Treatment Only
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$asset_purchase_own <- as.factor(gpf$asset_purchase_own)
+ds <-   gpf %>% 
+        filter(!is.na(asset_purchase_own) & asset_purchase_own %in% c(1:6) & household_type == "Treatment") %>%
+        mutate(recode_response = fct_recode(asset_purchase_own,
+                  "Husband" = "1",
+                  "Father-in-law" = "2",
+                  "Mother-in-law " = "3",
+                  "Son" = "4",
+                  "Other Male Member" = "5",
+                  "Other Female Member" = "6")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+  
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection", 
+                  "Asset purchases", "Percent")
+)
+
+ggplot(ds3, aes(x = round_month, y = pct, fill = recode_response)) +
+    geom_bar(alpha = 0.8, stat = "identity") +
+    facet_wrap(~ district, nrow = 2) +
+    labs(x = NULL, y = "Percent Asset Purchases") +
+    theme(axis.text.x= element_text(angle=45, hjust = 1))+
+    theme(legend.title=element_blank())
+
+```
+
+***
+### 9a.	Decision maker to purchase assets - (Treatment & Control) rounds 1 and 5
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$asset_1_who_made_decision_to_buy_assets <- as.factor(gpf$asset_1_who_made_decision_to_buy_assets)
+ds <-   gpf %>%
+        filter(!is.na(asset_1_who_made_decision_to_buy_assets) & round %in% c(1,5)) %>%
+        mutate(recode_response = fct_recode(asset_1_who_made_decision_to_buy_assets,
+                  "Self" = "1",
+                  "Husband" = "2",
+                  "Jointly" = "3",
+                  "Other Male Member" = "4",
+                  "Other Female Member" = "5")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,3,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Decision maker to purchase assets", "Treatment/Control Group", "Percent")
+)
+
+ggplot(ds3, aes(x = recode_response, y = pct, fill = household_type)) +
+geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+facet_wrap(~district, nrow = 2) +
+labs(x = NULL, y = "Percent Decision maker to purchase assets") +
+theme(legend.title=element_blank()) +
+coord_flip()
+
+```
+
+***
+### 9b.	Decision maker to purchase assets - Treatment Only
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$asset_1_who_made_decision_to_buy_assets <- as.factor(gpf$asset_1_who_made_decision_to_buy_assets)
+ds <-   gpf %>%
+        filter(!is.na(asset_1_who_made_decision_to_buy_assets) & household_type == "Treatment") %>%
+        mutate(recode_response = fct_recode(asset_1_who_made_decision_to_buy_assets,
+                  "Self" = "1",
+                  "Husband" = "2",
+                  "Jointly" = "3",
+                  "Other Male Member" = "4",
+                  "Other Female Member" = "5")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Decision maker to purchase assets", "Percent")
+)
+
+ggplot(ds3, aes(x = round_month, y = pct, fill = recode_response)) +
+    geom_bar(alpha = 0.8, stat = "identity") +
+    facet_wrap(~ district, nrow = 2) +
+    labs(x = NULL, y = "Percent Decision Maker for Purchases") +
+    theme(axis.text.x= element_text(angle=45, hjust = 1))+
+    theme(legend.title=element_blank())
+
+```
+
+***
+### 10a.	Person in control of assets - (Treatment & Control) rounds 1 and 5
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$decision_money <- as.factor(gpf$decision_money)
+ds <-   gpf %>%
+        filter(!is.na(decision_money) & round %in% c(1,5)) %>%
+        mutate(recode_response = fct_recode(decision_money,
+                  "Self" = "1",
+                  "Husband" = "2",
+                  "Jointly" = "3",
+                  "Other Male Member" = "4",
+                  "Other Female Member" = "5")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,3,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Person in control of assets", "Treatment/Control Group", "Percent")
+)
+
+ggplot(ds3, aes(x = recode_response, y = pct, fill = household_type)) +
+geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+facet_wrap(~district, nrow = 2) +
+labs(x = NULL, y = "Percent Person in Control of assets") +
+theme(legend.title=element_blank()) +
+coord_flip()
+
+```
+
+***
+### 10b.	Person in control of assets - Treatment Only
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$decision_money <- as.factor(gpf$decision_money)
+ds <-   gpf %>%
+        filter(!is.na(decision_money) & household_type == "Treatment") %>%
+        mutate(recode_response = fct_recode(decision_money,
+                  "Self" = "1",
+                  "Husband" = "2",
+                  "Jointly" = "3",
+                  "Other Male Member" = "4",
+                  "Other Female Member" = "5")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Person in control of assets", "Percent")
+)
+
+ggplot(ds3, aes(x = round_month, y = pct, fill = recode_response)) +
+    geom_bar(alpha = 0.8, stat = "identity") +
+    facet_wrap(~ district, nrow = 2) +
+    labs(x = NULL, y = "Percent Person in Control of Assets") +
+    theme(axis.text.x= element_text(angle=45, hjust = 1))+
+    theme(legend.title=element_blank())
+
+```
+
+***
+### GENDER: 2a.	Gender of Person Rearing Cow - (Treatment & Control) rounds 1 and 5
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$cow_rearing <- as.factor(gpf$cow_rearing)
+ds <-   gpf %>%
+        filter(!is.na(cow_rearing) & round %in% c(1,5)) %>%
+        mutate(recode_response = fct_recode(cow_rearing,
+                  "Women" = "1",
+                  "Men" = "2",
+                  "Jointly" = "3",
+                  "Other Male Member" = "4",
+                  "Other Female Member" = "5")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,3,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Person Rearing Cow", "Treatment/Control Group", "Percent")
+)
+
+ggplot(ds3, aes(x = recode_response, y = pct, fill = household_type)) +
+geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+facet_wrap(~district, nrow = 2) +
+labs(x = NULL, y = "Percent Person Rearing Cow") +
+theme(legend.title=element_blank()) +
+coord_flip()
+
+```
+
+***
+### GENDER: 2b.	Gender of Person Rearing Cow - Treatment Only
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$cow_rearing <- as.factor(gpf$cow_rearing)
+ds <-   gpf %>%
+        filter(!is.na(cow_rearing) & household_type == "Treatment") %>%
+        mutate(recode_response = fct_recode(cow_rearing,
+                  "Women" = "1",
+                  "Men" = "2",
+                  "Jointly" = "3",
+                  "Other Male Member" = "4",
+                  "Other Female Member" = "5")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Person Rearing Cow", "Percent")
+)
+
+ggplot(ds3, aes(x = round_month, y = pct, fill = recode_response)) +
+    geom_bar(alpha = 0.8, stat = "identity") +
+    facet_wrap(~ district, nrow = 2) +
+    labs(x = NULL, y = "Percent Person Rearing Cow") +
+    theme(axis.text.x= element_text(angle=45, hjust = 1))+
+    theme(legend.title=element_blank())
+
+```
+
+***
+### GENDER: 3a.	Person Purchasing Feed - (Treatment & Control) rounds 1 and 5
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$feed_practice <- as.factor(gpf$feed_practice)
+ds <-   gpf %>%
+        filter(!is.na(feed_practice) & round %in% c(1,5)) %>%
+        mutate(recode_response = fct_recode(feed_practice,
+                  "Women" = "1",
+                  "Men" = "2",
+                  "Jointly" = "3",
+                  "Other Male Member" = "4",
+                  "Other Female Member" = "5")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,3,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Person Purchasing Feed", "Treatment/Control Group", "Percent")
+)
+
+ggplot(ds3, aes(x = recode_response, y = pct, fill = household_type)) +
+geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+facet_wrap(~district, nrow = 2) +
+labs(x = NULL, y = "Percent Person Purchasing Feed") +
+theme(legend.title=element_blank()) +
+coord_flip()
+
+```
+
+***
+### GENDER: 3b.	Person Purchasing Feed - Treatment Only
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$feed_practice <- as.factor(gpf$feed_practice)
+ds <-   gpf %>%
+        filter(!is.na(feed_practice) & household_type == "Treatment") %>%
+        mutate(recode_response = fct_recode(feed_practice,
+                  "Women" = "1",
+                  "Men" = "2",
+                  "Jointly" = "3",
+                  "Other Male Member" = "4",
+                  "Other Female Member" = "5")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Person Purchasing Feed", "Percent")
+)
+
+ggplot(ds3, aes(x = round_month, y = pct, fill = recode_response)) +
+    geom_bar(alpha = 0.8, stat = "identity") +
+    facet_wrap(~ district, nrow = 2) +
+    labs(x = NULL, y = "Percent Person Purchasing Feed") +
+    theme(axis.text.x= element_text(angle=45, hjust = 1))+
+    theme(legend.title=element_blank())
+
+```
+
+***
+### GENDER: 4a.	Person Selling Milk - (Treatment & Control) rounds 1 and 5
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$milk_selling <- as.factor(gpf$milk_selling)
+ds <-   gpf %>%
+        filter(!is.na(milk_selling) & round %in% c(1,5)) %>%
+        mutate(recode_response = fct_recode(milk_selling,
+                  "Women" = "1",
+                  "Men" = "2",
+                  "Jointly" = "3",
+                  "Other Male Member" = "4",
+                  "Other Female Member" = "5")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,3,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Person Selling Milk", "Treatment/Control Group", "Percent")
+)
+
+ggplot(ds3, aes(x = recode_response, y = pct, fill = household_type)) +
+geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+facet_wrap(~district, nrow = 2) +
+labs(x = NULL, y = "Percent Person Selling Milk") +
+theme(legend.title=element_blank()) +
+coord_flip()
+
+```
+
+***
+### GENDER: 4b.	Person Selling Milk - Treatment Only
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$milk_selling <- as.factor(gpf$milk_selling)
+ds <-   gpf %>%
+        filter(!is.na(milk_selling) & household_type == "Treatment") %>%
+        mutate(recode_response = fct_recode(milk_selling,
+                  "Women" = "1",
+                  "Men" = "2",
+                  "Jointly" = "3",
+                  "Other Male Member" = "4",
+                  "Other Female Member" = "5")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Person Selling Milk", "Percent")
+)
+
+ggplot(ds3, aes(x = round_month, y = pct, fill = recode_response)) +
+    geom_bar(alpha = 0.8, stat = "identity") +
+    facet_wrap(~ district, nrow = 2) +
+    labs(x = NULL, y = "Percent Person Selling Milk") +
+    theme(axis.text.x= element_text(angle=45, hjust = 1))+
+    theme(legend.title=element_blank())
+
+```
+
+***
+### GENDER: 5a.	Person Purchasing Cow - (Treatment & Control) rounds 1 and 5
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$cattle_purchase <- as.factor(gpf$cattle_purchase)
+ds <-   gpf %>%
+        filter(!is.na(cattle_purchase) & round %in% c(1,5)) %>%
+        mutate(recode_response = fct_recode(cattle_purchase,
+                  "Women" = "1",
+                  "Men" = "2",
+                  "Jointly" = "3",
+                  "Other Male Member" = "4",
+                  "Other Female Member" = "5")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,3,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Person Purchasing Cow", "Treatment/Control Group", "Percent")
+)
+
+ggplot(ds3, aes(x = recode_response, y = pct, fill = household_type)) +
+geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+facet_wrap(~district, nrow = 2) +
+labs(x = NULL, y = "Percent Person Purchasing Cow") +
+theme(legend.title=element_blank()) +
+coord_flip()
+
+```
+
+***
+### GENDER: 5b.	Person Purchasing Cow - Treatment Only
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$cattle_purchase <- as.factor(gpf$cattle_purchase)
+ds <-   gpf %>%
+        filter(!is.na(cattle_purchase) & household_type == "Treatment") %>%
+        mutate(recode_response = fct_recode(cattle_purchase,
+                  "Women" = "1",
+                  "Men" = "2",
+                  "Jointly" = "3",
+                  "Other Male Member" = "4",
+                  "Other Female Member" = "5")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Person Purchasing Cow", "Percent")
+)
+
+ggplot(ds3, aes(x = round_month, y = pct, fill = recode_response)) +
+    geom_bar(alpha = 0.8, stat = "identity") +
+    facet_wrap(~ district, nrow = 2) +
+    labs(x = NULL, y = "Percent Person Purchasing Cow") +
+    theme(axis.text.x= element_text(angle=45, hjust = 1))+
+    theme(legend.title=element_blank())
+
+```
+
+***
+### GENDER: 6a.	Person Selling Cow - (Treatment & Control) rounds 1 and 5
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$cattle_sales <- as.factor(gpf$cattle_sales)
+ds <-   gpf %>%
+        filter(!is.na(cattle_sales) & round %in% c(1,5)) %>%
+        mutate(recode_response = fct_recode(cattle_sales,
+                  "Women" = "1",
+                  "Men" = "2",
+                  "Jointly" = "3",
+                  "Other Male Member" = "4",
+                  "Other Female Member" = "5")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,3,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Person Selling Cow", "Treatment/Control Group", "Percent")
+)
+
+ggplot(ds3, aes(x = recode_response, y = pct, fill = household_type)) +
+geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+facet_wrap(~district, nrow = 2) +
+labs(x = NULL, y = "Percent Person Selling Cow") +
+theme(legend.title=element_blank()) +
+coord_flip()
+
+```
+
+***
+### GENDER: 6b.	Person Selling Cow - Treatment Only
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$cattle_sales <- as.factor(gpf$cattle_sales)
+ds <-   gpf %>%
+        filter(!is.na(cattle_sales) & household_type == "Treatment") %>%
+        mutate(recode_response = fct_recode(cattle_sales,
+                  "Women" = "1",
+                  "Men" = "2",
+                  "Jointly" = "3",
+                  "Other Male Member" = "4",
+                  "Other Female Member" = "5")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Person Selling Cow", "Percent")
+)
+
+ggplot(ds3, aes(x = round_month, y = pct, fill = recode_response)) +
+    geom_bar(alpha = 0.8, stat = "identity") +
+    facet_wrap(~ district, nrow = 2) +
+    labs(x = NULL, y = "Percent Person Selling Cow") +
+    theme(axis.text.x= element_text(angle=45, hjust = 1))+
+    theme(legend.title=element_blank())
+
+```
+
+***
+### GENDER: 7a.	Person Milking Cow - (Treatment & Control) rounds 1 and 5
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$milking_cow <- as.factor(gpf$milking_cow)
+ds <-   gpf %>%
+        filter(!is.na(milking_cow) & round %in% c(1,5)) %>%
+        mutate(recode_response = fct_recode(milking_cow,
+                  "Women" = "1",
+                  "Men" = "2",
+                  "Jointly" = "3",
+                  "Other Male Member" = "4",
+                  "Other Female Member" = "5")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,3,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Person Milking Cow", "Treatment/Control Group", "Percent")
+)
+
+ggplot(ds3, aes(x = recode_response, y = pct, fill = household_type)) +
+geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+facet_wrap(~district, nrow = 2) +
+labs(x = NULL, y = "Percent Person Milking Cow") +
+theme(legend.title=element_blank()) +
+coord_flip()
+
+```
+
+***
+### GENDER: 7b.	Person Milking Cow - Treatment Only
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$milking_cow <- as.factor(gpf$milking_cow)
+ds <-   gpf %>%
+        filter(!is.na(milking_cow) & household_type == "Treatment") %>%
+        mutate(recode_response = fct_recode(milking_cow,
+                  "Women" = "1",
+                  "Men" = "2",
+                  "Jointly" = "3",
+                  "Other Male Member" = "4",
+                  "Other Female Member" = "5")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Person Milking Cow", "Percent")
+)
+
+ggplot(ds3, aes(x = round_month, y = pct, fill = recode_response)) +
+    geom_bar(alpha = 0.8, stat = "identity") +
+    facet_wrap(~ district, nrow = 2) +
+    labs(x = NULL, y = "Percent Person Milking Cow") +
+    theme(axis.text.x= element_text(angle=45, hjust = 1))+
+    theme(legend.title=element_blank())
+
+```
+
+***
+### WOMEN OWNERSHIP: 1a.	Women Who Own Cattle - (Treatment & Control) rounds 1 and 5
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+# filter for women only using sex_respondent = 1
+gpf$do_you_own_any_cattle <- as.factor(gpf$do_you_own_any_cattle)
+ds <-   gpf %>%
+        filter(!is.na(do_you_own_any_cattle) & round %in% c(1,5) & sex_respondent == 1) %>%
+        mutate(recode_response = fct_recode(do_you_own_any_cattle,
+                  "Yes" = "1",
+                  "No" = "2")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,3,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Women Who Own Cattle", "Treatment/Control Group", "Percent")
+)
+
+ggplot(ds3, aes(x = recode_response, y = pct, fill = household_type)) +
+geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+facet_wrap(~district, nrow= 2) +
+labs(x = NULL, y = "Percent Women Who Own Cattle") +
+theme(legend.title=element_blank()) +
+coord_flip()
+
+```
+
+***
+### WOMEN OWNERSHIP: 1b.	Women Who Own Cattle - Treatment Only
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$do_you_own_any_cattle <- as.factor(gpf$do_you_own_any_cattle)
+ds <-   gpf %>%
+        filter(!is.na(do_you_own_any_cattle) & household_type == "Treatment" & sex_respondent == 1) %>%
+        mutate(recode_response = fct_recode(do_you_own_any_cattle,
+                  "Yes" = "1",
+                  "No" = "2")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Women Who Own Cattle", "Percent")
+)
+
+ggplot(ds3, aes(x = round_month, y = pct, fill = recode_response)) +
+    geom_bar(alpha = 0.8, stat = "identity") +
+    facet_wrap(~ district, nrow = 2) +
+    labs(x = NULL, y = "Percent Women who Own Cattle") +
+    theme(axis.text.x= element_text(angle=45, hjust = 1))+
+    theme(legend.title=element_blank())
+
+```
+
+***
+### WOMEN OWNERSHIP: 2a.	Women Acquired Cattle - (Treatment & Control) rounds 1 and 5
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$how_did_you_get_ownership_cow <- as.factor(gpf$how_did_you_get_ownership_cow)
+ds <-   gpf %>%
+        filter(!is.na(how_did_you_get_ownership_cow) & round %in% c(1,5) & sex_respondent == 1) %>%
+        mutate(recode_response = fct_recode(how_did_you_get_ownership_cow,
+                  "Inherited" = "1",
+                  "Gifted" = "2",
+                  "Bought with own income" = "3",
+                  "Lease" = "4",
+                  "Gift" = "5",
+                  "Others (specify)" = "9")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,3,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Women Acquired Cattle", "Treatment/Control Group", "Percent")
+)
+
+ggplot(ds3, aes(x = recode_response, y = pct, fill = household_type)) +
+geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+facet_wrap(~district, nrow = 2) +
+labs(x = NULL, y = "Percent Women Acquired Cattle") +
+theme(legend.title=element_blank()) +
+coord_flip()
+
+```
+
+***
+### WOMEN OWNERSHIP: 2b.	Women Acquired Cattle - Treatment Only
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$how_did_you_get_ownership_cow <- as.factor(gpf$how_did_you_get_ownership_cow)
+ds <-   gpf %>%
+        filter(!is.na(how_did_you_get_ownership_cow) & household_type == "Treatment" & sex_respondent == 1) %>%
+        mutate(recode_response = fct_recode(how_did_you_get_ownership_cow,
+                  "Inherited" = "1",
+                  "Gifted" = "2",
+                  "Bought with own income" = "3",
+                  "Lease" = "4",
+                  "Gift" = "5",
+                  "Others (specify)" = "9")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Women Acquired Cattle", "Percent")
+)
+
+ggplot(ds3, aes(x = round_month, y = pct, fill = recode_response)) +
+    geom_bar(alpha = 0.8, stat = "identity") +
+    facet_wrap(~ district, nrow = 2) +
+    labs(x = NULL, y = "Percent Women Acquired Cattle") +
+    theme(axis.text.x= element_text(angle=45, hjust = 1))+
+    theme(legend.title=element_blank())
+
+```
+
+***
+### WOMEN OWNERSHIP: 3a.	Decision for Spending Woman's Milk Sales Income - (Treatment & Control) rounds 1 and 5
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$decision_milk_sales_income <- as.factor(gpf$decision_milk_sales_income)
+ds <-   gpf %>%
+        filter(!is.na(decision_milk_sales_income) & round %in% c(1,5) & sex_respondent == 1) %>%
+        mutate(recode_response = fct_recode(decision_milk_sales_income,
+                  "Self" = "1",
+                  "Husband" = "2",
+                  "Jointly" = "3",
+                  "Other Male Member" = "4",
+                  "Other Female Member" = "5")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,3,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Decision for Spending Woman's Milk Sales Income", "Treatment/Control Group", "Percent")
+)
+
+ggplot(ds3, aes(x = recode_response, y = pct, fill = household_type)) +
+geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+facet_wrap(~district, nrow = 2) +
+labs(x = NULL, y = "Percent Decision for Spending Woman's Milk Sales Income") +
+theme(legend.title=element_blank()) +
+coord_flip()
+
+```
+
+***
+### WOMEN OWNERSHIP: 3b.	Decision for Spending Woman's Milk Sales Income - Treatment Only
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$decision_milk_sales_income <- as.factor(gpf$decision_milk_sales_income)
+ds <-   gpf %>%
+        filter(!is.na(decision_milk_sales_income) & household_type == "Treatment" & sex_respondent == 1) %>%
+        mutate(recode_response = fct_recode(decision_milk_sales_income,
+                  "Self" = "1",
+                  "Husband" = "2",
+                  "Jointly" = "3",
+                  "Other Male Member" = "4",
+                  "Other Female Member" = "5")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Decision for Spending Woman's Milk Sales Income", "Percent")
+)
+
+ggplot(ds3, aes(x = round_month, y = pct, fill = recode_response)) +
+    geom_bar(alpha = 0.8, stat = "identity") +
+    facet_wrap(~ district, nrow = 2) +
+    labs(x = NULL, y = "Percent Decision for Spending Woman's Milk") +
+    theme(axis.text.x= element_text(angle=45, hjust = 1))+
+    theme(legend.title=element_blank())
+
+```
+
+***
+### WOMEN OWNERSHIP: 4a.	Permission to attend group meetings - (Treatment & Control) rounds 1 and 5
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$attended_group_meetings_within_village_need_permission <- as.factor(gpf$attended_group_meetings_within_village_need_permission)
+ds <-   gpf %>%
+        filter(!is.na(attended_group_meetings_within_village_need_permission) & round %in% c(1,5) & sex_respondent == 1) %>%
+        mutate(recode_response = fct_recode(attended_group_meetings_within_village_need_permission,
+                  "Yes" = "1",
+                  "No" = "2")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,3,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Permission to attend group meetings", "Treatment/Control Group", "Percent")
+)
+
+ggplot(ds3, aes(x = recode_response, y = pct, fill = household_type)) +
+geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+facet_wrap(~district, nrow = 2) +
+labs(x = NULL, y = "Percent Permission to Attend Group Meetings") +
+theme(legend.title=element_blank()) +
+coord_flip()
+
+```
+
+***
+### WOMEN OWNERSHIP: 4b.	Permission to attend group meetings - Treatment Only
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$attended_group_meetings_within_village_need_permission <- as.factor(gpf$attended_group_meetings_within_village_need_permission)
+ds <-   gpf %>%
+        filter(!is.na(attended_group_meetings_within_village_need_permission) & household_type == "Treatment" & sex_respondent == 1) %>%
+        mutate(recode_response = fct_recode(attended_group_meetings_within_village_need_permission,
+                  "Yes" = "1",
+                  "No" = "2")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Permission to attend group meetings", "Percent")
+)
+
+ggplot(ds3, aes(x = round_month, y = pct, fill = recode_response)) +
+    geom_bar(alpha = 0.8, stat = "identity") +
+    facet_wrap(~ district, nrow = 2) +
+    labs(x = NULL, y = "Percent Permission to Attend Group Meetings") +
+    theme(axis.text.x= element_text(angle=45, hjust = 1))+
+    theme(legend.title=element_blank())
+
+```
+
+***
+### WOMEN OWNERSHIP: 5a.	Permission to attend group meetings by Cow Ownership - (Treatment & Control) rounds 1 and 5
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+
+ds <-   gpf %>%
+        filter(!is.na(attended_group_meetings_within_village_need_permission) & !is.na(do_you_own_any_cattle) & round %in% c(1,5) & sex_respondent == 1) %>%
+        mutate(recode_response = fct_recode(attended_group_meetings_within_village_need_permission,
+                  "Yes" = "1",
+                  "No" = "2")) %>%
+        mutate(own = fct_recode(do_you_own_any_cattle,
+                  "Yes" = "1",
+                  "No" = "2")) %>%
+        filter(!is.na(recode_response) & !is.na(own)) %>%
+        group_by(district, round_month, household_type, recode_response, own) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type, recode_response) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type", "recode_response"), by.y = c("district", "round_month", "household_type", "recode_response"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type, ds3$own, ds3$recode_response),c(1,2,5,4,3,8)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Permission to attend group meetings", "Cattle Ownnership", "Treatment/Control Group", "Percent")
+)
+
+ggplot(ds3, aes(x = recode_response, y = pct, fill = household_type)) +
+geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+facet_wrap(~district, nrow = 2) +
+labs(x = NULL, y = "Percent Permission to Attend Group Meetings by Cow OWnership") +
+theme(legend.title=element_blank()) +
+coord_flip()
+
+```
+
+***
+### WOMEN OWNERSHIP: 5b.	Permission to attend group meetings by Cow Ownership - Treatment Only
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+ds <-   gpf %>%
+        filter(!is.na(attended_group_meetings_within_village_need_permission) & !is.na(do_you_own_any_cattle) & household_type == "Treatment" & sex_respondent == 1) %>%
+        mutate(recode_response = fct_recode(attended_group_meetings_within_village_need_permission,
+                  "Yes" = "1",
+                  "No" = "2")) %>%
+        mutate(own = fct_recode(do_you_own_any_cattle,
+                  "Yes" = "1",
+                  "No" = "2")) %>%
+        filter(!is.na(recode_response) & !is.na(own)) %>%
+        group_by(district, round_month, household_type, recode_response, own) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type, recode_response) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type", "recode_response"), by.y = c("district", "round_month", "household_type", "recode_response"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type, ds3$own, ds3$recode_response),c(1,2,5,4,8)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Permission to attend group meetings", "Cattle Ownnership", "Percent")
+)
+
+ggplot(ds3, aes(x = round_month, y = pct, fill = recode_response)) +
+    geom_bar(alpha = 0.8, stat = "identity") +
+    facet_wrap(~ district, nrow = 2) +
+    labs(x = NULL, y = "Percent Permission to Attend Group Meetings by Cow Ownership") +
+    theme(axis.text.x= element_text(angle=45, hjust = 1))+
+    theme(legend.title=element_blank())
+
+```
+
+***
+### WOMEN OWNERSHIP: 6a.	Permission to attend group meetings at a distance - (Treatment & Control) rounds 1 and 5
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$attend_meetings_at_a_distant_place_need_permission <- as.factor(gpf$attend_meetings_at_a_distant_place_need_permission)
+ds <-   gpf %>%
+        filter(!is.na(attend_meetings_at_a_distant_place_need_permission) & round %in% c(1,5) & sex_respondent == 1) %>%
+        mutate(recode_response = fct_recode(attend_meetings_at_a_distant_place_need_permission,
+                  "Yes" = "1",
+                  "No" = "2")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,3,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Permission to attend group meetings at a distance", "Treatment/Control Group", "Percent")
+)
+
+ggplot(ds3, aes(x = recode_response, y = pct, fill = household_type)) +
+geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+facet_wrap(~district, nrow = 2) +
+labs(x = NULL, y = "Percent Permission to Attend Meetings at Distance") +
+theme(legend.title=element_blank()) +
+coord_flip()
+
+```
+
+***
+### WOMEN OWNERSHIP: 6b.	Permission to attend group meetings at a distance - Treatment Only
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$attend_meetings_at_a_distant_place_need_permission <- as.factor(gpf$attend_meetings_at_a_distant_place_need_permission)
+ds <-   gpf %>%
+        filter(!is.na(attend_meetings_at_a_distant_place_need_permission) & household_type == "Treatment" & sex_respondent == 1) %>%
+        mutate(recode_response = fct_recode(attend_meetings_at_a_distant_place_need_permission,
+                  "Yes" = "1",
+                  "No" = "2")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Permission to attend group meetings at a distance", "Percent")
+)
+
+ggplot(ds3, aes(x = round_month, y = pct, fill = recode_response)) +
+    geom_bar(alpha = 0.8, stat = "identity") +
+    facet_wrap(~ district, nrow = 2) +
+    labs(x = NULL, y = "Percent Permission to Attend Group Meetings at Distance") +
+    theme(axis.text.x= element_text(angle=45, hjust = 1))+
+    theme(legend.title=element_blank())
+
+```
+
+***
+### WOMEN OWNERSHIP: 7a.	Permission to attend group meetings at Distance by Cow Ownership - (Treatment & Control) rounds 1 and 5
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+
+ds <-   gpf %>%
+        filter(!is.na(attend_meetings_at_a_distant_place_need_permission) & !is.na(do_you_own_any_cattle) & round %in% c(1,5) & sex_respondent == 1) %>%
+        mutate(recode_response = fct_recode(attend_meetings_at_a_distant_place_need_permission,
+                  "Yes" = "1",
+                  "No" = "2")) %>%
+        mutate(own = fct_recode(do_you_own_any_cattle,
+                  "Yes" = "1",
+                  "No" = "2")) %>%
+        filter(!is.na(recode_response) & !is.na(own)) %>%
+        group_by(district, round_month, household_type, recode_response, own) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type, recode_response) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type", "recode_response"), by.y = c("district", "round_month", "household_type", "recode_response"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type, ds3$own, ds3$recode_response),c(1,2,5,4,3,8)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Permission to attend group meetings at a distance", "Cattle Ownnership", "Treatment/Control Group", "Percent")
+)
+
+ggplot(ds3, aes(x = recode_response, y = pct, fill = household_type)) +
+geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+facet_wrap(~district, nrow = 2) +
+labs(x = NULL, y = "Percent Permission to Attend Meetings at Distance per Cow Ownership") +
+theme(legend.title=element_blank()) +
+coord_flip()
+
+```
+
+***
+### WOMEN OWNERSHIP: 7b.	Permission to attend group meetings at Distance by Cow Ownership - Treatment Only
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+ds <-   gpf %>%
+        filter(!is.na(attend_meetings_at_a_distant_place_need_permission) & !is.na(do_you_own_any_cattle) & household_type == "Treatment" & sex_respondent == 1) %>%
+        mutate(recode_response = fct_recode(attend_meetings_at_a_distant_place_need_permission,
+                  "Yes" = "1",
+                  "No" = "2")) %>%
+        mutate(own = fct_recode(do_you_own_any_cattle,
+                  "Yes" = "1",
+                  "No" = "2")) %>%
+        filter(!is.na(recode_response) & !is.na(own)) %>%
+        group_by(district, round_month, household_type, recode_response, own) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type, recode_response) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type", "recode_response"), by.y = c("district", "round_month", "household_type", "recode_response"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type, ds3$own, ds3$recode_response),c(1,2,5,4,8)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Permission to attend group meetings at a distance", "Cattle Ownnership", "Percent")
+)
+
+ggplot(ds3, aes(x = round_month, y = pct, fill = recode_response)) +
+    geom_bar(alpha = 0.8, stat = "identity") +
+    facet_wrap(~ district, nrow = 2) +
+    labs(x = NULL, y = "Percent Permission to Attend Group Meetings at Distance by Cow Ownership") +
+    theme(axis.text.x= element_text(angle=45, hjust = 1))+
+    theme(legend.title=element_blank())
+
+```
+
+***
+### WOMEN OWNERSHIP: 8a.	Husbands' Level of Household Help - (Treatment & Control) rounds 1 and 5
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$does_husband_help_you_in_daily_household_work <- as.factor(gpf$does_husband_help_you_in_daily_household_work)
+ds <-   gpf %>%
+        filter(!is.na(does_husband_help_you_in_daily_household_work) & round %in% c(1,5) & sex_respondent == 1) %>%
+        mutate(recode_response = fct_recode(does_husband_help_you_in_daily_household_work,
+                  "Yes" = "1",
+                  "No" = "2")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,3,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Husbands' Level of Household Help", "Treatment/Control Group", "Percent")
+)
+ggplot(ds3, aes(x = recode_response, y = pct, fill = household_type)) +
+geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+facet_wrap(~district, nrow = 2) +
+labs(x = NULL, y = "Percent Husbands Level of Household Help") +
+theme(legend.title=element_blank()) +
+coord_flip()
+
+
+```
+
+***
+### WOMEN OWNERSHIP: 8b.	Husbands' Level of Household Help - Treatment Only
+***
+
+```{r, fig.width=7, fig.height=7, echo = F, warning = F}
+
+gpf$does_husband_help_you_in_daily_household_work <- as.factor(gpf$does_husband_help_you_in_daily_household_work)
+ds <-   gpf %>%
+        filter(!is.na(does_husband_help_you_in_daily_household_work) & household_type == "Treatment" & sex_respondent == 1) %>%
+        mutate(recode_response = fct_recode(does_husband_help_you_in_daily_household_work,
+                  "Yes" = "1",
+                  "No" = "2")) %>%
+        filter(!is.na(recode_response)) %>%
+        group_by(district, round_month, household_type, recode_response) %>%
+        summarize(cnt = n())
+
+ds2 <- ds %>%
+       group_by(district, round_month, household_type) %>%
+       summarize(tot = sum(cnt, na.rm = T))
+
+ds3 <- merge(ds, ds2, by.x = c("district", "round_month", "household_type"), by.y = c("district", "round_month", "household_type"))
+ds3$pct <- round(ds3$cnt / ds3$tot, 2)
+ds3 <- ds3[order(ds3$district, ds3$round_month, ds3$recode_response, ds3$household_type),c(1,2,4,7)]
+row.names(ds3) <- NULL
+
+kable(
+    ds3,
+    digits = 2,
+    col.names = c("District","Round of Data Collection",
+                  "Husbands' Level of Household Help", "Percent")
+)
+
+ggplot(ds3, aes(x = round_month, y = pct, fill = recode_response)) +
+    geom_bar(alpha = 0.8, stat = "identity") +
+    facet_wrap(~ district, nrow = 2) +
+    labs(x = NULL, y = "Percent Husband Level of Household Help") +
+    theme(axis.text.x= element_text(angle=45, hjust = 1))+
+    theme(legend.title=element_blank())
+
+```
+
