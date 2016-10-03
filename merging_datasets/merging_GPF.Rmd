@@ -34,6 +34,9 @@ control_round5 <- left_join(read_excel("../data/SDVCII HH Survey_Excel Version_O
               by = "DEO ID") %>%
     left_join(read_excel("../data/SDVCII HH Survey_Excel Version_OSS_05092016.xlsx", 
                          sheet = 5, col_types = c("numeric", rep("text", 127))),
+              by = "DEO ID") %>%
+    left_join(read_excel("../data/SDVCII HH Survey_Excel Version_OSS_05092016.xlsx", 
+                         sheet = 6, col_types = c("numeric", rep("text", 35))),
               by = "DEO ID")
 
 control_round5_cows <- read_excel("../data/SDVCII HH Survey_Excel Version_OSS_05092016.xlsx",
@@ -50,6 +53,9 @@ treatment_round5 <- left_join(read_excel("../data/3. SDVCII Endline Database_ Au
               by = "DEO ID") %>%
     left_join(read_excel("../data/3. SDVCII Endline Database_ August 2016_CARE.xlsx", 
                          sheet = 5, col_types = c("numeric", rep("text", 127))),
+              by = "DEO ID") %>%
+    left_join(read_excel("../data/SDVCII HH Survey_Excel Version_OSS_05092016.xlsx", 
+                         sheet = 6, col_types = c("numeric", rep("text", 35))),
               by = "DEO ID")
 
 treatment_round5_cows <- read_excel("../data/3. SDVCII Endline Database_ August 2016_CARE.xlsx",
@@ -317,6 +323,8 @@ make_names_consistent <- function(df) {
                                 "have_you_had_any_other_income_income_during_last_6_months")] <- "income_from_any_other_income_source_taka"
         colnames(df)[str_detect(names(df), 
                                 "have_you_had_any_other_income_income_during_last_6_months")] <- "income_from_any_other_income_source_taka"
+        colnames(df)[str_detect(names(df), 
+                                "how_are_decision_taken_in_group")] <- "how_are_decisions_taken_in_group"
 
 
         
@@ -524,19 +532,23 @@ treatment_round5 <- treatment_round5 %>%
            -selling_price_2, -selling_price_3,
            -selling_month_2, -selling_month_3,
            -sex_2, -sex_3) %>%
-    rename(affected_by_disease_2 = affected_by_disease_yes_or_no_2,
+    rename(skill_level = skill_level_vet_doctor,
+           knowledge_level = knowledge_level_vet_doctor,
+           affected_by_disease_2 = affected_by_disease_yes_or_no_2,
            affected_by_disease_3 = affected_by_disease_what_did_you_do_3,
            affected_by_disease_4 = affected_by_disease_who_provide_treatment_4,
            affected_by_disease_5 = affected_by_disease_who_sugested_5,
            affected_by_disease_6 = affected_by_disease_fee_6,
            affected_by_disease_7 = affected_by_disease_diagnos_7,
            affected_by_disease_8 = affected_by_disease_medicine_8,
+           affected_by_disease_9 = affected_by_disease_total_9,
            vaccinated_2 = vaccinated_yes_or_no_2,
            vaccinated_4 = vaccinated_who_provide_treatment_4,
            vaccinated_5 = vaccinated_who_sugested_5,
            vaccinated_6 = vaccinated_fee_6,
            vaccinated_7 = vaccinated_diagnos_7,
            vaccinated_8 = vaccinated_vaccine_8,
+           vaccinated_9 = vaccinated_total_9,
            dewormed_2 = dewormed_yes_or_no_2,
            dewormed_4 = dewormed_who_provide_treatment_4,
            dewormed_5 = dewormed_who_sugested_5,
@@ -568,7 +580,15 @@ treatment_round5 <- treatment_round5 %>%
            cow_died_type_cow = type_death_cattle,
            cow_died_calf_sex = if_calf_sex,
            causes_death_cow = what_was_cause_death_cow,
-           causes_death_calf = what_was_cause_death_calve)
+           causes_death_calf = what_was_cause_death_calve,
+           quality_products_ku = how_would_you_rate_quality_products,
+           quality_service_ku = how_would_you_rate_quality_service,
+           do_you_think_milk_transactions_are_fair = do_you_think_milk_sales_transactions_are_fair,
+           explain_transactions = if_no_describe,
+           are_you_satisfied_with_methods_measurement_milk = are_you_satisfied_with_methods_measurement,
+           explain_methods = if_no_describe_why,
+           how_often_have_you_gone_to_ku_during_last_3_month = how_often_have_you_gone_to_ku,
+           what_type_effective_action_taken_by_fls_for_group_development = what_type_effective_action_taken_by_fls)
 
 
 control_round5 <- control_round5 %>%
@@ -580,19 +600,23 @@ control_round5 <- control_round5 %>%
            -selling_price_2, -selling_price_3,
            -selling_month_2, -selling_month_3,
            -sex_2, -sex_3) %>%
-    rename(affected_by_disease_2 = affected_by_disease_yes_or_no_2,
+    rename(skill_level = skill_level_vet_doctor,
+           knowledge_level = knowledge_level_vet_doctor,
+           affected_by_disease_2 = affected_by_disease_yes_or_no_2,
            affected_by_disease_3 = affected_by_disease_what_did_you_do_3,
            affected_by_disease_4 = affected_by_disease_who_provide_treatment_4,
            affected_by_disease_5 = affected_by_disease_who_sugested_5,
            affected_by_disease_6 = affected_by_disease_fee_6,
            affected_by_disease_7 = affected_by_disease_diagnos_7,
            affected_by_disease_8 = affected_by_disease_medicine_8,
+           affected_by_disease_9 = affected_by_disease_total_9,
            vaccinated_2 = vaccinated_yes_or_no_2,
            vaccinated_4 = vaccinated_who_provide_treatment_4,
            vaccinated_5 = vaccinated_who_sugested_5,
            vaccinated_6 = vaccinated_fee_6,
            vaccinated_7 = vaccinated_diagnos_7,
            vaccinated_8 = vaccinated_vaccine_8,
+           vaccinated_9 = vaccinated_total_9,
            dewormed_2 = dewormed_yes_or_no_2,
            dewormed_4 = dewormed_who_provide_treatment_4,
            dewormed_5 = dewormed_who_sugested_5,
@@ -624,7 +648,14 @@ control_round5 <- control_round5 %>%
            cow_died_type_cow = type_death_cattle,
            cow_died_calf_sex = if_calf_sex,
            causes_death_cow = what_was_cause_death_cow,
-           causes_death_calf = what_was_cause_death_cattle)
+           causes_death_calf = what_was_cause_death_cattle,
+           quality_products_ku = how_would_you_rate_quality_products,
+           quality_service_ku = how_would_you_rate_quality_service,
+           do_you_think_milk_transactions_are_fair = do_you_think_milk_sales_transactions_are_fair,
+           explain_transactions = if_no_describe,
+           are_you_satisfied_with_methods_measurement_milk = are_you_satisfied_with_methods_measurement,
+           explain_methods = if_no_describe_why,
+           what_type_effective_action_taken_by_fls_for_group_development = what_type_effective_action_taken_by_fls)
 ```
 
 How are things looking?
@@ -687,7 +718,7 @@ treatment_round1 <- treatment_round1 %>%
            supervisor_id = `13bsupervisorid`,
            date_interview = `14dateofinterview`,
            age_respondent = ageofrespondent,
-           no_of_family_members_total = nooffamilymembers,
+           no_family_members_total = nooffamilymembers,
            are_you_sdvc_group_member = areyousdvcgroupmember,
            group_code = groupcode,
            producer_id = membercode,
@@ -721,7 +752,6 @@ treatment_round1 <- treatment_round1 %>%
            which_vaccines_have_you_given_to_cattle = whichvaccines,
            have_you_dewormed_cattle_in_last_6_months = didyoudewormed,
            how_many_days_deworming = howmanydaysbefore,
-           who_suggested_deworming = whosuggestedyou1,
            from_where_vaccination_taken = whodecideswhethervaccinationdewormingtreatmentaiisprovidedforcat,
            what_drinking_water_sources_for_cattle = whatarethedrinkingwatersourcesforyourcattle1,
            do_you_wash_cattle = doyouwashyourcattle,
@@ -876,6 +906,7 @@ treatment_round1 <- treatment_round1 %>%
            vaccinated_9 = totalvaccinationcost,
            dewormed_2 = dewormedyesno,
            dewormed_4 = provideddewormed1,
+           dewormed_5 = whosuggestedyou1,
            dewormed_9 = totaldewormingcost,
            provided_ai_2 = providedaiyesno,
            provided_ai_4 = whoprovidedai1,
@@ -920,16 +951,16 @@ treatment_round1 <- treatment_round1 %>%
            why_do_you_chose_to_sell_milk_here = whydoyouchoosetosellmilkhere,
            are_you_satisfied_with_overall_services_dft = levelofsatisfactionwithdftpointormilkcollector,
            are_you_satisfied_with_methods_measurement_milk = areyousatisfiedwiththemethodsofmeasurement,
-           explain = describewhy,
+           explain_methods = describewhy,
            do_you_think_milk_transactions_are_fair = doyouthinkthemilksalestransactionsarefair,
-           explains = describewhy_a,
+           explain_transactions = describewhy_a,
            where_do_you_purchase_inputs = wheredoyoupurchaseyourinputs1,
            have_you_recently_changed_where_you_purchase_inputs = haveyourecentlychangedwhereyoupurchaseyourinputs,
            where_did_you_previously_purchase_inputs = wheredidyoupreviouslypurchaseyourinputs1,
            quality_products_ku = howwouldyouratethequalityoftheproductsyoupurchasethere,
            quality_service_ku = howwouldyouratethequalityoftheserviceyoupurchasethere,
            what_type_effective_action_taken_by_fls_for_group_development = whattypeeffectiveactiontakenbyflsforgroupdevelopment,
-           how_are_decision_taken_in_group = howthedecisionsaretakeninthegroup1,
+           how_are_decisions_taken_in_group = howthedecisionsaretakeninthegroup1,
            level_satisfaction_fls_activities = levelofsatisfactionofflsactivities) %>%
     mutate(how_often_have_you_gone_to_ku_during_last_3_month = 0.5 * as.numeric(howoftendidyougototheinputkushopinthepast6months),
            income_from_cowdung_sold_during_last_6_months = 2 * as.numeric(incomefromcowdungsoldduringlast3months),
