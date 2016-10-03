@@ -1807,6 +1807,41 @@ treatment,5.0,"10/7/1 If receive any loan, how much was it (tk)?"
 treatment,5.0,10/7/2 What was the loan Source?
 treatment,5.0,10/8 Do you haveany plan to get a loan?
 treatment,5.0,"10/8/1 If yes, from where will you get it?"
+treatment,5.0,11/1 What types of vet Doctor provide services to your cattle?
+treatment,5.0,11/2 How many times has the vet Doctor visited in your farm?
+treatment,5.0,11/3 Knowledge Level of the vet  Doctor?
+treatment,5.0,11/4  Skill Level of the vet Doctor?
+treatment,5.0,11/5 Responsiveness of that vet Doctor when called?
+treatment,5.0,11/6 Range of Fee received?
+treatment,5.0,11/7 Does the vet Doctor provide prescription?
+treatment,5.0,11/8 Are you satisfied with the service of the vet Doctor?
+treatment,5.0,11/8/1 Explain Your Comments
+treatment,5.0,12/1 Where do you sell milk in general?
+treatment,5.0,12/2 Where do you sell milk most often
+treatment,5.0,12/3 Why do you choose to sell milk here?
+treatment,5.0,"12/4 If not selling milk to DFT, why not sale?"
+treatment,5.0,12/5 Level of Satisfaction with DFT point’s
+treatment,5.0,12/6 Are you satisfied with the methods of measurement
+treatment,5.0,"12/6/1 If no, describe why?"
+treatment,5.0,12/7 Do you think the milk sales transactions are fair?
+treatment,5.0,12/7/1 If No describe
+treatment,5.0,12/8 Mainly who receives payment from milk sales?
+treatment,5.0,12/9 What more services do you expect from DFT?
+treatment,5.0,13/1 Where do you purchase your inputs?
+treatment,5.0,13/2 How often have you gone to the KU input shop?
+treatment,5.0,13/3 How would you rate the quality of the products?
+treatment,5.0,13/4 How would you rate the quality of the service?
+treatment,5.0,14/1 Have you observed any change in the dairy
+treatment,5.0,"14/1/1 If yes, what are they?"
+treatment,5.0,14/1/2 What are the reasons for these changes?
+treatment,5.0,14/2 Is there any organization working here?
+treatment,5.0,"14/2/1 If yes, what activities"
+treatment,5.0,15/1 What type effective action taken by FLs
+treatment,5.0,15/2 How are the decisions taken in the group?
+treatment,5.0,15/3 Level of satisfaction of FLs activities?
+treatment,5.0,15/4 What do you think
+treatment,5.0,15/4/1 Describe
+treatment,5.0,16 Overall comments of Surveyor
 cows,5.0,DEO ID
 cows,5.0,Serial No
 cows,5.0,COW SL
@@ -2096,6 +2131,41 @@ control,5.0,"10/7/1 If receive any loan, how much was it (tk)?"
 control,5.0,10/7/2 What was the loan Source?
 control,5.0,10/8 Do you haveany plan to get a loan?
 control,5.0,"10/8/1 If yes, from where will you get it?"
+control,5.0,11/1 What types of vet Doctor provide services to your cattle?
+control,5.0,11/2 How many times has the vet Doctor visited in your farm?
+control,5.0,11/3 Knowledge Level of the vet  Doctor?
+control,5.0,11/4  Skill Level of the vet Doctor?
+control,5.0,11/5 Responsiveness of that vet Doctor when called?
+control,5.0,11/6 Range of Fee received?
+control,5.0,11/7 Does the vet Doctor provide prescription?
+control,5.0,11/8 Are you satisfied with the service of the vet Doctor?
+control,5.0,11/8/1 Explain Your Comments
+control,5.0,12/1 Where do you sell milk in general?
+control,5.0,12/2 Where do you sell milk most often
+control,5.0,12/3 Why do you choose to sell milk here?
+control,5.0,"12/4 If not selling milk to DFT, why not sale?"
+control,5.0,12/5 Level of Satisfaction with DFT point’s
+control,5.0,12/6 Are you satisfied with the methods of measurement
+control,5.0,"12/6/1 If no, describe why?"
+control,5.0,12/7 Do you think the milk sales transactions are fair?
+control,5.0,12/7/1 If No describe
+control,5.0,12/8 Mainly who receives payment from milk sales?
+control,5.0,12/9 What more services do you expect from DFT?
+control,5.0,13/1 Where do you purchase your inputs?
+control,5.0,13/2 How often have you gone to the KU input shop?
+control,5.0,13/3 How would you rate the quality of the products?
+control,5.0,13/4 How would you rate the quality of the service?
+control,5.0,14/1 Have you observed any change in the dairy
+control,5.0,"14/1/1 If yes, what are they?"
+control,5.0,14/1/2 What are the reasons for these changes?
+control,5.0,14/2 Is there any organization working here?
+control,5.0,"14/2/1 If yes, what activities"
+control,5.0,15/1 What type effective action taken by FLs
+control,5.0,15/2 How are the decisions taken in the group?
+control,5.0,15/3 Level of satisfaction of FLs activities?
+control,5.0,15/4 What do you think
+control,5.0,15/4/1 Describe
+control,5.0,16 Overall comments of Surveyor
 controlcows,5.0,DEO ID
 controlcows,5.0,Serial No
 controlcows,5.0,COW SL
