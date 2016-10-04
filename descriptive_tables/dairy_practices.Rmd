@@ -47,7 +47,8 @@ producers <- bind_rows(gpf_ppt %>%
                            distinct(entry_id, .keep_all = TRUE),
                        gpf_ppt %>%
                            filter(round_month == 'Jul 2016') %>%
-                           distinct(household_type, deo_id, round, .keep_all = TRUE))
+                           distinct(household_type, deo_id, round, .keep_all = TRUE)) %>%
+    ungroup
                     
 dim(producers)    
 ```
@@ -89,12 +90,16 @@ df %>%
                         "Are You Cultivating Fodder?", "Percent"),
           caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
 
-ggplot(df, aes(round_month, prop/100, fill = are_you_cultivating_fodder)) +
+
+df %>%
+    filter(are_you_cultivating_fodder %in% c("Yes","No")) %>%
+    ggplot(aes(round_month, prop/100, fill = are_you_cultivating_fodder)) +
     geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
     facet_wrap(~household_type) +
     labs(x = NULL, y = "Are You Cultivating Fodder?") +
     scale_y_continuous(labels = scales::percent_format()) +
-    theme(legend.title=element_blank())
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#66c2a5", "#d53e4f"))
 
 ```
 
@@ -167,7 +172,8 @@ ggplot(df, aes(round_month, prop/100, fill = type_fodder_cultivating)) +
     facet_wrap(~household_type) +
     labs(x = NULL, y = "What Type of Fodder Are You Cultivating?") +
     scale_y_continuous(labels = scales::percent_format()) +
-    theme(legend.title=element_blank())
+    theme(legend.title=element_blank()) +
+    scale_fill_brewer(palette = "Spectral")
 
 ```
 
@@ -182,9 +188,11 @@ producers <- producers %>%
 totals <- producers %>% 
     group_by(round_month, household_type, do_you_feed_green_grass_to_cow) %>% 
     summarise(n = n()) %>% 
+    ungroup %>%
     filter(!is.na(do_you_feed_green_grass_to_cow)) %>%
     group_by(round_month, household_type) %>% 
-    summarise(total = sum(n, na.rm = TRUE))
+    summarise(total = sum(n, na.rm = TRUE)) %>%
+    ungroup
 
 
 df <- producers %>% 
@@ -206,7 +214,8 @@ ggplot(df, aes(round_month, prop/100, fill = do_you_feed_green_grass_to_cow)) +
     facet_wrap(~household_type) +
     labs(x = NULL, y = "Do You Feed Green Grass to Your Cattle?") +
     scale_y_continuous(labels = scales::percent_format()) +
-    theme(legend.title=element_blank())
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#66c2a5", "#d53e4f"))
 
 ```
 
@@ -253,15 +262,18 @@ producers <- producers %>%
 
 totals <- producers %>% 
     group_by(round_month, household_type, source_grass) %>% 
-    summarise(n = n()) %>% 
+    summarise(n = n()) %>%
+    ungroup %>%
     filter(!is.na(source_grass)) %>%
     group_by(round_month, household_type) %>% 
-    summarise(total = sum(n, na.rm = TRUE))
+    summarise(total = sum(n, na.rm = TRUE)) %>%
+    ungroup
 
 
 df <- producers %>% 
     group_by(round_month, household_type, source_grass) %>% 
     summarise(n = n()) %>%
+    ungroup %>%
     filter(!is.na(source_grass)) %>%
     left_join(totals, by = c("round_month", "household_type")) %>%
     mutate(prop = n / total*100) %>%
@@ -279,8 +291,9 @@ ggplot(df, aes(round_month, prop/100, fill = source_grass)) +
     facet_wrap(~household_type) +
     labs(x = NULL, y = "Source of Grass") +
     scale_y_continuous(labels = scales::percent_format()) +
-    theme(legend.title=element_blank())
-
+    theme(legend.title=element_blank()) +
+    scale_fill_brewer(palette = "Spectral")
+    
 ```
 
 ## 3. Deworming
@@ -295,14 +308,17 @@ producers <- producers %>%
 totals <- producers %>% 
     group_by(round_month, household_type, have_you_dewormed_cattle_in_last_6_months) %>% 
     summarise(n = n()) %>% 
+    ungroup %>%
     filter(!is.na(have_you_dewormed_cattle_in_last_6_months)) %>%
     group_by(round_month, household_type) %>% 
-    summarise(total = sum(n, na.rm = TRUE))
+    summarise(total = sum(n, na.rm = TRUE)) %>%
+    ungroup
 
 
 df <- producers %>% 
     group_by(round_month, household_type, have_you_dewormed_cattle_in_last_6_months) %>% 
     summarise(n = n()) %>%
+    ungroup %>%
     filter(!is.na(have_you_dewormed_cattle_in_last_6_months)) %>%
     left_join(totals, by = c("round_month", "household_type")) %>%
     mutate(prop = n / total*100) %>%
@@ -319,7 +335,8 @@ ggplot(df, aes(round_month, prop/100, fill = have_you_dewormed_cattle_in_last_6_
     facet_wrap(~household_type) +
     labs(x = NULL, y = "Have You Dewormed Your Cattle (Last 6 Months)?") +
     scale_y_continuous(labels = scales::percent_format()) +
-    theme(legend.title=element_blank())
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#66c2a5", "#d53e4f"))
 
 ```
 
@@ -327,6 +344,7 @@ ggplot(df, aes(round_month, prop/100, fill = have_you_dewormed_cattle_in_last_6_
 ## 4. Washing
 
 ```{r, fig.height=4, fig.width=8}
+producers <- producers %>% ungroup
 producers$do_you_wash_cattle[producers$do_you_wash_cattle == 0] <- NA
 producers <- producers %>%
     mutate(do_you_wash_cattle = fct_recode(do_you_wash_cattle,
@@ -336,9 +354,11 @@ producers <- producers %>%
 totals <- producers %>% 
     group_by(round_month, household_type, do_you_wash_cattle) %>% 
     summarise(n = n()) %>% 
+    ungroup %>%
     filter(!is.na(do_you_wash_cattle)) %>%
     group_by(round_month, household_type) %>% 
-    summarise(total = sum(n, na.rm = TRUE))
+    summarise(total = sum(n, na.rm = TRUE)) %>%
+    ungroup
 
 
 df <- producers %>% 
@@ -360,7 +380,8 @@ ggplot(df, aes(round_month, prop/100, fill = do_you_wash_cattle)) +
     facet_wrap(~household_type) +
     labs(x = NULL, y = "Do You Wash Your Cattle?") +
     scale_y_continuous(labels = scales::percent_format()) +
-    theme(legend.title=element_blank())
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#66c2a5", "#d53e4f"))
 
 ```
 
@@ -411,14 +432,17 @@ producers <- producers %>%
 totals <- producers %>% 
     group_by(round_month, household_type, measurement_taken_for_bio_security) %>% 
     summarise(n = n()) %>% 
+    ungroup %>%
     filter(!is.na(measurement_taken_for_bio_security)) %>%
     group_by(round_month, household_type) %>% 
-    summarise(total = sum(n, na.rm = TRUE))
+    summarise(total = sum(n, na.rm = TRUE)) %>%
+    ungroup
 
 
 df <- producers %>% 
     group_by(round_month, household_type, measurement_taken_for_bio_security) %>% 
     summarise(n = n()) %>%
+    ungroup %>%
     filter(!is.na(measurement_taken_for_bio_security)) %>%
     left_join(totals, by = c("round_month", "household_type")) %>%
     mutate(prop = n / total*100) %>%
@@ -436,7 +460,8 @@ ggplot(df, aes(round_month, prop/100, fill = measurement_taken_for_bio_security)
     facet_wrap(~household_type) +
     labs(x = NULL, y = "Measures Taken for Biosecurity") +
     scale_y_continuous(labels = scales::percent_format()) +
-    theme(legend.title=element_blank())
+    theme(legend.title=element_blank()) +
+    scale_fill_brewer(palette = "Spectral")
 
 ```
 
@@ -445,19 +470,23 @@ ggplot(df, aes(round_month, prop/100, fill = measurement_taken_for_bio_security)
 
 ```{r, fig.height=4, fig.width=8}
 producers <- producers %>%
+    ungroup() %>%
     mutate(how_many_vaccines_should_be_given_for_cattle = fct_recode(how_many_vaccines_should_be_given_for_cattle,
                               `Don't know` = '0'))
 totals <- producers %>% 
     group_by(round_month, household_type, how_many_vaccines_should_be_given_for_cattle) %>% 
     summarise(n = n()) %>% 
+    ungroup %>%
     filter(!is.na(how_many_vaccines_should_be_given_for_cattle)) %>%
     group_by(round_month, household_type) %>% 
-    summarise(total = sum(n, na.rm = TRUE))
+    summarise(total = sum(n, na.rm = TRUE)) %>%
+    ungroup
 
 
 df <- producers %>% 
     group_by(round_month, household_type, how_many_vaccines_should_be_given_for_cattle) %>% 
     summarise(n = n()) %>%
+    ungroup %>%
     filter(!is.na(how_many_vaccines_should_be_given_for_cattle)) %>%
     left_join(totals, by = c("round_month", "household_type")) %>%
     mutate(prop = n / total*100) %>%
@@ -475,11 +504,13 @@ ggplot(df, aes(round_month, prop/100, fill = how_many_vaccines_should_be_given_f
     facet_wrap(~household_type) +
     labs(x = NULL, y = "How Many Vaccines Should Be Given to Cattle?") +
     scale_y_continuous(labels = scales::percent_format()) +
-    theme(legend.title=element_blank())
+    theme(legend.title=element_blank()) +
+    scale_fill_brewer(palette = "Spectral")
 
 ```
 
 ```{r, fig.height=4, fig.width=8}
+producers <- producers %>% ungroup()
 producers <- producers %>%
     mutate(which_vaccines_have_you_given_to_cattle = fct_recode(which_vaccines_have_you_given_to_cattle,
                               FMD = '1',
@@ -651,14 +682,17 @@ producers <- producers %>%
 totals <- producers %>% 
     group_by(round_month, household_type, which_vaccines_have_you_given_to_cattle) %>% 
     summarise(n = n()) %>% 
+    ungroup() %>%
     filter(!is.na(which_vaccines_have_you_given_to_cattle)) %>%
     group_by(round_month, household_type) %>% 
-    summarise(total = sum(n, na.rm = TRUE))
+    summarise(total = sum(n, na.rm = TRUE)) %>%
+    ungroup()
 
 
 df <- producers %>% 
     group_by(round_month, household_type, which_vaccines_have_you_given_to_cattle) %>% 
     summarise(n = n()) %>%
+    ungroup() %>%
     filter(!is.na(which_vaccines_have_you_given_to_cattle)) %>%
     left_join(totals, by = c("round_month", "household_type")) %>%
     mutate(prop = n / total*100) %>%
@@ -676,14 +710,11 @@ ggplot(df, aes(round_month, prop/100, fill = which_vaccines_have_you_given_to_ca
     facet_wrap(~household_type) +
     labs(x = NULL, y = "Which Vaccines Have You Given (Last 6 Months)?") +
     scale_y_continuous(labels = scales::percent_format()) +
-    theme(legend.title=element_blank())
-
+    theme(legend.title=element_blank()) +
+    scale_fill_brewer(palette = "Spectral")
 ```
 
 ## 7. Artificial Insemination (usage, costs, and source)
-
-provided_ai_4 = provided_ai_who_provide_services_4
-provided_ai_4 = whoprovidedai1
 
 ```{r, fig.height=4, fig.width=8}
 producers$provided_ai_2[producers$provided_ai_2 == '22'] <- '2'
@@ -719,8 +750,9 @@ ggplot(df, aes(round_month, prop/100, fill = provided_ai_2)) +
     facet_wrap(~household_type) +
     labs(x = NULL, y = "Usage of Artificial Insemination") +
     scale_y_continuous(labels = scales::percent_format()) +
-    theme(legend.title=element_blank())
-
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#66c2a5", "#d53e4f"))
+    
 ```
 
 ```{r, fig.height=4, fig.width=8}
@@ -764,14 +796,13 @@ ggplot(df, aes(round_month, prop/100, fill = provided_ai_4)) +
     facet_wrap(~household_type) +
     labs(x = NULL, y = "Who Provided Artificial Insemination Service?") +
     scale_y_continuous(labels = scales::percent_format()) +
-    theme(legend.title=element_blank())
+    theme(legend.title=element_blank()) +
+    scale_fill_brewer(palette = "Spectral")
 
-
-levels(factor(producers$provided_ai_9))
 ```
 
 
-```{r, fig.height=4, fig.width=7}
+```{r, fig.height=4, fig.width=5.5}
 producers$provided_ai_9[producers$provided_ai_9 == '0'] <- NA
 
 producers <- producers %>%
@@ -790,7 +821,8 @@ df %>%
 ggplot(df, aes(round_month, median1, fill = household_type)) +
     geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
     labs(x = NULL, y = "Total Expenditure on Artificial Insemination (Median)") +
-    theme(legend.title=element_blank())
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#3288bd", "#f46d43"))
 ```
 
 ## 8. Diet of the herd (breakdown of what the cows eat and farmer expenditure on cattle diet)
@@ -832,12 +864,16 @@ df %>%
                         "Percent of Cows Who Eat Ready Feed"),
           caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
 
-ggplot(melt(df), aes(round_month, value/100, fill = variable)) +
+
+melt(df) %>% 
+    filter(!(variable %in% c("Molasses", "DCP"))) %>%
+    ggplot(aes(round_month, value/100, fill = variable)) +
     geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
     facet_wrap(~ household_type) +
     labs(x = NULL, y = "Percent of Cows Whose Diet Contains Each Item") +
     scale_y_continuous(labels = scales::percent_format()) +
-    theme(legend.title=element_blank())
+    theme(legend.title=element_blank()) +
+    scale_fill_brewer(palette = "Spectral")
 ```
 
 
@@ -861,15 +897,17 @@ df <- bind_rows(gpf_ppt %>%
               group_by(household_type, deo_id) %>% 
               summarize(production = sum(cow_daily_production, na.rm = TRUE),
                         expenditure = max(taka_total)) %>% 
-              mutate(round_month = 'Jul 2016'))
+              mutate(round_month = 'Jul 2016')) %>%
+    ungroup
 
 df$production[df$production == 0] <- NA
 df$expenditure[df$expenditure == 0] <- NA
 
-ggplot(df, aes(expenditure, production)) +
+ggplot(df, aes(expenditure, production, color = household_type)) +
     stat_smooth(method = "lm", se = FALSE, color = "gray70", linetype = 2) +
-    geom_point(alpha = 0.3, color = "cyan3", size = 2) +
+    geom_point(alpha = 0.3, size = 2, show.legend = FALSE) +
     facet_grid(household_type ~ round_month) +
+    scale_color_manual(values = c("#3288bd", "#f46d43")) +
     xlim(NA, 2e4) +
     ylim(NA, 70) +
     labs(x = "Total Expenditure on Diet in Taka", 
@@ -892,7 +930,7 @@ SKIP FOR NOW
 
 ## 13. Knowledge Scores
 
-```{r, fig.height=4, fig.width=6}
+```{r, fig.height=4, fig.width=5.5}
 producers$total_score_knowledge[producers$total_score_knowledge == '0'] <- NA
 
 producers <- producers %>%
@@ -911,13 +949,14 @@ df %>%
 ggplot(df, aes(round_month, median1, fill = household_type)) +
     geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
     labs(x = NULL, y = "Median Total Knowledge Score") +
-    theme(legend.title=element_blank())
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#3288bd", "#f46d43"))
 ```
 
 
 ## 14. Practice Score
 
-```{r, fig.height=4, fig.width=6}
+```{r, fig.height=4, fig.width=5.5}
 producers$total_score_practice[producers$total_score_practice == '0'] <- NA
 
 producers <- producers %>%
@@ -936,7 +975,8 @@ df %>%
 ggplot(df, aes(round_month, median1, fill = household_type)) +
     geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
     labs(x = NULL, y = "Median Total Practice Score") +
-    theme(legend.title=element_blank())
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#3288bd", "#f46d43"))
 ```
 
 
@@ -983,21 +1023,22 @@ df <- producers %>%
 df %>%
     kable(digits = 1,
           col.names = c("Round of Data Collection", "Treatment/Control",
-                        "Measures Taken for Biosecurity", "Percent"),
+                        "Source of Dairy Activity Financing", "Percent"),
           caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
 
 ggplot(df, aes(round_month, prop/100, fill = how_did_you_bear_dairy_related_expenses)) +
     geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
     facet_wrap(~household_type) +
-    labs(x = NULL, y = "Measures Taken for Biosecurity") +
+    labs(x = NULL, y = "Source of Dairy Activity Financing") +
     scale_y_continuous(labels = scales::percent_format()) +
-    theme(legend.title=element_blank())
+    theme(legend.title=element_blank()) +
+    scale_fill_brewer(palette = "Spectral")
 
 ```
 
 ## 16. Size of loans
 
-```{r, fig.height=4, fig.width=6}
+```{r, fig.height=4, fig.width=5.5}
 producers$if_receive_any_loan_how_much_was_it_tk[producers$if_receive_any_loan_how_much_was_it_tk == '0'] <- NA
 
 producers <- producers %>%
@@ -1016,6 +1057,7 @@ df %>%
 ggplot(df, aes(round_month, median1, fill = household_type)) +
     geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
     labs(x = NULL, y = "Median Size of Loan in Taka") +
-    theme(legend.title=element_blank())
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#3288bd", "#f46d43"))
 ```
 
