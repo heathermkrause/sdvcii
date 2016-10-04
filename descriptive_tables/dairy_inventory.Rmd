@@ -3,15 +3,13 @@ title: "SDVC Final Report Descriptive Tables"
 subtitle: "Dairy Cattle Inventory and Milk Production"
 author: "Julia Silge"
 date: "`r Sys.Date()`"
-output: 
-    html_document:
-        toc: yes
+output: word_document
 ---
 
 ```{r, echo = FALSE, warning = FALSE}
 library(knitr)
 knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, dpi = 180)
-#knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE)
 options(width=80, dplyr.width = 150)
 library(ggplot2)
 theme_set(theme_light())
@@ -65,8 +63,7 @@ producers <- bind_rows(gpf_ppt %>%
                            distinct(entry_id, .keep_all = TRUE),
                        gpf_ppt %>%
                            filter(round_month != 'Jul 2014') %>%
-                           distinct(household_type, deo_id, round, .keep_all = TRUE)) %>%
-    ungroup()
+                           distinct(household_type, deo_id, round, .keep_all = TRUE))
                     
 dim(producers)    
 ```
@@ -90,7 +87,7 @@ df <- bind_rows(gpf_ppt %>%
     group_by(round_month, district_gpf, household_type) %>%
     summarize(median = median(cows, na.rm = TRUE)) %>%
     filter(!is.na(median)) %>%
-    complete(household_type)
+    complete(household_type) %>%
     ungroup
 
 df %>% 
@@ -1303,7 +1300,7 @@ producers %>%
 
 
 
-```{r, fig.width=8, fig.height=6}
+```{r, fig.width=8, fig.height=4}
 producers$where_do_you_sell_milk_most_often[producers$where_do_you_sell_milk_most_often == 0] <- NA
 
 producers <- producers %>%
