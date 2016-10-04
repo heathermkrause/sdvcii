@@ -14,11 +14,11 @@ knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, dpi = 180)
 options(width=80, dplyr.width = 150)
 ```
 
-It is now time to do some linear mixed effects modeling. Let's do it!
+It is now time to do some modeling. Here we go!
 
 ## Loading the Data
 
-First, let's load the data , do some cleaning that we found we needed to do during the table-making process, and make a producers data frame.
+First, let's load the data , do some cleaning that we found we needed to do during the table-making process, and make a producers data frame. The producers data frame needs to include the number of in-milk cows and the quantity of milk per in-milk cow.
 
 ```{r}
 library(readr)
@@ -38,8 +38,10 @@ producers <- bind_rows(gpf_ppt %>%
                            filter(round == '1.0') %>% 
                            distinct(entry_id, .keep_all = TRUE),
                        gpf_ppt %>%
-                           filter(round != '5.0') %>%
+                           filter(round != '1.0') %>%
                            distinct(household_type, deo_id, round, .keep_all = TRUE))
+## add in-milk cows and total production per cow
+
                     
 producers[,c(36)] <- lapply(producers[,c(36)], as.numeric)
 
@@ -47,6 +49,7 @@ producers[,c(1,13,24,281)] <- lapply(producers[,c(1,13,24,281)], as.factor)
 
 dim(producers)    
 
+# make treatment only producers data frame
 ```
 
 ## Building a Model
@@ -59,6 +62,9 @@ Fixed effect vs. random effect
 library(lme4)
 library(broom)
 
+## fix up the group codes -- ALL A MESS
+## producer ID = group code + 2 digits at end
+
 fit1 <- lmer(yesterday_total_income_from_milk_sale ~ round * household_type +
                  district_gpf +
                  (1 | group_code),
@@ -67,4 +73,11 @@ fit1 <- lmer(yesterday_total_income_from_milk_sale ~ round * household_type +
 summary(fit1)
 ```
 
+For treatment group,
 
+* Do linear model
+* Do lme model using group_code
+
+For treatment + control group
+
+* Only use linear models
