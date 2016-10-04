@@ -11,6 +11,7 @@ output:
 ```{r, echo = FALSE, warning = FALSE}
 library(knitr)
 knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, dpi = 180)
+#knitr::opts_chunk$set(echo = FALSE)
 options(width=80, dplyr.width = 150)
 library(ggplot2)
 theme_set(theme_light())
@@ -19,7 +20,6 @@ theme_set(theme_light())
 ISSUES:
 
 * No number of births in the last 6 months in round 1, that I can find.
-* No market linkage data for round 5, that I can find.
 * Add up other/etc to see if it adds up to the new "all" for priority to drink milk?
 
 
@@ -45,7 +45,8 @@ gpf_ppt <- gpf_ppt %>%
                                          Treatment = c("1", "2", "3"),
                                          Control = c("4", "5", "6")))
 
-gpf_ppt[,c(1,27:35,36,273:276,326)] <- lapply(gpf_ppt[,c(1,27:35,36,273:276,326)], as.numeric)
+gpf_ppt[,c(1,22,27:35,36,273:276,324,326)] <- lapply(gpf_ppt[,c(1,22,27:35,36,273:276,324,326)], as.numeric)
+
 gpf_ppt$district_gpf[gpf_ppt$district_gpf == "pabna"] <- "Pabna"
 gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Jaipur Hat"] <- "Joypurhat"
 gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Natore"] <- "Nator"
@@ -64,7 +65,8 @@ producers <- bind_rows(gpf_ppt %>%
                            distinct(entry_id, .keep_all = TRUE),
                        gpf_ppt %>%
                            filter(round_month != 'Jul 2014') %>%
-                           distinct(household_type, deo_id, round, .keep_all = TRUE))
+                           distinct(household_type, deo_id, round, .keep_all = TRUE)) %>%
+    ungroup()
                     
 dim(producers)    
 ```
@@ -87,7 +89,9 @@ df <- bind_rows(gpf_ppt %>%
                     mutate(round_month = 'Jul 2016')) %>%
     group_by(round_month, district_gpf, household_type) %>%
     summarize(median = median(cows, na.rm = TRUE)) %>%
-    filter(!is.na(median))
+    filter(!is.na(median)) %>%
+    complete(household_type)
+    ungroup
 
 df %>% 
     kable(digits = 0,
@@ -101,7 +105,8 @@ df %>%
     geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
     facet_wrap(~district_gpf) +
     labs(x = NULL, y = "Median Number of Cattle per Household") +
-    theme(legend.title=element_blank())
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#3288bd", "#f46d43"))
 ```
 
 ```{r, fig.width=7, fig.height=8}
@@ -124,7 +129,8 @@ df <- bind_rows(gpf_ppt %>%
                               'Jul 2016')) %>%
     group_by(round_month, district_gpf) %>%
     summarize(median = median(cows, na.rm = TRUE)) %>%
-    filter(!is.na(median)) 
+    filter(!is.na(median)) %>%
+    ungroup()
 
 df %>%
     kable(digits = 0,
@@ -133,7 +139,7 @@ df %>%
           caption = "Treatment Group at All Data Collection Rounds")
 
 ggplot(df, aes(round_month, median)) +
-    geom_bar(alpha = 0.8, stat = "identity") +
+    geom_bar(alpha = 0.8, stat = "identity", fill = "#66c2a5") +
     facet_wrap(~ district_gpf) +
     labs(x = NULL, y = "Median Number of Cattle per Household") +
     theme(axis.text.x= element_text(angle=45, hjust = 1))
@@ -158,7 +164,8 @@ df <- bind_rows(gpf_ppt %>%
               mutate(round_month = 'Jul 2016')) %>%
     group_by(round_month, district_gpf, household_type) %>%
     summarize(median = median(cows, na.rm = TRUE)) %>%
-    filter(!is.na(median))
+    filter(!is.na(median)) %>%
+    complete(household_type)
 
 df %>%
     kable(digits = 0,
@@ -172,8 +179,8 @@ df %>%
     geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
     facet_wrap(~district_gpf) +
     labs(x = NULL, y = "Median Number of Local Breed Cattle per Household") +
-    theme(legend.title=element_blank())
-
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#3288bd", "#f46d43"))
 ```
 
 ```{r, fig.width=7, fig.height=8}
@@ -207,7 +214,7 @@ df %>%
           caption = "Treatment Group at All Data Collection Rounds")
 
 ggplot(df, aes(round_month, median)) +
-    geom_bar(alpha = 0.8, stat = "identity") +
+    geom_bar(alpha = 0.8, stat = "identity", fill = "#66c2a5") +
     facet_wrap(~ district_gpf) +
     labs(x = NULL, y = "Median Number of Local Breed Cattle per Household") +
     theme(axis.text.x= element_text(angle=45, hjust = 1))
@@ -233,7 +240,7 @@ df <- bind_rows(gpf_ppt %>%
               mutate(round_month = 'Jul 2016')) %>%
     group_by(round_month, district_gpf, household_type) %>%
     summarize(median = median(cows, na.rm = TRUE)) %>%
-    filter(!is.na(median)) 
+    filter(!is.na(median) & district_gpf != "Naogaon") 
 df %>%
     kable(digits = 0,
           col.names = c("Round of Data Collection", "District", "Treatment/Control", 
@@ -246,8 +253,8 @@ df %>%
     geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
     facet_wrap(~district_gpf) +
     labs(x = NULL, y = "Median Number of Cross Breed Cattle per Household") +
-    theme(legend.title=element_blank())
-
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#3288bd", "#f46d43"))
 ```
 
 ```{r, fig.width=7, fig.height=8}
@@ -272,7 +279,9 @@ df <- bind_rows(gpf_ppt %>%
                               'Jul 2016')) %>%
     group_by(round_month, district_gpf) %>%
     summarize(median = median(cows, na.rm = TRUE)) %>%
-    filter(!is.na(median)) 
+    filter(!is.na(median)) %>%
+    ungroup()
+
 df %>%
     kable(digits = 0,
           col.names = c("Round of Data Collection", "District", 
@@ -280,7 +289,7 @@ df %>%
           caption = "Treatment Group at All Data Collection Rounds")
 
 ggplot(df, aes(round_month, median)) +
-    geom_bar(alpha = 0.8, stat = "identity") +
+    geom_bar(alpha = 0.8, stat = "identity", fill = "#66c2a5") +
     facet_wrap(~ district_gpf) +
     labs(x = NULL, y = "Median Number of Cross Breed Cattle per Household") +
     theme(axis.text.x= element_text(angle=45, hjust = 1))
@@ -310,8 +319,12 @@ df <- bind_rows(gpf_ppt %>%
               summarize(cows = n(),
                         births = max(how_many_calf_born)) %>% 
               mutate(round_month = 'Jul 2016')) %>%
+    ungroup %>%
     group_by(round_month, district_gpf, household_type) %>%
-    summarize(rate = median(births/cows, na.rm = TRUE))
+    summarize(rate = median(births/cows, na.rm = TRUE)) %>%
+    ungroup %>%
+    complete(household_type) %>%
+    select(round_month, district_gpf, household_type, rate)
 
 df %>%
     kable(digits = 1,
@@ -325,8 +338,8 @@ df %>%
     geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
     facet_wrap(~district_gpf) +
     labs(x = NULL, y = "Median Number of Births per Female Adult Cow (Last 6 Months)") +
-    theme(legend.title=element_blank())
-
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#3288bd", "#f46d43"))
 ```
 
 ```{r, fig.width=7, fig.height=8}
@@ -352,7 +365,8 @@ df <- bind_rows(gpf_ppt %>%
                               'Dec 2015',
                               'Jul 2016')) %>%
     group_by(round_month, district_gpf) %>%
-    summarize(rate = median(births/cows, na.rm = TRUE))
+    summarize(rate = median(births/cows, na.rm = TRUE)) %>%
+    ungroup()
 
 df %>%
     kable(digits = 1,
@@ -361,7 +375,7 @@ df %>%
           caption = "Treatment Group at All Data Collection Rounds")
 
 ggplot(df, aes(round_month, rate)) +
-    geom_bar(alpha = 0.8, stat = "identity") +
+    geom_bar(alpha = 0.8, stat = "identity", fill = "#66c2a5") +
     facet_wrap(~ district_gpf) +
     labs(x = NULL, y = "Median Number of Births per Female Adult Cow (Last 6 Months)") +
     theme(axis.text.x= element_text(angle=45, hjust = 1))
@@ -372,6 +386,8 @@ ggplot(df, aes(round_month, rate)) +
 ## 6. Value of local breed and cross breed cows in BDT, by district
 
 ```{r, fig.width=7, fig.height=7}
+gpf_ppt <- gpf_ppt %>% ungroup
+
 df <- full_join(
     gpf_ppt %>% 
         filter(round_month %in% c('Jul 2014', 'Jul 2016')) %>%
@@ -382,7 +398,8 @@ df <- full_join(
         filter(round_month %in% c('Jul 2014', 'Jul 2016')) %>%
         group_by(round_month, district_gpf, household_type) %>% 
         filter(cow_breed == 2) %>% 
-        summarise(median2 = median(cow_value_bdt, na.rm = TRUE))) 
+        summarise(median2 = median(cow_value_bdt, na.rm = TRUE))) %>%
+    filter(district_gpf != "Naogaon")
 
 df %>%
     kable(digits = 0,
@@ -397,7 +414,8 @@ df %>%
     geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
     facet_wrap(~district_gpf) +
     labs(x = NULL, y = "Median Value of Local Breed Cattle in BDT") +
-    theme(legend.title=element_blank())
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#3288bd", "#f46d43"))
 
 df %>% 
     complete(household_type) %>%
@@ -405,8 +423,8 @@ df %>%
     geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
     facet_wrap(~district_gpf) +
     labs(x = NULL, y = "Median Value of Cross Breed Cattle in BDT") +
-    theme(legend.title=element_blank())
-
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#3288bd", "#f46d43"))
 ```
 
 ```{r, fig.width=7, fig.height=8}
@@ -434,7 +452,8 @@ ggplot(melt(df), aes(round_month, value, fill = variable)) +
     facet_wrap(~ district_gpf) +
     labs(x = NULL, y = "Median Value of Cattle in BDT") +
     theme(legend.title=element_blank()) +
-    theme(axis.text.x= element_text(angle=45, hjust = 1))
+    theme(axis.text.x= element_text(angle=45, hjust = 1)) +
+    scale_fill_manual(values = c("#fee08b", "#abdda4"))
 
 ```
 
@@ -446,7 +465,8 @@ gpf_ppt$cow_daily_production[gpf_ppt$cow_daily_production == 0] <- NA
 df <- gpf_ppt %>% 
     filter(round_month %in% c('Jul 2014', 'Jul 2016')) %>%
     group_by(round_month, district_gpf, household_type) %>% 
-    summarise(median1 = median(cow_daily_production, na.rm = TRUE))
+    summarise(median1 = median(cow_daily_production, na.rm = TRUE)) %>%
+    filter(district_gpf != "Naogaon")
 
 df %>%
     kable(digits = 1,
@@ -460,7 +480,8 @@ df %>%
     geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
     facet_wrap(~district_gpf) +
     labs(x = NULL, y = "Median Productivity per In-Milk Cow in Liters") +
-    theme(legend.title=element_blank())
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#3288bd", "#f46d43"))
 ```
 
 ```{r, fig.width=7, fig.height=8}
@@ -476,7 +497,7 @@ df %>%
           caption = "Treatment Group at All Data Collection Rounds")
 
 ggplot(df, aes(round_month, median1)) +
-    geom_bar(alpha = 0.8, stat = "identity") +
+    geom_bar(alpha = 0.8, stat = "identity", fill = "#66c2a5") +
     facet_wrap(~ district_gpf) +
     labs(x = NULL, y = "Median Productivity per In-Milk Cow in Liters") +
     theme(axis.text.x= element_text(angle=45, hjust = 1))
@@ -496,7 +517,9 @@ df <- bind_rows(gpf_ppt %>%
                     filter(round_month == 'Jul 2016') %>% 
                     group_by(district_gpf, household_type, deo_id) %>% 
                     summarize(cows = sum(cow_daily_production, na.rm = TRUE)) %>% 
-                    mutate(round_month = 'Jul 2016')) 
+                    mutate(round_month = 'Jul 2016')) %>%
+    filter(district_gpf != "Naogaon")
+
 
 df$cows[df$cows == 0] <- NA
 df <- df %>%
@@ -516,8 +539,8 @@ df %>%
     geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
     facet_wrap(~district_gpf) +
     labs(x = NULL, y = "Median Daily Household Milk Production in Liters") +
-    theme(legend.title=element_blank())
-
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#3288bd", "#f46d43"))
 ```
 
 
@@ -552,7 +575,7 @@ df %>%
           caption = "Treatment Group at All Data Collection Rounds")
 
 ggplot(df, aes(round_month, median1)) +
-    geom_bar(alpha = 0.8, stat = "identity") +
+    geom_bar(alpha = 0.8, stat = "identity", fill = "#66c2a5") +
     facet_wrap(~ district_gpf) +
     labs(x = NULL, y = "Median Productivity per In-Milk Cow in Liters") +
     theme(axis.text.x= element_text(angle=45, hjust = 1))
@@ -561,7 +584,7 @@ ggplot(df, aes(round_month, median1)) +
 
 ## 9. Value of Herd
 
-```{r, fig.width=7, fig.height=6}
+```{r, fig.width=6, fig.height=4}
 df <- bind_rows(gpf_ppt %>% 
               filter(round_month == 'Jul 2014') %>% 
               group_by(household_type, entry_id) %>% 
@@ -585,11 +608,11 @@ df %>%
 ggplot(df, aes(round_month, median, fill = household_type)) +
     geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
     labs(x = NULL, y = "Median Value of Herd in BDT") +
-    theme(legend.title=element_blank())
-
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#3288bd", "#f46d43"))
 ```
 
-```{r, fig.width=7, fig.height=6}
+```{r, fig.width=6, fig.height=4}
 df <- bind_rows(gpf_ppt %>% 
               filter(round_month == 'Jul 2014' & household_type == "Treatment") %>% 
               group_by(entry_id) %>% 
@@ -617,14 +640,14 @@ df %>%
           caption = "Treatment Group at All Data Collection Rounds")
 
 ggplot(df, aes(round_month, median)) +
-    geom_bar(alpha = 0.8, stat = "identity") +
+    geom_bar(alpha = 0.8, stat = "identity", fill = "#66c2a5") +
     labs(x = NULL, y = "Median Productivity of Herd in Liters")
 ```
 
 
 ## 10. Productivity of Herd
 
-```{r, fig.width=8, fig.height=6}
+```{r, fig.width=6, fig.height=4}
 gpf_ppt$cow_daily_production[gpf_ppt$cow_daily_production == 0] <- NA
 
 df <- bind_rows(gpf_ppt %>% 
@@ -651,10 +674,11 @@ df %>%
 ggplot(df, aes(round_month, median, fill = household_type)) +
     geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
     labs(x = NULL, y = "Median Productivity of Herd in Liters") +
-    theme(legend.title=element_blank())
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#3288bd", "#f46d43"))
 ```
 
-```{r,  fig.width=8, fig.height=6}
+```{r,  fig.width=6, fig.height=4}
 df <- bind_rows(gpf_ppt %>% 
               filter(round_month == 'Jul 2014' & household_type == "Treatment") %>% 
               group_by(entry_id) %>% 
@@ -682,7 +706,7 @@ df %>%
           caption = "Treatment Group at All Data Collection Rounds")
 
 ggplot(df, aes(round_month, median)) +
-    geom_bar(alpha = 0.8, stat = "identity") +
+    geom_bar(alpha = 0.8, stat = "identity", fill = "#66c2a5") +
     labs(x = NULL, y = "Median Productivity of Herd in Liters")
 
 ```
@@ -693,8 +717,7 @@ ggplot(df, aes(round_month, median)) +
 
 ## 11. Total Income from Milk Sales (Tk.) per day
 
-```{r, fig.width=8, fig.height=6}
-
+```{r, fig.width=6, fig.height=5}
 df <- producers %>%
     filter(round_month %in% c('Jul 2014', 'Jul 2016')) %>%
     group_by(round_month, household_type) %>%
@@ -709,10 +732,46 @@ df %>%
 ggplot(df, aes(round_month, median1, fill = household_type)) +
     geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
     labs(x = NULL, y = "Median Daily Income from Milk Sales in Taka") +
-    theme(legend.title=element_blank())
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#3288bd", "#f46d43"))
 ```
 
-```{r, fig.width=8, fig.height=6}
+```{r, fig.width=6, fig.height=5}
+df <- bind_rows(gpf_ppt %>% 
+              filter(round_month == 'Jul 2014') %>% 
+              filter(cow_type == 1) %>% 
+              group_by(district_gpf, household_type, entry_id) %>% 
+              summarize(cows = n(),
+                        income = max(yesterday_total_income_from_milk_sale)) %>% 
+              mutate(deo_id = entry_id,
+                     round_month = 'Jul 2014'),
+          gpf_ppt %>% 
+              filter(round_month == 'Jul 2016') %>% 
+              filter(cow_type == 1) %>% 
+              group_by(district_gpf, household_type, deo_id) %>% 
+              summarize(cows = n(),
+                        income = max(yesterday_total_income_from_milk_sale)) %>% 
+              mutate(round_month = 'Jul 2016')) %>%
+    ungroup %>%
+    group_by(round_month, household_type) %>%
+    summarize(rate = median(income/cows, na.rm = TRUE))
+
+df %>%
+    kable(digits = 0,
+          col.names = c("Round of Data Collection", "Treatment/Control", 
+                        "Median Daily Income from Milk Sales Per In-Milk Cow in Taka"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+ggplot(df, aes(round_month, rate, fill = household_type)) +
+    geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+    labs(x = NULL, y = "Median Daily Income from Milk Sales Per In-Milk Cow in Taka") +
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#3288bd", "#f46d43"))
+```
+
+
+
+```{r, fig.width=6, fig.height=5}
 df <- producers %>% 
     filter(household_type == "Treatment") %>% 
     group_by(round_month) %>% 
@@ -725,49 +784,130 @@ df %>%
           caption = "Treatment Group at All Data Collection Rounds")
 
 ggplot(df, aes(round_month, median1)) +
-    geom_bar(alpha = 0.8, stat = "identity") +
+    geom_bar(alpha = 0.8, stat = "identity", fill = "#66c2a5") +
     labs(x = NULL, y = "Median Daily Income from Milk Sales in Taka")
 ```
 
+
+```{r, fig.width=6, fig.height=5}
+
+df <- bind_rows(gpf_ppt %>% 
+              filter(round_month == 'Jul 2014' & household_type == "Treatment") %>% 
+              filter(cow_type == 1) %>% 
+              group_by(district_gpf, entry_id) %>% 
+              summarize(cows = n(),
+                        income = max(yesterday_total_income_from_milk_sale)) %>% 
+              mutate(deo_id = entry_id,
+                     round_month = 'Jul 2014'),
+          gpf_ppt %>% 
+              filter(round_month %in% c('Dec 2014', 'Jul 2015','Dec 2015', 'Jul 2016') & household_type == "Treatment") %>% 
+              filter(cow_type == 1) %>% 
+              group_by(round_month, district_gpf, deo_id) %>% 
+              summarize(cows = n(),
+                        income = max(yesterday_total_income_from_milk_sale))) %>%
+    ungroup %>%
+    mutate(round_month = fct_relevel(round_month,
+                              'Jul 2014',
+                              'Dec 2014',
+                              'Jul 2015',
+                              'Dec 2015',
+                              'Jul 2016')) %>% 
+    ungroup %>%
+    group_by(round_month) %>%
+    summarize(rate = median(income/cows, na.rm = TRUE))
+
+df %>%
+    kable(digits = 0,
+          col.names = c("Round of Data Collection", 
+                        "Median Daily Income from Milk Sales Per In-Milk Cow in Taka"),
+          caption = "Treatment Group at All Data Collection Rounds")
+
+ggplot(df, aes(round_month, rate)) +
+    geom_bar(alpha = 0.8, stat = "identity", fill = "#66c2a5") +
+    labs(x = NULL, y = "Median Daily Income from Milk Sales Per In-Milk Cow in Taka")
+```
+
+
 ## 12. Total Milk Consumption in Liters
 
-```{r, fig.width=8, fig.height=6}
+```{r, fig.width=6, fig.height=5}
 producers$total_consumption_ltr[producers$total_consumption_ltr == 0] <- NA
 
 df <- producers %>% 
     filter(round_month %in% c('Jul 2014', 'Jul 2016')) %>%
     group_by(round_month, household_type) %>%
-    summarise(median1 = median(total_consumption_ltr, na.rm = TRUE)) 
+    summarise(mean1 = mean(total_consumption_ltr, na.rm = TRUE)) 
 
 df %>%
-    kable(digits = 1,
+    kable(digits = 2,
           col.names = c("Round of Data Collection", "Treatment/Control", 
-                        "Median Total Milk Consumption in Liters"),
+                        "Average Total Milk Consumption in Liters"),
           caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
 
-ggplot(df, aes(round_month, median1, fill = household_type)) +
+ggplot(df, aes(round_month, mean1, fill = household_type)) +
     geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
-    labs(x = NULL, y = "Median Total Milk Consumption in Liters") +
-    theme(legend.title=element_blank())
-
+    labs(x = NULL, y = "Average Total Milk Consumption in Liters") +
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#3288bd", "#f46d43"))
 ```
 
-```{r, fig.width=8, fig.height=6}
+```{r, fig.width=7, fig.height=5}
 df <- producers %>% 
     filter(household_type == "Treatment") %>% 
     group_by(round_month) %>% 
-    summarize(median1 = median(total_consumption_ltr, na.rm = TRUE))
+    summarize(mean1 = mean(total_consumption_ltr, na.rm = TRUE))
  
 df %>%
-    kable(digits = 1,
+    kable(digits = 2,
           col.names = c("Round of Data Collection", 
-                        "Median Total Milk Consumption in Liters"),
+                        "Average Total Milk Consumption in Liters"),
           caption = "Treatment Group at All Data Collection Rounds")
 
-ggplot(df, aes(round_month, median1)) +
-    geom_bar(alpha = 0.8, stat = "identity") +
-    labs(x = NULL, y = "Median Total Milk Consumption in Liters")
+ggplot(df, aes(round_month, mean1)) +
+    geom_bar(alpha = 0.8, stat = "identity", fill = "#66c2a5") +
+    labs(x = NULL, y = "Average Total Milk Consumption in Liters")
 ```
+
+```{r, fig.width=6, fig.height=5}
+producers$no_family_members_total[producers$no_family_members_total == 0] <- NA
+
+df <- producers %>% 
+    filter(round_month %in% c('Jul 2014', 'Jul 2016')) %>%
+    group_by(round_month, household_type) %>%
+    summarise(mean1 = mean(total_consumption_ltr/no_family_members_total, 
+                           na.rm = TRUE)) 
+
+df %>%
+    kable(digits = 2,
+          col.names = c("Round of Data Collection", "Treatment/Control", 
+                        "Average Milk Consumption per Person in Household in Liters"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+ggplot(df, aes(round_month, mean1, fill = household_type)) +
+    geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+    labs(x = NULL, y = "Average Milk Consumption per Person in Household in Liters") +
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#3288bd", "#f46d43"))
+```
+
+```{r, fig.width=6, fig.height=5}
+df <- producers %>% 
+    filter(household_type == "Treatment") %>% 
+    group_by(round_month) %>% 
+    summarize(mean1 = mean(total_consumption_ltr/no_family_members_total, 
+                           na.rm = TRUE))
+ 
+df %>%
+    kable(digits = 2,
+          col.names = c("Round of Data Collection", 
+                        "Average Milk Consumption per Person in Household in Liters"),
+          caption = "Treatment Group at All Data Collection Rounds")
+
+ggplot(df, aes(round_month, mean1)) +
+    geom_bar(alpha = 0.8, stat = "identity", fill = "#66c2a5") +
+    labs(x = NULL, y = "Average Milk Consumption per Person in Household in Liters")
+```
+
 
 
 ## 13. Milk Consumption Priorities (proportions/percentages)
@@ -911,17 +1051,18 @@ df %>%
                         "Who Is Given Priority to Consume Milk?", "Percent"),
           caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
 
-library(ggstance)
-ggplot(df, aes(prop/100, within_household_who_given_priority_to_consumed_milk, fill = household_type)) +
-    geom_barh(stat = "identity", position = "dodge") +
+ggplot(df, aes(within_household_who_given_priority_to_consumed_milk, prop/100, fill = household_type)) +
+    geom_bar(stat = "identity", position = "dodge", alpha = 0.8) +
     facet_wrap(~ round_month, ncol = 1) +
-    labs(x = NULL, y = "Who Is Given Priority to Consume Milk?") +
-    scale_x_continuous(labels = scales::percent_format()) +
-    theme(legend.title=element_blank())
+    labs(y = NULL, x = "Who Is Given Priority to Consume Milk?") +
+    scale_y_continuous(labels = scales::percent_format()) +
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#3288bd", "#f46d43")) +
+    coord_flip()
 
 ```
 
-```{r, fig.width=10, fig.height=10}
+```{r, fig.width=8, fig.height=8}
 df <- producers %>% 
     filter(household_type == "Treatment") %>% 
     group_by(round_month, within_household_who_given_priority_to_consumed_milk) %>% 
@@ -939,11 +1080,14 @@ df %>%
                         "Who Is Given Priority to Consume Milk?", "Percent"),
           caption = "Treatment Group at All Data Collection Rounds")
 
-ggplot(df, aes(prop/100, within_household_who_given_priority_to_consumed_milk, fill = round_month)) +
-    geom_barh(stat = "identity", position = "dodge") +
-    labs(x = NULL, y = "Who Is Given Priority to Consume Milk?") +
-    scale_x_continuous(labels = scales::percent_format()) +
-    theme(legend.title=element_blank())
+ggplot(df, aes(within_household_who_given_priority_to_consumed_milk, prop/100, fill = round_month)) +
+    geom_bar(stat = "identity", position = "dodge", alpha = 0.8) +
+    labs(y = NULL, x = "Who Is Given Priority to Consume Milk?") +
+    scale_y_continuous(labels = scales::percent_format()) +
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#fdae61", "#fee08b", "#e6f598", "#abdda4", "#66c2a5")) +
+    coord_flip()
+    
 ```
 
 
@@ -983,16 +1127,17 @@ df %>%
           caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
 
 
-ggplot(melt(df), aes(value, variable, fill = household_type)) +
-    geom_barh(stat = "identity", position = "dodge") +
+ggplot(melt(df), aes(variable, value, fill = household_type)) +
+    geom_bar(stat = "identity", position = "dodge", alpha = 0.8) +
     facet_wrap(~round_month) +
-    labs(x = "Liters of Milk", y = "Where is Milk Distributed?") +
-    theme(legend.title=element_blank())
-
+    labs(y = "Liters of Milk", x = "Where is Milk Distributed?") +
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#3288bd", "#f46d43")) +
+    coord_flip()
 
 ```
 
-```{r, fig.width=9, fig.height=6}
+```{r, fig.width=8, fig.height=5}
 df <- producers %>% 
     filter(!is.na(round_month) & household_type == "Treatment") %>%
     group_by(round_month) %>%
@@ -1017,7 +1162,8 @@ df %>%
 ggplot(melt(df), aes(round_month, value, fill = variable)) +
     geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
     labs(x = NULL, y = "Milk in Liters") +
-    theme(legend.title=element_blank())
+    theme(legend.title=element_blank()) +
+    scale_fill_brewer(palette = "Spectral")
 ```
 
 
@@ -1075,16 +1221,17 @@ df %>%
           caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
 
 
-ggplot(melt(df), aes(value/100, variable, fill = household_type)) +
-    geom_barh(stat = "identity", position = "dodge") +
+ggplot(melt(df), aes(variable, value/100, fill = household_type)) +
+    geom_bar(stat = "identity", position = "dodge", alpha = 0.8) +
     facet_wrap(~round_month) +
-    labs(x = NULL, y = "Where is Milk Distributed?") +
-    scale_x_continuous(labels = scales::percent_format()) +
-    theme(legend.title=element_blank())
-
+    labs(y = NULL, x = "Where is Milk Distributed?") +
+    scale_y_continuous(labels = scales::percent_format()) +
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#3288bd", "#f46d43")) + 
+    coord_flip()
 ```
 
-```{r, fig.width=9, fig.height=6}
+```{r, fig.width=8, fig.height=5}
 totals <- producers %>% 
     filter(!is.na(round_month) & household_type == "Treatment") %>%
     group_by(round_month) %>%
@@ -1137,7 +1284,8 @@ ggplot(melt(df), aes(round_month, value/100, fill = variable)) +
     geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
     labs(x = NULL, y = "Amount of Milk") +
     scale_y_continuous(labels = scales::percent_format()) +
-    theme(legend.title=element_blank())
+    theme(legend.title=element_blank()) +
+    scale_fill_brewer(palette = "Spectral")
 ```
 
 ## 16. Market Linkage Choices (proportions)
@@ -1198,7 +1346,8 @@ ggplot(df, aes(round_month, prop/100, fill = where_do_you_sell_milk_most_often))
     geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
     labs(x = NULL, y = "Where Is Milk Sold Most Often?") +
     scale_y_continuous(labels = scales::percent_format()) +
-    theme(legend.title=element_blank())
+    theme(legend.title=element_blank()) +
+    scale_fill_brewer(palette = "Spectral")
 
 ```
 
