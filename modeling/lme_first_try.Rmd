@@ -1,5 +1,5 @@
 ---
-title: "First Attempts at LME Modeling"
+title: "First Attempts at Modeling"
 subtitle: "Strengthening the Dairy Value Chain"
 author: "Julia Silge"
 date: "`r Sys.Date()`"
@@ -18,7 +18,7 @@ It is now time to do some modeling. Here we go!
 
 ## Loading the Data
 
-First, let's load the data , do some cleaning that we found we needed to do during the table-making process, and make a producers data frame. The producers data frame needs to include the number of in-milk cows and the quantity of milk per in-milk cow.
+First, let's load the data , do some cleaning that we found we needed to do during the table-making process, and make a producers data frame. The producers data frame needs to include the number of in-milk cows (both breeds) and the quantity of milk produced yesterday.
 
 ```{r}
 library(readr)
@@ -40,9 +40,9 @@ producers <- bind_rows(gpf_ppt %>%
                        gpf_ppt %>%
                            filter(round != '1.0') %>%
                            distinct(household_type, deo_id, round, .keep_all = TRUE))
-## add in-milk cows and total production per cow
+## add in-milk local breed cows, in-milk cross breed cows, total number of 
+## cows, and total liters produced yesterday
 
-                    
 producers[,c(36)] <- lapply(producers[,c(36)], as.numeric)
 
 producers[,c(1,13,24,281)] <- lapply(producers[,c(1,13,24,281)], as.factor)
