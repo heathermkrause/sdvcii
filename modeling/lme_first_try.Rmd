@@ -93,7 +93,8 @@ producers <- bind_rows(gpf_ppt %>%
                                               sweetmeat_tea_stall,
                                               direct_to_company,
                                               yesterday_total_spoilage_ltr,
-                                              na.rm = TRUE))
+                                              na.rm = TRUE)) %>%
+    ungroup
 
 producers <- producers %>%
     mutate(yesterday_total_income_from_milk_sale = as.numeric(yesterday_total_income_from_milk_sale),
@@ -127,11 +128,16 @@ treatment_producers <- producers %>%
 library(lme4)
 library(broom)
 
-## fix up the group codes -- ALL A MESS
-## producer ID = group code + 2 digits at end
+## fix up the group codes at all?
+
+treatment_producers %>% 
+    group_by(round) %>% 
+    summarise(n = n(), 
+              group_code_NA = mean(is.na(group_code)))
 
 fit1 <- lmer(yesterday_total_income_from_milk_sale ~ round * household_type +
-                 district_gpf +
+                 district_gpf + in_milk_cross_cows + in_milk_local_cows +
+                 total_distribution_yesterday +
                  (1 | group_code),
              data = treatment_producers)
 
