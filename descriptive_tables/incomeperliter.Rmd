@@ -1,0 +1,92 @@
+---
+title: "SDVC Final Report Descriptive Tables"
+subtitle: "Income per Liter"
+author: "Julia Silge"
+date: "`r Sys.Date()`"
+output: 
+    html_document:
+        toc: yes
+---
+
+```{r, echo = FALSE, warning = FALSE}
+library(knitr)
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, dpi = 180)
+knitr::opts_chunk$set(echo = FALSE)
+options(width=80, dplyr.width = 150)
+library(ggplot2)
+theme_set(theme_light())
+```
+
+Before we make the table and plot we need, let's read in the data.
+
+```{r}
+library(readr)
+library(forcats)
+library(dplyr)
+library(reshape2)
+gpf_ppt <- read_csv("../data/gpf_ppt_merged.csv", 
+                    col_types = cols(.default = col_character()))
+dim(gpf_ppt)
+
+gpf_ppt <- gpf_ppt %>%
+    filter(round %in% c('1.0', '5.0')) %>%
+    mutate(round_month = fct_recode(round,
+                              `Jul 2014` = '1.0',
+                              `Jul 2016` = '5.0')) %>%
+    mutate(household_type = fct_collapse(household_type,
+                                         Treatment = c("1", "2", "3"),
+                                         Control = c("4", "5", "6")))
+
+gpf_ppt[,c(1,27:35,36,273:276,326)] <- lapply(gpf_ppt[,c(1,27:35,36,273:276,326)], as.numeric)
+```
+
+## Make a Producers Data Frame
+
+```{r}
+producers <- bind_rows(gpf_ppt %>% 
+                           filter(round_month == 'Jul 2014') %>% 
+                           distinct(entry_id, .keep_all = TRUE),
+                       gpf_ppt %>%
+                           filter(round_month == 'Jul 2016') %>%
+                           distinct(household_type, deo_id, round, .keep_all = TRUE)) %>%
+    ungroup
+                    
+dim(producers)    
+```
+
+## Income per Total Liters Distributed
+
+
+```{r}
+producers <- producers %>%
+    mutate(total_distribution_yesterday = sum(total_free_distribution_ltr,
+                                              neighbors,
+                                              collection_point,
+                                              milk_collector,
+                                              open_market,
+                                              sweetmeat_tea_stall,
+                                              direct_to_company,
+                                              yesterday_total_spoilage_ltr,
+                                              na.rm = TRUE),
+           rate = yesterday_total_income_from_milk_sale/total_distribution_yesterday)
+```
+
+```{r, fig.width=6, fig.height=5}
+df <- producers %>% 
+    group_by(round_month, household_type) %>% 
+    summarise(median1 = median(rate, na.rm = TRUE))
+ 
+df %>%
+    kable(digits = 4,
+          col.names = c("Round of Data Collection", "Treatment/Control",
+                        "Median Income in Taka per Liter of Milk Distributed"),
+          caption = "Treatment and Control Groups at the First and Last Data Collection Rounds")
+
+ggplot(df, aes(round_month, median1, fill = household_type)) +
+    geom_bar(alpha = 0.8, stat = "identity", position = "dodge") +
+    labs(x = NULL, y = "Median Income in Taka per Liter of Milk Distributed") +
+    theme(legend.title=element_blank()) +
+    scale_fill_manual(values = c("#3288bd", "#f46d43"))
+
+```
+
