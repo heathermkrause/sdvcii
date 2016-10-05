@@ -14,13 +14,23 @@ knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, dpi = 180)
 options(width=80, dplyr.width = 150)
 ```
 
-It is now time to do some modeling. Here we go!
+It is now time to do some modeling. Here is our general plan:
+
+For the treatment groups, we will 
+
+* build a linear model
+* build a linear mixed effects model using `group_code` as the random effect
+
+For the treatment + control groups, we will
+
+* only use linear models
+
 
 ## Loading the Data
 
 First, let's load the data , do some cleaning that we found we needed to do during the table-making process, and make a producers data frame. The producers data frame needs to include the number of in-milk cows (both breeds) and the quantity of milk produced yesterday.
 
-```{r}
+```{r setup}
 library(readr)
 library(dplyr)
 gpf_ppt <- read_csv("../data/gpf_ppt_merged.csv", 
@@ -34,29 +44,84 @@ gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Shirajgonj"] <- "Sirajgonj"
 gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Sirajgang"] <- "Sirajgonj"
 gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Sirajganj"] <- "Sirajgonj"
 
+gpf_ppt[,c(28:35)] <- lapply(gpf_ppt[,c(28:35)], as.numeric)
+
+## code below makes producer data frame with in-milk local breed cows, 
+## in-milk cross breed cows, total number of all cows, and total liters 
+## produced yesterday
+
 producers <- bind_rows(gpf_ppt %>% 
                            filter(round == '1.0') %>% 
-                           distinct(entry_id, .keep_all = TRUE),
+                           distinct(entry_id, .keep_all = TRUE) %>%
+                           left_join(gpf_ppt %>% 
+                                         filter(round == '1.0') %>% 
+                                         group_by(entry_id) %>% 
+                                         summarize(total_cows = n())) %>%
+                           left_join(gpf_ppt %>% 
+                                         filter(round == '1.0') %>% 
+                                         filter(cow_type == 1, cow_breed == 1) %>% 
+                                         group_by(entry_id) %>% 
+                                         summarize(in_milk_local_cows = n())) %>%
+                           left_join(gpf_ppt %>% 
+                                         filter(round == '1.0') %>% 
+                                         filter(cow_type == 1, cow_breed == 2) %>% 
+                                         group_by(entry_id) %>% 
+                                         summarize(in_milk_cross_cows = n())),
                        gpf_ppt %>%
                            filter(round != '1.0') %>%
-                           distinct(household_type, deo_id, round, .keep_all = TRUE))
-## add in-milk local breed cows, in-milk cross breed cows, total number of 
-## cows, and total liters produced yesterday
+                           distinct(household_type, deo_id, round, .keep_all = TRUE) %>%
+                           left_join(gpf_ppt %>% 
+                                         filter(round != '1.0') %>% 
+                                         group_by(household_type, deo_id, round) %>% 
+                                         summarize(total_cows = n())) %>%
+                           left_join(gpf_ppt %>% 
+                                         filter(round != '1.0') %>% 
+                                         filter(cow_type == 1, cow_breed == 1) %>% 
+                                         group_by(household_type, deo_id, round) %>% 
+                                         summarize(in_milk_local_cows = n())) %>%
+                           left_join(gpf_ppt %>% 
+                                         filter(round != '1.0') %>% 
+                                         filter(cow_type == 1, cow_breed == 2) %>% 
+                                         group_by(household_type, deo_id, round) %>% 
+                                         summarize(in_milk_cross_cows = n()))) %>%
+    rowwise() %>%
+    mutate(total_distribution_yesterday = sum(total_free_distribution_ltr,
+                                              neighbors,
+                                              collection_point,
+                                              milk_collector,
+                                              open_market,
+                                              sweetmeat_tea_stall,
+                                              direct_to_company,
+                                              yesterday_total_spoilage_ltr,
+                                              na.rm = TRUE))
 
-producers[,c(36)] <- lapply(producers[,c(36)], as.numeric)
-
-producers[,c(1,13,24,281)] <- lapply(producers[,c(1,13,24,281)], as.factor)
+producers <- producers %>%
+    mutate(yesterday_total_income_from_milk_sale = as.numeric(yesterday_total_income_from_milk_sale),
+           round = as.factor(round),
+           district_gpf = as.factor(district_gpf),
+           group_code = as.factor(group_code),
+           household_type = as.factor(household_type))
 
 dim(producers)    
+```
 
-# make treatment only producers data frame
+Heather, two issues to check.
+
+* For the counts of cows, there are `NA` right now when there are none of a certain kind of cow (no cross-breed in-milk cows, for instance). This means the modeling function will ignore those and throw them out. Is this appropriate? Only use rows which have at least one cow if we are using that variable?
+* For the sum of all the ways milk was distributed, zero is placed in the variable when there are all `NA` values for all of the milk distribution choices, which means there are a lot of zeroes. (Median of this value is currently zero.) Is this appropriate? Should we substitute `NA` for zero for this total milk distribution quantity? (This would throw out a lot of rows.)
+
+## Make Two Data Frames
+
+We will build different models for the treatment and treatment + control producers, so let's be explicit about that right here.
+
+```{r}
+all_producers <- producers
+
+treatment_producers <- producers %>%
+    filter(household_type %in% c("1", "2", "3"))
 ```
 
 ## Building a Model
-
-Random effects will have different intercepts
-
-Fixed effect vs. random effect
 
 ```{r}
 library(lme4)
@@ -68,16 +133,8 @@ library(broom)
 fit1 <- lmer(yesterday_total_income_from_milk_sale ~ round * household_type +
                  district_gpf +
                  (1 | group_code),
-             data = producers)
+             data = treatment_producers)
 
 summary(fit1)
 ```
 
-For treatment group,
-
-* Do linear model
-* Do lme model using group_code
-
-For treatment + control group
-
-* Only use linear models
