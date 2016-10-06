@@ -124,6 +124,8 @@ treatment_producers <- producers %>%
 
 ## Building a Model for the Treatment Groups
 
+These first models don't work so well because there is not enough information in our data to constrain this model.
+
 ```{r}
 library(lme4)
 
@@ -151,7 +153,36 @@ summary(fit_me)
 summary(fit_lm)
 ```
 
+RANK DEFICIENT. AND SINGULARITIES.
+
+What if we try a model with only treatment groups 1 and 2?
+
+```{r}
+treatment_producers_subset <- treatment_producers %>%
+    filter(household_type == 1 | household_type == 2)
+
+fit_me <- lmer(yesterday_total_income_from_milk_sale ~ round * household_type +
+                 district_gpf + in_milk_cross_cows + in_milk_local_cows +
+                 total_distribution_yesterday +
+                 (1 | group_code),
+             data = treatment_producers_subset)
+
+
+fit_lm <- lm(yesterday_total_income_from_milk_sale ~ round * household_type +
+                 district_gpf + in_milk_cross_cows + in_milk_local_cows +
+                 total_distribution_yesterday,
+             data = treatment_producers_subset)
+
+
+summary(fit_me)
+summary(fit_lm)
+```
+
+This is functioning better, at least the `lm` version.
+
 ## Building a Model for the Treatment and Control Groups
+
+Again, we can't build a good, functioning model with all treatment/control groups and rounds because not all groups were surveyed in all rounds.
 
 ```{r}
 fit_lm <- lm(yesterday_total_income_from_milk_sale ~ round * household_type +
@@ -161,15 +192,48 @@ fit_lm <- lm(yesterday_total_income_from_milk_sale ~ round * household_type +
 summary(fit_lm)
 ```
 
+What about all groups in rounds 1 and 5?
 
-## Current Issues
+```{r}
+all_producers_rounds <- all_producers %>%
+    filter(round == '1.0' | round == '5.0')
 
-* The mixed effects model still says it is rank deficient.
-* The linear models have singularities so some coefficients are not defined.
+fit_lm <- lm(yesterday_total_income_from_milk_sale ~ round * household_type +
+                 district_gpf + in_milk_cross_cows + in_milk_local_cows +
+                 total_distribution_yesterday,
+             data = all_producers_rounds)
+summary(fit_lm)
 
-These sound like they are the same problem, right? Like there is not enough information in our data to constrain the model we are trying to build? What would be a good next step?
+```
 
-Including the total liters distributed obviously has a super big effect, and the R squared is already quite high. Let's just look at those two variables.
+Still some singularities.
+
+What about collapsing all the separate treatment and control groups into just one group each?
+
+```{r}
+library(forcats)
+all_producers_collapse <- all_producers %>%    
+    mutate(household_type = fct_collapse(household_type,
+                                         Treatment = c("1", "2", "3"),
+                                         Control = c("4", "5", "6"))) %>%
+    filter(round == '1.0' | round == '5.0')
+
+fit_lm <- lm(yesterday_total_income_from_milk_sale ~ round * household_type +
+                 district_gpf + in_milk_cross_cows + in_milk_local_cows +
+                 total_distribution_yesterday,
+             data = all_producers_collapse)
+summary(fit_lm)
+
+```
+
+
+That looks much better. Neither the regular slope or interaction term with the household type are significant in this model. 
+
+There are significant district-to-district differences, and the number of in-milk cows and total liters distributed significantly affect income. Cross breed cows more strongly impact income than local breed cows.
+
+## Plotting the Data
+
+A lot of these models still have issues, but let's plot the data. The total liters distributed is the most important effect, and the R squared is quite high for all of the models. Let's plot those two variables.
 
 ```{r, fig.width=8, fig.height=6}
 library(ggplot2)
@@ -182,6 +246,3 @@ ggplot(all_producers, aes(total_distribution_yesterday,
     labs(title = "Income vs. Liters of Milk Distributed",
          subtitle = "Each panel shows a different treatment/control group")
 ```
-
-
-One idea I have here is to make one treatment group and one control group and trying modeling with that; there's just not much data in some of these bins.
