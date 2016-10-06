@@ -103,13 +103,11 @@ producers <- producers %>%
            group_code = as.factor(group_code),
            household_type = as.factor(household_type))
 
+producers$yesterday_total_income_from_milk_sale[producers$yesterday_total_income_from_milk_sale == 0.0] <- NA
+producers$total_distribution_yesterday[producers$total_distribution_yesterday == 0.0] <- NA
+
 dim(producers)    
 ```
-
-Heather, two issues to check.
-
-* For the counts of cows, there are `NA` right now when there are none of a certain kind of cow (no cross-breed in-milk cows, for instance). This means the modeling function will ignore those and throw them out. Is this appropriate? Only use rows which have at least one cow if we are using that variable?
-* For the sum of all the ways milk was distributed, zero is placed in the variable when there are all `NA` values for all of the milk distribution choices, which means there are a lot of zeroes. (Median of this value is currently zero.) Is this appropriate? Should we substitute `NA` for zero for this total milk distribution quantity? (This would throw out a lot of rows.)
 
 ## Make Two Data Frames
 
@@ -122,11 +120,10 @@ treatment_producers <- producers %>%
     filter(household_type %in% c("1", "2", "3"))
 ```
 
-## Building a Model
+## Building a Model for the Treatment Groups
 
 ```{r}
 library(lme4)
-library(broom)
 
 ## fix up the group codes at all?
 
@@ -135,12 +132,106 @@ treatment_producers %>%
     summarise(n = n(), 
               group_code_NA = mean(is.na(group_code)))
 
-fit1 <- lmer(yesterday_total_income_from_milk_sale ~ round * household_type +
+fit_me <- lmer(yesterday_total_income_from_milk_sale ~ round * household_type +
                  district_gpf + in_milk_cross_cows + in_milk_local_cows +
                  total_distribution_yesterday +
                  (1 | group_code),
              data = treatment_producers)
 
-summary(fit1)
+
+fit_lm <- lm(yesterday_total_income_from_milk_sale ~ round * household_type +
+                 district_gpf + in_milk_cross_cows + in_milk_local_cows +
+                 total_distribution_yesterday,
+             data = treatment_producers)
+
+
+summary(fit_me)
+summary(fit_lm)
 ```
 
+## Building a Model for the Treatment and Control Groups
+
+```{r}
+fit_lm <- lm(yesterday_total_income_from_milk_sale ~ round * household_type +
+                 district_gpf + in_milk_cross_cows + in_milk_local_cows +
+                 total_distribution_yesterday,
+             data = all_producers)
+summary(fit_lm)
+```
+
+## Counting `NA` Values
+
+The modeling is not working so well right now, I think because so many rows are getting thrown out because of missing data. How many observations do we have if we want to use all of these columns?
+
+```{r}
+mean(complete.cases(all_producers %>% 
+                        select(yesterday_total_income_from_milk_sale, 
+                               round, 
+                               household_type, 
+                               district_gpf, 
+                               in_milk_cross_cows, 
+                               in_milk_local_cows, 
+                               total_distribution_yesterday)))
+
+sum(complete.cases(all_producers %>% 
+                       select(yesterday_total_income_from_milk_sale, 
+                              round, 
+                              household_type, 
+                              district_gpf, 
+                              in_milk_cross_cows, 
+                              in_milk_local_cows, 
+                              total_distribution_yesterday)))
+```
+
+So there are only 110 producers in the treatment + control groups (less than 2% of the data) that have non-`NA` values for all of these columns.
+
+What about just the treatment producers?
+
+```{r}
+mean(complete.cases(treatment_producers %>% 
+                        select(yesterday_total_income_from_milk_sale, 
+                               round, 
+                               household_type, 
+                               district_gpf, 
+                               in_milk_cross_cows, 
+                               in_milk_local_cows, 
+                               total_distribution_yesterday)))
+
+sum(complete.cases(treatment_producers %>% 
+                       select(yesterday_total_income_from_milk_sale, 
+                              round, 
+                              household_type, 
+                              district_gpf, 
+                              in_milk_cross_cows, 
+                              in_milk_local_cows, 
+                              total_distribution_yesterday)))
+```
+
+Here it is only 78 producers (about the same, less than 2%) that have non-`NA` values for all of these columns.
+
+Which of these columns are really killing us for missing data?
+
+```{r}
+all_producers %>% 
+    summarise(`NA income` = mean(is.na(yesterday_total_income_from_milk_sale)),
+              `NA round` = mean(is.na(round)),
+              `NA hhtype` = mean(is.na(household_type)),
+              `NA district` = mean(is.na(district_gpf)),
+              `NA crossbreed` = mean(is.na(in_milk_cross_cows)),
+              `NA local` = mean(is.na(in_milk_local_cows)),
+              `NA liters` = mean(is.na(total_distribution_yesterday)))
+```
+
+So it is the income, number of in-milk cows of both breeds, and liters of milk distributed that are really killing us here. The `NA` values are so high that I am not sure imputation methods such as random forest would be at all effective. One idea would be to put zeroes in for all the `NA` values for number of in-milk cows. That would at least give us ~40%  of the data in income and liters distributed.
+
+```{r}
+mean(complete.cases(all_producers %>% 
+                        select(yesterday_total_income_from_milk_sale, 
+                               total_distribution_yesterday)))
+
+sum(complete.cases(all_producers %>% 
+                       select(yesterday_total_income_from_milk_sale, 
+                              total_distribution_yesterday)))
+```
+
+Fortunately, most of the non-missing data for those two columns are the same rows. What do you think of that plan? Is an `NA` for the number of in-milk cows mostly the same as a zero for in-milk cows?
