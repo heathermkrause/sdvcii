@@ -1,5 +1,5 @@
 ---
-title: "Predicting Total Milk Distributed"
+title: "Predicting Total Milk Produced"
 subtitle: "Strengthening the Dairy Value Chain"
 author: "Julia Silge"
 date: "`r Sys.Date()`"
@@ -14,7 +14,7 @@ knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, dpi = 180)
 options(width=80, dplyr.width = 150)
 ```
 
-Let's build a model to predict total milk distributed (in liters) for the treatment and control groups at rounds 1 and 5.
+Let's build a model to predict total milk produced (in liters) for the treatment and control groups at rounds 1 and 5.
 
 ## Loading and Processing the Data
 
@@ -34,7 +34,7 @@ gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Shirajgonj"] <- "Sirajgonj"
 gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Sirajgang"] <- "Sirajgonj"
 gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Sirajganj"] <- "Sirajgonj"
 
-gpf_ppt[,c(28:35)] <- lapply(gpf_ppt[,c(28:35)], as.numeric)
+gpf_ppt[,c(27:35)] <- lapply(gpf_ppt[,c(28:35)], as.numeric)
 
 ## code below makes producer data frame with in-milk local breed cows, 
 ## in-milk cross breed cows, total number of all cows, and total liters 
@@ -75,7 +75,8 @@ producers <- bind_rows(gpf_ppt %>%
                                          group_by(household_type, deo_id, round) %>% 
                                          summarize(in_milk_cross_cows = n()))) %>%
     rowwise() %>%
-    mutate(total_distribution_yesterday = sum(total_free_distribution_ltr,
+    mutate(total_distribution_yesterday = sum(total_consumption_ltr,
+                                              total_free_distribution_ltr,
                                               neighbors,
                                               collection_point,
                                               milk_collector,
