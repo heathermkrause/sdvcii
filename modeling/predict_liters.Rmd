@@ -1,0 +1,192 @@
+---
+title: "Predicting Total Milk Distributed"
+subtitle: "Strengthening the Dairy Value Chain"
+author: "Julia Silge"
+date: "`r Sys.Date()`"
+output:
+  prettydoc::html_pretty:
+    theme: leonids
+---
+
+```{r, echo = FALSE, warning = FALSE}
+library(knitr)
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE, message = FALSE, dpi = 180)
+options(width=80, dplyr.width = 150)
+```
+
+Let's build a model to predict total milk distributed (in liters) for the treatment and control groups at rounds 1 and 5.
+
+## Loading and Processing the Data
+
+First, let's load the data, do some cleaning that we found we needed to do during the table-making process, and make a producers data frame. The producers data frame needs to include the number of in-milk cows (both breeds) and the quantity of milk produced yesterday.
+
+```{r setup}
+library(readr)
+library(dplyr)
+gpf_ppt <- read_csv("../data/gpf_ppt_merged.csv", 
+                    col_types = cols(.default = col_character()))
+
+gpf_ppt$district_gpf[gpf_ppt$district_gpf == "pabna"] <- "Pabna"
+gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Jaipur Hat"] <- "Joypurhat"
+gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Natore"] <- "Nator"
+gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Shirajgong"] <- "Sirajgonj"
+gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Shirajgonj"] <- "Sirajgonj"
+gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Sirajgang"] <- "Sirajgonj"
+gpf_ppt$district_gpf[gpf_ppt$district_gpf == "Sirajganj"] <- "Sirajgonj"
+
+gpf_ppt[,c(28:35)] <- lapply(gpf_ppt[,c(28:35)], as.numeric)
+
+## code below makes producer data frame with in-milk local breed cows, 
+## in-milk cross breed cows, total number of all cows, and total liters 
+## produced yesterday
+
+producers <- bind_rows(gpf_ppt %>% 
+                           filter(round == '1.0') %>% 
+                           distinct(entry_id, .keep_all = TRUE) %>%
+                           left_join(gpf_ppt %>% 
+                                         filter(round == '1.0') %>% 
+                                         group_by(entry_id) %>% 
+                                         summarize(total_cows = n())) %>%
+                           left_join(gpf_ppt %>% 
+                                         filter(round == '1.0') %>% 
+                                         filter(cow_type == 1, cow_breed == 1) %>% 
+                                         group_by(entry_id) %>% 
+                                         summarize(in_milk_local_cows = n())) %>%
+                           left_join(gpf_ppt %>% 
+                                         filter(round == '1.0') %>% 
+                                         filter(cow_type == 1, cow_breed == 2) %>% 
+                                         group_by(entry_id) %>% 
+                                         summarize(in_milk_cross_cows = n())),
+                       gpf_ppt %>%
+                           filter(round != '1.0') %>%
+                           distinct(household_type, deo_id, round, .keep_all = TRUE) %>%
+                           left_join(gpf_ppt %>% 
+                                         filter(round != '1.0') %>% 
+                                         group_by(household_type, deo_id, round) %>% 
+                                         summarize(total_cows = n())) %>%
+                           left_join(gpf_ppt %>% 
+                                         filter(round != '1.0') %>% 
+                                         filter(cow_type == 1, cow_breed == 1) %>% 
+                                         group_by(household_type, deo_id, round) %>% 
+                                         summarize(in_milk_local_cows = n())) %>%
+                           left_join(gpf_ppt %>% 
+                                         filter(round != '1.0') %>% 
+                                         filter(cow_type == 1, cow_breed == 2) %>% 
+                                         group_by(household_type, deo_id, round) %>% 
+                                         summarize(in_milk_cross_cows = n()))) %>%
+    rowwise() %>%
+    mutate(total_distribution_yesterday = sum(total_free_distribution_ltr,
+                                              neighbors,
+                                              collection_point,
+                                              milk_collector,
+                                              open_market,
+                                              sweetmeat_tea_stall,
+                                              direct_to_company,
+                                              yesterday_total_spoilage_ltr,
+                                              na.rm = TRUE)) %>%
+    ungroup
+
+producers <- producers %>%
+    mutate(yesterday_total_income_from_milk_sale = as.numeric(yesterday_total_income_from_milk_sale),
+           round = as.factor(round),
+           district_gpf = as.factor(district_gpf),
+           group_code = as.factor(group_code),
+           household_type = as.factor(household_type))
+
+producers$yesterday_total_income_from_milk_sale[producers$yesterday_total_income_from_milk_sale == 0.0] <- NA
+producers$total_distribution_yesterday[producers$total_distribution_yesterday == 0.0] <- NA
+producers$in_milk_cross_cows[is.na(producers$in_milk_cross_cows)] <- 0
+producers$in_milk_local_cows[is.na(producers$in_milk_local_cows)] <- 0
+
+dim(producers)    
+```
+
+
+## Building a Model with Number of Cows
+
+Let's collapse all the separate treatment and control groups into just one group each.
+
+```{r}
+library(forcats)
+all_producers_collapse <- producers %>%    
+    mutate(household_type = fct_collapse(household_type,
+                                         Treatment = c("1", "2", "3"),
+                                         Control = c("4", "5", "6"))) %>%
+    filter(round == '1.0' | round == '5.0')
+
+fit_lm <- lm(total_distribution_yesterday ~ round * household_type +
+                 in_milk_cross_cows + in_milk_local_cows,
+             data = all_producers_collapse)
+summary(fit_lm)
+
+```
+
+
+Let's try a similar model without the interaction term.
+
+```{r}
+fit_lm <- lm(total_distribution_yesterday ~ round + household_type +
+                 in_milk_cross_cows + in_milk_local_cows,
+             data = all_producers_collapse)
+summary(fit_lm)
+```
+
+Pretty much the same. Still no significant effect between the treatment/control group.
+
+## Building a Model with Three-Way Interaction Including Gender
+
+```{r}
+fit_respondent <- lm(total_distribution_yesterday ~ in_milk_cross_cows + in_milk_local_cows +
+                 round * household_type * sex_respondent,
+             data = all_producers_collapse)
+summary(fit_respondent)
+```
+
+
+```{r}
+fit_rearing <- lm(total_distribution_yesterday ~ in_milk_cross_cows + in_milk_local_cows +
+                 round * household_type * cow_rearing,
+             data = all_producers_collapse)
+summary(fit_rearing)
+```
+
+
+## Visualization of Models
+
+Let's make some visualization of these last couple of models.
+
+```{r}
+pred <- expand.grid(in_milk_cross_cows = c(0,1,2,3,4),
+                    in_milk_local_cows = 0,
+                    round = c('1.0', '5.0'),
+                    household_type = levels(all_producers_collapse$household_type),
+                    sex_respondent = c('1','2'),
+                    cow_rearing = c('1','2','3'))
+
+pred$pred1 <- predict(fit_respondent, newdata = pred)
+pred$pred2 <- predict(fit_rearing, newdata = pred)
+```
+
+
+```{r, fig.width=8, fig.height=6}
+library(ggplot2)
+ggplot(pred, aes(in_milk_cross_cows, pred1, color = sex_respondent)) +
+    geom_line(size = 1.5, alpha = 0.8) +
+    facet_grid(round ~ household_type) +
+    labs(y = "Total liters of milk distributed",
+         x = "Number of in-milk cross breed cows")
+```
+
+Respondent sex of 1 means female and 2 means male. I could make this plot with the local breed cows instead if you'd like.
+
+```{r, fig.width=8, fig.height=6}
+ggplot(pred, aes(in_milk_cross_cows, pred2, color = cow_rearing)) +
+    geom_line(size = 1.5, alpha = 0.8) +
+    facet_grid(round ~ household_type) +
+    labs(y = "Total liters of milk distributed",
+         x = "Number of in-milk cross breed cows")
+
+
+```
+
+Cow rearing coded as 1 means female, 2 means male, and 3 means jointly.
