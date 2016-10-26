@@ -110,9 +110,9 @@ Let's collapse all the separate treatment and control groups into just one group
 ```{r}
 library(forcats)
 all_producers_collapse <- producers %>%    
-    mutate(household_type = fct_collapse(household_type,
-                                         Treatment = c("1", "2", "3"),
-                                         Control = c("4", "5", "6"))) %>%
+    mutate(treatment = fct_collapse(household_type,
+                                    Treatment = c("1", "2", "3"),
+                                    Control = c("4", "5", "6"))) %>%
     filter(round == '1.0' | round == '5.0')
 ```
 
